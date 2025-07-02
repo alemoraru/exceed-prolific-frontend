@@ -4,6 +4,7 @@ import {ErrorMessage} from "./ErrorMessage";
 import {snippets} from "../data/snippets";
 import {ErrorToggle} from './ErrorToggle';
 import {RevertButton} from './RevertButton';
+import {PrimaryButton, SecondaryButton, DisabledButton} from './SurveyButtons';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -181,18 +182,12 @@ export function Part2Survey(
                         </ErrorToggle>
                     </div>
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded cursor-not-allowed opacity-60"
-                            disabled
-                        >
+                        <DisabledButton>
                             Previous
-                        </button>
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goNext}
-                        >
+                        </DisabledButton>
+                        <PrimaryButton onClick={goNext}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -212,20 +207,12 @@ export function Part2Survey(
                         <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
                     {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                            disabled={submitLoading}
-                        >
+                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
-                        </button>
-                        <button
-                            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer${submitLoading ? ' opacity-60 cursor-not-allowed' : ''}`}
-                            onClick={goNext}
-                            disabled={submitLoading}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -248,21 +235,15 @@ export function Part2Survey(
                         </ErrorToggle>
                     </div>
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                        >
+                        <SecondaryButton onClick={goPrev}>
                             Previous
-                        </button>
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={() => {
-                                setStep(4);
-                                setEditedCode2(editedCode1);
-                            }}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={() => {
+                            setStep(4);
+                            setEditedCode2(editedCode1);
+                        }}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -284,20 +265,12 @@ export function Part2Survey(
                         <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
                     {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                            disabled={submitLoading}
-                        >
+                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
-                        </button>
-                        <button
-                            className={`bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer${submitLoading ? ' opacity-60 cursor-not-allowed' : ''}`}
-                            onClick={goNext}
-                            disabled={submitLoading}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
                             Submit
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
