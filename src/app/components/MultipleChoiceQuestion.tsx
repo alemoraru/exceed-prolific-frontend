@@ -1,0 +1,73 @@
+import React from 'react';
+import {CodeEditor} from './CodeEditor';
+
+export interface MCQProps {
+    question: string;
+    options: string[];
+    selected: number | null;
+    onSelect: (idx: number) => void;
+    code?: string;
+    error?: string;
+    disabled?: boolean;
+}
+
+/**
+ * MultipleChoiceQuestion component renders a multiple choice question with options.
+ * @param question - The question text to display.
+ * @param options - Array of options for the question.
+ * @param selected - The index of the selected option, or null if none is selected.
+ * @param onSelect - Callback function to call when an option is selected, passing the index of the selected option.
+ * @param code - Optional code snippet to display below the question.
+ * @param error - Optional error message to display below the question.
+ * @param disabled - Optional flag to disable interaction with the options.
+ */
+export function MultipleChoiceQuestion({question, options, selected, onSelect, code, error, disabled}: MCQProps) {
+    return (
+        <div className="mb-8 w-full">
+            <div className="font-semibold mb-2 w-full text-left">{question}</div>
+            {code && (
+                <div className="mb-4">
+                    <CodeEditor code={code} readOnly/>
+                </div>
+            )}
+            {error && (
+                <div
+                    className="bg-red-100 border-l-4 border-red-600 text-red-800 p-3 mb-2 rounded text-sm w-full text-left">
+                    <pre className="whitespace-pre-wrap ml-2">{error}</pre>
+                </div>
+            )}
+            <div className="flex flex-col gap-2 items-start w-full">
+                {options.map((opt, idx) => {
+                    const id = `mcq-option-${idx}`;
+                    return (
+                        <label
+                            key={idx}
+                            htmlFor={id}
+                            className={`flex items-center gap-2 p-2 rounded cursor-pointer border transition-colors w-full ${selected === idx ? 'bg-blue-50 border-blue-400' : 'bg-white border-gray-200 hover:bg-gray-50'}` + (disabled ? ' opacity-60 cursor-not-allowed' : '')}
+                            tabIndex={0}
+                            onKeyDown={e => {
+                                if (!disabled && (e.key === ' ' || e.key === 'Enter')) {
+                                    e.preventDefault();
+                                    onSelect(idx);
+                                }
+                            }}
+                        >
+                            <input
+                                type="radio"
+                                id={id}
+                                name="mcq"
+                                checked={selected === idx}
+                                onChange={() => onSelect(idx)}
+                                disabled={disabled}
+                                className="accent-blue-600"
+                                aria-checked={selected === idx}
+                                aria-label={`Select option ${idx + 1}`}
+                            />
+                            <span className="text-left w-full">{opt}</span>
+                        </label>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
