@@ -4,7 +4,17 @@ import {ErrorMessage} from "./ErrorMessage";
 import {snippets} from "../data/snippets";
 import {ErrorToggle} from './ErrorToggle';
 import {RevertButton} from './RevertButton';
+import {PrimaryButton, SecondaryButton, DisabledButton} from './SurveyButtons';
 
+/**
+ * Part2Survey component handles the second part of the survey where users fix code snippets.
+ * This component manages the flow of the survey, including displaying code snippets,
+ * error messages, and allowing users to edit code.
+ * @param onComplete - Callback function to call when the survey is completed.
+ * @param progressPercent - Percentage of progress to display in the progress bar.
+ * @param setOverallStep - Function to update the overall step in a parent component.
+ * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate overall step.
+ */
 export function Part2Survey(
     {
         onComplete,
@@ -21,6 +31,10 @@ export function Part2Survey(
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
     const [editedCode1, setEditedCode1] = useState(snippets[0].code);
     const [editedCode2, setEditedCode2] = useState(snippets[0].code);
+    const [participantId, setParticipantId] = useState<string | null>(null);
+    const [submitLoading, setSubmitLoading] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [dynamicErrorMsg, setDynamicErrorMsg] = useState<string | null>(null);
 
     // Randomly pick either 'pragmatic' or 'contingent' for each snippet for the second error message style
     const [secondErrorStyleList] = useState(() =>
@@ -36,9 +50,84 @@ export function Part2Survey(
         setOverallStep(part1Total + (snippetIdx * 4) + step);
     }, [snippetIdx, step, setOverallStep, part1Total]);
 
+    // Get participant_id from localStorage on mount
+    useEffect(() => {
+        const pid = localStorage.getItem('participant_id');
+        if (pid) setParticipantId(pid);
+    }, []);
+
     // Navigation helpers
-    const goNext = () => {
+    const goNext = async () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
+        if (step === 2) {
+            setSubmitLoading(true);
+            setSubmitError(null);
+            setDynamicErrorMsg(null);
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        snippet_id: currentSnippet.id,
+                        code: editedCode1
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    // Move to next snippet or finish
+                    if (snippetIdx < snippets.length - 1) {
+                        setSnippetIdx(snippetIdx + 1);
+                        setStep(1);
+                        setEditedCode1(snippets[snippetIdx + 1].code);
+                        setEditedCode2(snippets[snippetIdx + 1].code);
+                        setDynamicErrorMsg(null);
+                    } else {
+                        onComplete();
+                    }
+                } else {
+                    // Show backend error in step 3
+                    setDynamicErrorMsg(data.error_msg || 'Unknown error');
+                    setStep(3);
+                }
+            } catch (e) {
+                setSubmitError('Failed to submit code. Please try again.');
+            } finally {
+                setSubmitLoading(false);
+            }
+            return;
+        }
+        if (step === 4) {
+            setSubmitLoading(true);
+            setSubmitError(null);
+            setDynamicErrorMsg(null);
+            try {
+                await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        snippet_id: currentSnippet.id,
+                        code: editedCode2
+                    })
+                });
+                // Regardless of success or error, go to the next snippet or finish
+                if (snippetIdx < snippets.length - 1) {
+                    setSnippetIdx(snippetIdx + 1);
+                    setStep(1);
+                    setEditedCode1(snippets[snippetIdx + 1].code);
+                    setEditedCode2(snippets[snippetIdx + 1].code);
+                    setDynamicErrorMsg(null);
+                } else {
+                    onComplete();
+                }
+            } catch (e) {
+                setSubmitError('Failed to submit code. Please try again.');
+            } finally {
+                setSubmitLoading(false);
+            }
+            return;
+        }
         if (step < 4) {
             setStep((step + 1) as 1 | 2 | 3 | 4);
         } else if (snippetIdx < snippets.length - 1) {
@@ -46,6 +135,7 @@ export function Part2Survey(
             setStep(1);
             setEditedCode1(snippets[snippetIdx + 1].code);
             setEditedCode2(snippets[snippetIdx + 1].code);
+            setDynamicErrorMsg(null);
         } else {
             onComplete();
         }
@@ -87,23 +177,17 @@ export function Part2Survey(
                             <div className="font-semibold mb-1">Original Code</div>
                             <CodeEditor code={currentSnippet.code} readOnly/>
                         </div>
-                        <ErrorToggle label="Error Message" initialOpen>
+                        <ErrorToggle label="View Error Message" initialOpen>
                             <ErrorMessage messageStyle="standard" snippet={currentSnippet}/>
                         </ErrorToggle>
                     </div>
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-gray-200 text-gray-500 font-semibold py-2 px-4 rounded cursor-not-allowed opacity-60"
-                            disabled
-                        >
+                        <DisabledButton>
                             Previous
-                        </button>
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goNext}
-                        >
+                        </DisabledButton>
+                        <PrimaryButton onClick={goNext}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -114,24 +198,21 @@ export function Part2Survey(
                     <p className="mb-4 text-gray-700">Edit the code to fix any errors you have identified. You can
                         revert to the original snippet if needed. The error message is shown below for your reference.
                         Click Next when you are satisfied with your fix.</p>
-                    <CodeEditor code={editedCode1} onChange={setEditedCode1}/>
+                    <CodeEditor code={editedCode1} onChange={setEditedCode1} readOnly={submitLoading}/>
                     <RevertButton onClick={rollback}/>
                     <ErrorToggle label="Error Message">
                         <ErrorMessage messageStyle="standard" snippet={currentSnippet}/>
                     </ErrorToggle>
+                    {submitLoading &&
+                        <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
+                    {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                        >
+                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
-                        </button>
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer shadow-md hover:shadow-lg transition-all duration-200"
-                            onClick={goNext}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -144,25 +225,25 @@ export function Part2Survey(
                     <div className="flex flex-col gap-6">
                         <div className="flex-1">
                             <div className="font-semibold mb-1">Code (after your fix)</div>
-                            <CodeEditor code={currentSnippet.code} readOnly/>
+                            <CodeEditor code={editedCode1} readOnly/>
                         </div>
                         <ErrorToggle label="Error Message" initialOpen>
-                            <ErrorMessage messageStyle={currentSecondErrorStyle} snippet={currentSnippet}/>
+                            <div
+                                className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 mt-4 rounded text-left">
+                                <pre className="whitespace-pre-wrap mt-2 text-left">{dynamicErrorMsg}</pre>
+                            </div>
                         </ErrorToggle>
                     </div>
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                        >
+                        <SecondaryButton onClick={goPrev}>
                             Previous
-                        </button>
-                        <button
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goNext}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={() => {
+                            setStep(4);
+                            setEditedCode2(editedCode1);
+                        }}>
                             Next
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}
@@ -173,24 +254,23 @@ export function Part2Survey(
                     <p className="mb-4 text-gray-700">Make your final changes to the code based on the new error message
                         and your understanding. The error message is shown below for your reference. When you are done,
                         click Submit to finish.</p>
-                    <CodeEditor code={editedCode2} onChange={setEditedCode2}/>
+                    <CodeEditor code={editedCode2} onChange={setEditedCode2} readOnly={submitLoading}/>
                     <RevertButton onClick={rollback2}/>
                     <ErrorToggle label="Error Message">
-                        <ErrorMessage messageStyle={currentSecondErrorStyle} snippet={currentSnippet}/>
+                        <div className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 mt-4 rounded text-left">
+                            <pre className="whitespace-pre-wrap mt-2 text-left">{dynamicErrorMsg}</pre>
+                        </div>
                     </ErrorToggle>
+                    {submitLoading &&
+                        <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
+                    {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
                     <div className="flex justify-between mt-8">
-                        <button
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-2 px-4 rounded cursor-pointer"
-                            onClick={goPrev}
-                        >
+                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
-                        </button>
-                        <button
-                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded cursor-pointer shadow-md hover:shadow-lg transition-all duration-200"
-                            onClick={goNext}
-                        >
+                        </SecondaryButton>
+                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
                             Submit
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             )}

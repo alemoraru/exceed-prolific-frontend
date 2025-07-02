@@ -3,6 +3,7 @@ import {questions as questionsRaw} from '../data/questions';
 import {ExperienceSlider} from './ExperienceSlider';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 import {ConsentForm} from './ConsentForm';
+import {PrimaryButton, DisabledButton} from './SurveyButtons';
 
 // Helper to shuffle an array
 function shuffle<T>(arr: T[]): T[] {
@@ -65,7 +66,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const handleNext = async () => {
         if (step === 0) {
             try {
-                const res = await fetch('http://localhost:8000/api/participants/consent', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/consent`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({consent: consent === 0})
@@ -106,7 +107,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 return;
             }
             try {
-                const res = await fetch('http://localhost:8000/api/participants/experience', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/experience`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -143,7 +144,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             setMcqLoading(true);
             setMcqError(null);
             try {
-                const res = await fetch('http://localhost:8000/api/participants/question', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/question`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -216,19 +217,12 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 </div>
             ) : null}
             <div className="flex justify-between mt-8">
-                <button
-                    className={`py-2 px-4 rounded font-semibold bg-gray-200 text-gray-400 cursor-not-allowed`}
-                    disabled
-                >
+                <DisabledButton>
                     Previous
-                </button>
-                <button
-                    className={`py-2 px-4 rounded font-semibold ${canContinue && !mcqLoading ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-                    onClick={handleNext}
-                    disabled={!canContinue || mcqLoading}
-                >
+                </DisabledButton>
+                <PrimaryButton onClick={handleNext} disabled={!canContinue || mcqLoading}>
                     {isLast ? 'Next' : 'Next'}
-                </button>
+                </PrimaryButton>
             </div>
         </div>
     );

@@ -1,6 +1,5 @@
 export interface Snippet {
     id: string;
-    docstring: string;
     code: string;
     errorMessages: {
         standard: string;
@@ -11,125 +10,91 @@ export interface Snippet {
 
 export const snippets: Snippet[] = [
     {
-        id: 'snippet1',
-        docstring: 'This function returns the nth Fibonacci number using dynamic programming.\nArgs:\n    n (int): The position in the Fibonacci sequence.\nReturns:\n    int: The nth Fibonacci number.\n\nNote: There is a bug in the implementation that can cause a recursion depth error.',
-        code: `def fibonacci(n, memo={}):
+        id: 'snippetA',
+        code: `def build_list(n):
     """
-    Returns the nth Fibonacci number using dynamic programming.
+    Build a list of integers from 0 up to n-1.
     Args:
-        n (int): The position in the Fibonacci sequence.
+        n (int): The length of the list.
     Returns:
-        int: The nth Fibonacci number.
+        list[int]: A list of integers.
     """
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        return n
-
-    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
-    return memo[n]
-
-for i in range(10000):
-    fibonacci(i)
-`,
+    result = []
+    for i in range(n):
+        result = result.append(i)
+    return result`,
         errorMessages: {
-            standard:
-                'Traceback (most recent call last):\n' +
-                '  File "main.py", line 15, in <module>\n' +
-                '    fibonacci(i)\n' +
-                '  File "main.py", line 12, in fibonacci\n' +
-                '    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)\n' +
-                '  File "main.py", line 12, in fibonacci\n' +
-                '    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)\n' +
-                '  ...\n' +
-                'RecursionError: maximum recursion depth exceeded in comparison',
-            pragmatic: 'The function uses a mutable default argument (memo={}), which is shared across calls and can cause unexpected recursion depth errors.',
-            contingent: 'Using a mutable default argument for memoization can lead to issues. Try initializing memo inside the function instead.',
+            standard: `Traceback (most recent call last):
+  File "main.py", line 17, in <module>
+    build_list(10)
+  File "main.py", line 11, in build_list
+    result = result.append(i)
+             ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'append'`,
+            pragmatic: `You assigned the return value of result.append(i) (which is None) back to result. Instead, call result.append(i) without assignment and then return result.`,
+            contingent: `Remember that list.append() modifies the list in-place and returns None. How could you adjust the code so result remains a list?`,
         },
     },
     {
-        id: 'snippet2',
-        docstring: 'This function checks if a string is a palindrome.\nArgs:\n    s (str): The string to check.\nReturns:\n    bool: True if s is a palindrome, False otherwise.\n',
-        code: `def is_palindrome(s):
+        id: 'snippetB',
+        code: `def top_three(items):
     """
-    Checks if a string is a palindrome.
+    Return the top three largest numbers from a list.
     Args:
-        s (str): The string to check.
+        items (list[int]): A list of numbers.
     Returns:
-        bool: True if s is a palindrome, False otherwise.
+        list[int]: The three largest numbers.
     """
-    return s == s[::-1] and len(s) > 0
-
-print(is_palindrome("racecar"))
-print(is_palindrome("hello"))
-print(is_palindrome(""))
-`,
+    sorted_items = items.sort(reverse=True)
+    return sorted_items[:3]`,
         errorMessages: {
-            standard:
-                'Traceback (most recent call last):\n' +
-                '  File "main.py", line 13, in <module>\n' +
-                '    print(is_palindrome(""))\n' +
-                '  File "main.py", line 10, in is_palindrome\n' +
-                '    return s == s[::-1] and len(s) > 0\n' +
-                'AssertionError: Empty string should not be considered a palindrome',
-            pragmatic: 'The function returns True for empty strings, which may not be the intended behavior.',
-            contingent: 'Consider handling the empty string case separately to avoid incorrect palindrome results.',
+            standard: `Traceback (most recent call last):
+  File "main.py", line 6, in top_three
+    return sorted_items[:3]
+TypeError: 'NoneType' object is not subscriptable`,
+            pragmatic: `You assigned the result of items.sort(), which sorts in-place and returns None, to sorted_items. Use sorted(items, reverse=True) or call items.sort() first and then slice items.`,
+            contingent: `The list.sort() method doesn’t return the sorted list. What built-in function could you use instead to get a new sorted list?`,
         },
     },
     {
-        id: 'snippet3',
-        docstring: 'This function calculates the average of a list of numbers.\nArgs:\n    numbers (list): List of numbers.\nReturns:\n    float: The average value.\n',
-        code: `def average(numbers):
+        id: 'snippetC',
+        code: `def get_third_element(lst):
     """
-    Calculates the average of a list of numbers.
+    Return the third element of the list.
     Args:
-        numbers (list): List of numbers.
+        lst (list): A list of elements.
     Returns:
-        float: The average value.
+        Any: The third element.
     """
-    return sum(numbers) / len(numbers)
-
-print(average([1, 2, 3]))
-print(average([]))
-`,
+    return lst[2]`,
         errorMessages: {
-            standard:
-                'Traceback (most recent call last):\n' +
-                '  File "main.py", line 8, in <module>\n' +
-                '    print(average([]))\n' +
-                '  File "main.py", line 5, in average\n' +
-                '    return sum(numbers) / len(numbers)\n' +
-                'ZeroDivisionError: division by zero',
-            pragmatic: 'The function does not handle the case when the input list is empty, leading to a division by zero.',
-            contingent: 'Add a check for empty lists before performing the division to avoid errors.',
+            standard: `Traceback (most recent call last):
+  File "main.py", line 5, in get_third_element
+    return lst[2]
+IndexError: list index out of range`,
+            pragmatic: `The function directly accesses lst[2] without ensuring the list has at least three elements. Consider checking len(lst) before indexing.`,
+            contingent: `Could the list be shorter than 3? How might you handle lists of varying lengths to avoid this error?`,
         },
     },
     {
-        id: 'snippet4',
-        docstring: 'This function finds the maximum value in a list.\nArgs:\n    lst (list): List of numbers.\nReturns:\n    int: The maximum value.\n',
-        code: `def find_max(lst):
+        id: 'snippetD',
+        code: `def parse_numbers(data):
     """
-    Finds the maximum value in a list.
+    Parse comma-separated numbers into a list of ints.
     Args:
-        lst (list): List of numbers.
+        data (str): A comma-separated string of numbers.
     Returns:
-        int: The maximum value.
+        list[int]: List of integers.
     """
-    return max(lst)
-
-print(find_max([3, 1, 4, 1, 5, 9]))
-print(find_max([]))
-`,
+    return [int(x) for x in data.split(',')]`
+        ,
         errorMessages: {
-            standard:
-                'Traceback (most recent call last):\n' +
-                '  File "main.py", line 10, in <module>\n' +
-                '    print(find_max([]))\n' +
-                '  File "main.py", line 7, in find_max\n' +
-                '    return max(lst)\n' +
-                'ValueError: max() arg is an empty sequence',
-            pragmatic: 'The function does not handle empty lists, which causes a ValueError when calling max().',
-            contingent: 'Check if the list is empty before calling max() to prevent errors.',
+            standard: `Traceback (most recent call last):
+  File "main.py", line 6, in parse_numbers
+    return [int(x) for x in data.split(',')]
+AttributeError: 'list' object has no attribute 'split'`,
+            pragmatic: `The function expects a string with commas, but data is a list. You could join the list into a string first or adjust the function to handle lists.`,
+            contingent: `Is data always a string? If you’re passing in a list, maybe you need to, for example, join it: ','.join(data), or handle both types differently.`,
         },
     },
 ];
