@@ -1,4 +1,5 @@
 import React from 'react';
+import Slider from '@mui/material/Slider';
 
 /**
  * ExperienceSlider component allows users to select their years of experience with Python.
@@ -11,35 +12,36 @@ export function ExperienceSlider({value, onChange}: { value: number; onChange: (
             <label className="block font-semibold mb-2 text-gray-800 text-base">
                 How many years of experience do you have with Python?
             </label>
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
-                <input
-                    type="range"
+            <div className="w-full flex flex-col items-center">
+                <div className="flex w-full items-center justify-between mb-1">
+                    <span className="text-xs text-gray-500">0</span>
+                    <span className="text-xs text-gray-500">35</span>
+                </div>
+                <Slider
+                    value={value}
+                    onChange={(_, v) => onChange(Number(v))}
                     min={0}
                     max={35}
-                    value={value}
-                    onChange={e => onChange(Number(e.target.value))}
-                    className="w-full accent-blue-600 h-2 rounded-lg appearance-none bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    step={1}
+                    marks={[{value: 0, label: ''}, {value: 35, label: ''}]}
+                    valueLabelDisplay="auto"
+                    sx={{width: '100%', color: '#2563eb'}}
                     aria-label="Python experience in years"
                 />
-                <div className="flex items-center gap-2">
-                    <input
-                        type="number"
-                        min={0}
-                        max={35}
-                        value={value}
-                        onChange={e => {
-                            const v = Number(e.target.value);
-                            if (!isNaN(v) && v >= 0 && v <= 50) onChange(v);
-                        }}
-                        className="w-16 text-center font-mono border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all"
-                        aria-label="Python experience in years (number input)"
-                    />
-                    <span className="text-gray-500">years</span>
+                <div className="flex flex-col items-center mt-2">
+                    <div className="flex items-baseline gap-1">
+                        <input
+                            type="number"
+                            min={0}
+                            max={35}
+                            value={value}
+                            onChange={e => onChange(Number(e.target.value))}
+                            className="w-16 border border-gray-300 rounded px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-400 text-base"
+                            aria-label="Python experience in years (number input)"
+                        />
+                        <span className="text-gray-700 text-base">years</span>
+                    </div>
                 </div>
-            </div>
-            <div className="flex justify-between text-xs text-gray-400 mt-1 px-1">
-                <span>0</span>
-                <span>35</span>
             </div>
         </div>
     );
