@@ -65,7 +65,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const handleNext = async () => {
         if (step === 0) {
             try {
-                const res = await fetch('http://localhost:8000/api/participants/consent', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/consent`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({consent: consent === 0})
@@ -106,7 +106,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 return;
             }
             try {
-                const res = await fetch('http://localhost:8000/api/participants/experience', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/experience`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -143,7 +143,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             setMcqLoading(true);
             setMcqError(null);
             try {
-                const res = await fetch('http://localhost:8000/api/participants/question', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/question`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({

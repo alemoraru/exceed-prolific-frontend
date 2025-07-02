@@ -63,7 +63,7 @@ export function Part2Survey(
             setSubmitError(null);
             setDynamicErrorMsg(null);
             try {
-                const res = await fetch('http://localhost:8000/api/code/submit', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -101,7 +101,7 @@ export function Part2Survey(
             setSubmitError(null);
             setDynamicErrorMsg(null);
             try {
-                await fetch('http://localhost:8000/api/code/submit', {
+                await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
