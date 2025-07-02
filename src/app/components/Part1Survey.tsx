@@ -14,13 +14,18 @@ function shuffle<T>(arr: T[]): T[] {
     return a;
 }
 
-const consentQuestion = {
-    question: 'Do you consent to participate in this study under the above conditions?',
-    options: ['Yes, I consent', 'No, I do not consent'],
-};
+/**
+ * Part1Answers interface defines the structure of answers collected in Part 1 of the survey.
+ */
+export interface Part1Answers {
+    consent: number | null;
+    experience: number;
+    mcqAnswers: (number | null)[];
+    randomizedQuestions: typeof questionsRaw;
+}
 
 export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
-    onComplete: (answers: any) => void,
+    onComplete: (answers: Part1Answers) => void,
     onStepChange: (step: number) => void,
     onConsentDenied: () => void
 }) {
@@ -37,6 +42,9 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const [experience, setExperience] = useState(0);
     const [mcqAnswers, setMcqAnswers] = useState<(number | null)[]>(Array(randomizedQuestions.length).fill(null));
     const [step, setStep] = useState(0);
+    const [participantId, setParticipantId] = useState<string | null>(null);
+    const [mcqLoading, setMcqLoading] = useState(false);
+    const [mcqError, setMcqError] = useState<string | null>(null);
 
     useEffect(() => {
         onStepChange(step);
@@ -54,56 +62,159 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const canContinue = (step === 0 && consent !== null) || (step === 1) || (step > 1 && mcqAnswers[step - 2] !== null);
     const isLast = step === randomizedQuestions.length + 1;
 
-    const handleNext = () => {
-        if (step === 0 && consent === 1) {
-            // User did not consent, go to thank you page
-            onConsentDenied();
+    const handleNext = async () => {
+        if (step === 0) {
+            try {
+                const res = await fetch('http://localhost:8000/api/participants/consent', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({consent: consent === 0})
+                });
+                if (!res.ok) throw new Error('Failed to submit consent');
+                const data = await res.json();
+                if (consent === 0) { // Yes, I consent
+                    if (data.participant_id) {
+                        setParticipantId(data.participant_id);
+                        localStorage.setItem('participant_id', data.participant_id);
+                        setStep(1);
+                    } else {
+                        throw new Error('No participant_id returned');
+                    }
+                } else if (consent === 1) { // No, I do not consent
+                    setParticipantId(null);
+                    localStorage.removeItem('participant_id');
+                    onConsentDenied();
+                }
+            } catch (e) {
+                if (e instanceof Error) {
+                    console.log(e.message || 'Failed to submit consent');
+                } else {
+                    console.log('Failed to submit consent');
+                }
+            } finally {
+                console.log('Something')
+            }
             return;
         }
-
         // Only allow if consent is 'Yes' or 'No'
         if (step === 0 && consent !== 0) return;
 
+        if (step === 1) {
+            // Experience step: send experience to backend
+            if (!participantId) {
+                console.error('No participant_id found');
+                return;
+            }
+            try {
+                const res = await fetch('http://localhost:8000/api/participants/experience', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        python_yoe: experience
+                    })
+                });
+                if (!res.ok) throw new Error('Failed to submit experience');
+            } catch (e) {
+                if (e instanceof Error) {
+                    console.error(e.message || 'Failed to submit experience');
+                } else {
+                    console.error('Failed to submit experience');
+                }
+            }
+            setStep(s => s + 1);
+            return;
+        }
+
+        if (step > 1 && step - 2 < randomizedQuestions.length) {
+            // MCQ step: send answer to backend
+            if (!participantId) {
+                console.error('No participant_id found');
+                return;
+            }
+            const questionIdx = step - 2;
+            const question = randomizedQuestions[questionIdx];
+            const selectedIdx = mcqAnswers[questionIdx];
+            if (selectedIdx == null) {
+                console.error('No answer selected');
+                return;
+            }
+            const answerString = question.options[selectedIdx];
+            setMcqLoading(true);
+            setMcqError(null);
+            try {
+                const res = await fetch('http://localhost:8000/api/participants/question', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        question_id: question.id,
+                        answer: answerString
+                    })
+                });
+                if (!res.ok) throw new Error('Failed to submit MCQ answer');
+                // If this was the last MCQ, call onComplete instead of an incrementing step
+                if (questionIdx >= randomizedQuestions.length - 1) {
+                    onComplete({consent, experience, mcqAnswers, randomizedQuestions});
+                    return;
+                } else {
+                    setStep(s => s + 1);
+                }
+            } catch (e) {
+                if (e instanceof Error) {
+                    setMcqError(e.message || 'Failed to submit MCQ answer');
+                } else {
+                    setMcqError('Failed to submit MCQ answer');
+                }
+            } finally {
+                setMcqLoading(false);
+            }
+            return;
+        }
+
         if (isLast) {
             onComplete({consent, experience, mcqAnswers, randomizedQuestions});
-        } else {
-            setStep(s => s + 1);
+            // Do NOT increment step after onComplete
+            return;
         }
-    };
+        // Only increment step if not last
+        setStep(s => s + 1);
+    }
 
     return (
         <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl p-8 fade-in">
-            <div className="mb-8 text-sm text-gray-500">Question {step + 1} of {randomizedQuestions.length + 2}</div>
-            {step === 0 ? (
-                <div>
-                    <ConsentForm/>
+            <div
+                className="mb-8 text-sm text-gray-500">Question {step + 1} of {randomizedQuestions.length + 2}</div>
+            {step > 1 && step - 2 < randomizedQuestions.length ? (
+                <>
                     <MultipleChoiceQuestion
-                        question={consentQuestion.question}
-                        options={consentQuestion.options}
-                        selected={consent}
-                        onSelect={setConsent}
-                        disabled={false}
+                        question={randomizedQuestions[step - 2].question}
+                        options={randomizedQuestions[step - 2].options}
+                        selected={mcqAnswers[step - 2]}
+                        onSelect={handleMCQSelect(step - 2)}
+                        code={randomizedQuestions[step - 2].code}
+                        error={randomizedQuestions[step - 2].error}
+                        disabled={mcqLoading}
                     />
-                </div>
+                    {mcqLoading && <div className="text-blue-700 mt-2">Submitting your answer...</div>}
+                    {mcqError && <div className="text-red-700 mt-2">{mcqError}</div>}
+                </>
+            ) : step === 0 ? (
+                <>
+                    <ConsentForm value={consent} onChange={setConsent}/>
+                </>
             ) : step === 1 ? (
                 <div>
                     <div className="mb-4 text-left text-gray-700 text-sm">
-                        Please indicate your years of experience with Python. Use the slider or enter a number. If you
-                        have no experience, set it to 0, otherwise set it to the closest whole number (e.g. 1.5 years
+                        Please indicate your years of experience with Python. Use the slider or enter a number. If
+                        you
+                        have no experience, set it to 0, otherwise set it to the closest whole number (e.g. 1.5
+                        years
                         should be set to 2). This information helps us understand your background.
                     </div>
                     <ExperienceSlider value={experience} onChange={setExperience}/>
                 </div>
-            ) : (
-                <MultipleChoiceQuestion
-                    question={randomizedQuestions[step - 2].question}
-                    options={randomizedQuestions[step - 2].options}
-                    selected={mcqAnswers[step - 2]}
-                    onSelect={handleMCQSelect(step - 2)}
-                    code={randomizedQuestions[step - 2].code}
-                    error={randomizedQuestions[step - 2].error}
-                />
-            )}
+            ) : null}
             <div className="flex justify-between mt-8">
                 <button
                     className={`py-2 px-4 rounded font-semibold bg-gray-200 text-gray-400 cursor-not-allowed`}
@@ -112,9 +223,9 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     Previous
                 </button>
                 <button
-                    className={`py-2 px-4 rounded font-semibold ${canContinue ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                    className={`py-2 px-4 rounded font-semibold ${canContinue && !mcqLoading ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                     onClick={handleNext}
-                    disabled={!canContinue}
+                    disabled={!canContinue || mcqLoading}
                 >
                     {isLast ? 'Next' : 'Next'}
                 </button>

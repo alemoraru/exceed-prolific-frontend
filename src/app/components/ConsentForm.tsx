@@ -1,9 +1,21 @@
 import React from 'react';
+import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 
 /**
  * ConsentForm component displays the consent form for participants in the research study.
+ * Controlled: receives value and onChange from parent.
+ * Uses MultipleChoiceQuestion for the consent question.
  */
-export function ConsentForm() {
+export function ConsentForm(
+    {
+        value,
+        onChange,
+        disabled
+    }: {
+        value: number | null;
+        onChange: (value: number) => void;
+        disabled?: boolean;
+    }) {
     return (
         <div
             className="mb-8 w-full mx-auto text-left bg-white p-8 rounded-2xl shadow-md border border-gray-100">
@@ -92,6 +104,15 @@ export function ConsentForm() {
                     will imply revoking your consent, and subsequently, all your data will be discarded from our
                     databases.</p>
             </section>
+
+            {/* Consent question and options using MCQ style */}
+            <MultipleChoiceQuestion
+                question={"Do you consent to participate in this study under the above conditions?"}
+                options={["Yes, I consent", "No, I do not consent"]}
+                selected={value}
+                onSelect={onChange}
+                disabled={disabled}
+            />
         </div>
     );
 }

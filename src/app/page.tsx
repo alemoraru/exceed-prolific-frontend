@@ -36,7 +36,7 @@ export default function App() {
                     <h1 className="text-3xl font-bold text-green-700 mb-6">Thank you for your time!</h1>
                     <h2 className="text-lg font-semibold mb-4 text-gray-800">You have chosen not to participate.</h2>
                     <p className="mb-6 text-gray-700">
-                        Your choice has been recorded. You may now close this window.
+                        Your choice has been recorded.
                     </p>
                     <div className="text-gray-500 text-sm mt-8">You may now close this window.</div>
                 </div>
