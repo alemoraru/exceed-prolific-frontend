@@ -176,7 +176,7 @@ export function Part2Survey(
                             <div className="font-semibold mb-1">Original Code</div>
                             <CodeEditor code={currentSnippet.code} readOnly/>
                         </div>
-                        <ErrorToggle label="Error Message" initialOpen>
+                        <ErrorToggle label="View Error Message" initialOpen>
                             <ErrorMessage messageStyle="standard" snippet={currentSnippet}/>
                         </ErrorToggle>
                     </div>

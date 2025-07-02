@@ -45,7 +45,6 @@ AttributeError: 'NoneType' object has no attribute 'append'`,
     Returns:
         list[int]: The three largest numbers.
     """
-    # BUG: list.sort() returns None
     sorted_items = items.sort(reverse=True)
     return sorted_items[:3]`,
         errorMessages: {
@@ -67,7 +66,6 @@ TypeError: 'NoneType' object is not subscriptable`,
     Returns:
         Any: The third element.
     """
-    # BUG: no length check before indexing
     return lst[2]`,
         errorMessages: {
             standard: `Traceback (most recent call last):
@@ -88,7 +86,6 @@ IndexError: list index out of range`,
     Returns:
         list[int]: List of integers.
     """
-    # BUG: data might be a list, not a string
     return [int(x) for x in data.split(',')]`
         ,
         errorMessages: {
