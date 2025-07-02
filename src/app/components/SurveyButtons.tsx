@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * PrimaryButton component renders a primary styled button.
+ * @param children - The content to display inside the button, typically text or icons.
+ * @param props - Additional properties to pass to the button element, such as onClick, disabled, etc.
+ */
 export function PrimaryButton({children, ...props}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button
@@ -11,6 +16,11 @@ export function PrimaryButton({children, ...props}: React.ButtonHTMLAttributes<H
     );
 }
 
+/**
+ * SecondaryButton component renders a secondary styled button.
+ * @param children - The content to display inside the button, typically text or icons.
+ * @param props - Additional properties to pass to the button element, such as onClick, disabled, etc.
+ */
 export function SecondaryButton({children, ...props}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button
@@ -22,6 +32,11 @@ export function SecondaryButton({children, ...props}: React.ButtonHTMLAttributes
     );
 }
 
+/**
+ * DisabledButton component renders a button that is styled to indicate it is disabled.
+ * @param children - The content to display inside the button, typically text or icons.
+ * @param props - Additional properties to pass to the button element, such as onClick, disabled, etc.
+ */
 export function DisabledButton({children, ...props}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button
