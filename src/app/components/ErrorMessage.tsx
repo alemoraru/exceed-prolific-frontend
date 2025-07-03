@@ -1,22 +1,14 @@
 'use client';
 
-import type {Snippet} from "../data/snippets";
+import React from "react";
 
 /**
- * ErrorMessage component displays an error message based on the provided message style and snippet.
- * @param messageStyle - The style of the error message to display (e.g., "standard", "pragmatic", "contingent").
- * @param snippet - The code snippet containing the error messages.
+ * ErrorMessage component displays an error message string in a styled alert box.
+ * @param errorMessage - The error message string to display.
  */
-export const ErrorMessage = (
-    {
-        messageStyle,
-        snippet,
-    }: {
-        messageStyle: keyof Snippet["errorMessages"];
-        snippet: Snippet;
-    }) => (
+export const ErrorMessage = ({errorMessage}: { errorMessage: string }) => (
     <div
-        className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 mt-4 rounded text-left shadow-md relative animate-fade-in"
+        className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 rounded text-left shadow-md relative animate-fade-in"
         role="alert"
         aria-live="assertive"
     >
@@ -26,7 +18,7 @@ export const ErrorMessage = (
             </div>
             <div>
                 <span className="font-bold block mb-1">Error</span>
-                <pre className="whitespace-pre-wrap text-left m-0">{snippet.errorMessages[messageStyle]}</pre>
+                <pre className="whitespace-pre-wrap text-left m-0">{errorMessage}</pre>
             </div>
         </div>
     </div>
