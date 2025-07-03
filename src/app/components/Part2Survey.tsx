@@ -5,6 +5,9 @@ import {snippets} from "../data/snippets";
 import {ErrorToggle} from './ErrorToggle';
 import {RevertButton} from './RevertButton';
 import {PrimaryButton, SecondaryButton, DisabledButton} from './SurveyButtons';
+import {SubmittingLoader} from './SubmittingLoader';
+import {SubmissionError} from './SubmissionError';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -35,6 +38,12 @@ export function Part2Survey(
     const [submitLoading, setSubmitLoading] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [dynamicErrorMsg, setDynamicErrorMsg] = useState<string | null>(null);
+    const [showError1, setShowError1] = useState(false);
+    const [showError2, setShowError2] = useState(false);
+    const [showErrorStep1, setShowErrorStep1] = useState(true); // Step 1: open by default
+    const [showError3, setShowError3] = useState(true); // Step 3: open by default
+    const [showConfirmModal, setShowConfirmModal] = useState<false | 2 | 4>(false);
+    const [showRevertModal, setShowRevertModal] = useState<false | 1 | 2>(false);
 
     // Randomly pick either 'pragmatic' or 'contingent' for each snippet for the second error message style
     const [secondErrorStyleList] = useState(() =>
@@ -154,6 +163,29 @@ export function Part2Survey(
     const rollback = () => setEditedCode1(currentSnippet.code);
     const rollback2 = () => setEditedCode2(currentSnippet.code);
 
+    // Submission handler split for modal confirmation
+    const handleSubmit = async () => {
+        if (step === 2 || step === 4) {
+            setShowConfirmModal(step);
+        } else {
+            goNext();
+        }
+    };
+    const handleModalConfirm = async () => {
+        setShowConfirmModal(false);
+        await goNext();
+    };
+    const handleModalCancel = () => setShowConfirmModal(false);
+
+    // Revert handlers
+    const handleRevert = () => setShowRevertModal(step === 2 ? 1 : 2);
+    const handleRevertConfirm = () => {
+        setShowRevertModal(false);
+        if (step === 2) rollback();
+        else if (step === 4) rollback2();
+    };
+    const handleRevertCancel = () => setShowRevertModal(false);
+
     return (
         <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
       <span className="step-indicator">
@@ -172,14 +204,19 @@ export function Part2Survey(
                     <p className="mb-4 text-gray-700">Carefully review the code and the error message. Try to understand
                         what the function is intended to do and what the error means. When you are ready, click
                         Next.</p>
-                    <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-3">
                         <div className="flex-1">
                             <div className="font-semibold mb-1">Original Code</div>
                             <CodeEditor code={currentSnippet.code} readOnly/>
                         </div>
-                        <ErrorToggle label="View Error Message" initialOpen>
-                            <ErrorMessage messageStyle="standard" snippet={currentSnippet}/>
-                        </ErrorToggle>
+                        <div className="flex items-start gap-4 mt-4 w-full">
+                            <div className="w-1/2 flex justify-start">
+                                <ErrorToggle label="View Error Message" initialOpen onToggle={setShowErrorStep1}/>
+                            </div>
+                        </div>
+                        {showErrorStep1 && (
+                            <ErrorMessage errorMessage={currentSnippet.errorMessages["standard"]}/>
+                        )}
                     </div>
                     <div className="flex justify-between mt-8">
                         <DisabledButton>
@@ -195,44 +232,79 @@ export function Part2Survey(
             {step === 2 && (
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Step 2: Attempt a Fix</h2>
-                    <p className="mb-4 text-gray-700">Edit the code to fix any errors you have identified. You can
-                        revert to the original snippet if needed. The error message is shown below for your reference.
-                        Click Next when you are satisfied with your fix.</p>
+                    <p className="mb-4 text-gray-700 text-left">
+                        Edit the code to fix any errors you have identified. You can revert to the original snippet if
+                        needed by clicking the <b>Revert to original snippet</b> button. The error message is shown
+                        below for your reference - by default it is hidden, but you can toggle it on to see it.
+                        Once you have made your changes, click the <b>Next</b> button to submit your fix. Note that
+                        once you submit, you will not be able to come back to this step to make further changes.
+                    </p>
                     <CodeEditor code={editedCode1} onChange={setEditedCode1} readOnly={submitLoading}/>
-                    <RevertButton onClick={rollback}/>
-                    <ErrorToggle label="Error Message">
-                        <ErrorMessage messageStyle="standard" snippet={currentSnippet}/>
-                    </ErrorToggle>
-                    {submitLoading &&
-                        <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
-                    {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
+                    <div className="flex items-start gap-4 mt-4 w-full">
+                        <div className="w-1/2 flex justify-start">
+                            <ErrorToggle label="Error Message" onToggle={setShowError1}/>
+                        </div>
+                        <div className="w-1/2 flex justify-end">
+                            <RevertButton onClick={handleRevert}/>
+                        </div>
+                    </div>
+                    {/* Error message shown below, not disrupting RevertButton */}
+                    {showError1 && (
+                        <div className="w-full mt-3">
+                            <ErrorMessage errorMessage={currentSnippet.errorMessages["standard"]}/>
+                        </div>
+                    )}
+                    {submitLoading && <SubmittingLoader/>}
+                    {submitError && <SubmissionError message={submitError}/>}
                     <div className="flex justify-between mt-8">
                         <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
                         </SecondaryButton>
-                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
+                        <PrimaryButton onClick={handleSubmit} disabled={submitLoading}>
                             Next
                         </PrimaryButton>
                     </div>
+                    <ConfirmChoiceModal
+                        open={showConfirmModal === 2}
+                        onCancel={handleModalCancel}
+                        onConfirm={handleModalConfirm}
+                        type={ConfirmChoiceModalType.CodeFix}
+                    />
+                    <ConfirmChoiceModal
+                        open={showRevertModal === 1}
+                        onCancel={handleRevertCancel}
+                        onConfirm={handleRevertConfirm}
+                        type={ConfirmChoiceModalType.CodeRevert}
+                    />
                 </div>
             )}
             {/* Step 3: Show code (read-only) and new error message below, with toggle open by default */}
             {step === 3 && (
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Step 3: Review the New Error Message</h2>
-                    <p className="mb-4 text-gray-700">Review the code and the new error message. Use this information to
-                        help you understand what went wrong. Click Next to try fixing the code again.</p>
-                    <div className="flex flex-col gap-6">
+                    <p className="mb-4 text-gray-700 text-left">
+                        The code you submitted previously did not fully resolve all issues. Please review the new error
+                        message below, which was triggered by your code changes. Use this information to help
+                        you understand what went wrong. <b>Your goal is still to modify the code so that it achieves the
+                        desired result as initially defined within the docstrings. </b>
+                    </p>
+                    <div className="flex flex-col gap-3">
                         <div className="flex-1">
-                            <div className="font-semibold mb-1">Code (after your fix)</div>
+                            <div className="font-semibold mb-1">Code (after your initial fix)</div>
                             <CodeEditor code={editedCode1} readOnly/>
                         </div>
-                        <ErrorToggle label="Error Message" initialOpen>
-                            <div
-                                className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 mt-4 rounded text-left">
-                                <pre className="whitespace-pre-wrap mt-2 text-left">{dynamicErrorMsg}</pre>
+                        <div className="flex items-start gap-4 mt-4 w-full">
+                            <div className="w-1/2 flex justify-start">
+                                <ErrorToggle label="Error Message" initialOpen onToggle={setShowError3}/>
                             </div>
-                        </ErrorToggle>
+                        </div>
+                        {showError3 && (
+                            <div className="w-full">
+                                <ErrorMessage
+                                    errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className="flex justify-between mt-8">
                         <SecondaryButton onClick={goPrev}>
@@ -247,31 +319,56 @@ export function Part2Survey(
                     </div>
                 </div>
             )}
-            {/* Step 4: Ask user to fix the code again, show new error message below code, revert button below code */}
+            {/* Step 4: Ask user to fix the code again, show the new error message below code, revert button below code */}
             {step === 4 && (
                 <div>
                     <h2 className="text-lg font-semibold mb-2">Step 4: Final Fix</h2>
-                    <p className="mb-4 text-gray-700">Make your final changes to the code based on the new error message
-                        and your understanding. The error message is shown below for your reference. When you are done,
-                        click Submit to finish.</p>
+                    <p className="mb-4 text-gray-700 text-left">
+                        Based on the new error message and your understanding, please make your final changes to the
+                        code below. <b>Your goal is to modify the code so that it achieves the desired result as
+                        initially defined within the docstrings.</b> You can revert to the original snippet at any time
+                        by clicking the <b>Revert to original snippet</b> button. When you are done editing, click
+                        the <b>Submit</b> button to submit your final fix. Note that once you submit, you will not be
+                        able to come back to this step to make further changes.
+                    </p>
                     <CodeEditor code={editedCode2} onChange={setEditedCode2} readOnly={submitLoading}/>
-                    <RevertButton onClick={rollback2}/>
-                    <ErrorToggle label="Error Message">
-                        <div className="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 mt-4 rounded text-left">
-                            <pre className="whitespace-pre-wrap mt-2 text-left">{dynamicErrorMsg}</pre>
+                    <div className="flex items-start gap-4 mt-4 w-full">
+                        <div className="w-1/2 flex justify-start">
+                            <ErrorToggle label="Error Message" onToggle={setShowError2}/>
                         </div>
-                    </ErrorToggle>
-                    {submitLoading &&
-                        <div className="text-blue-700 mt-2">Submitting your code for verification...</div>}
-                    {submitError && <div className="text-red-700 mt-2">{submitError}</div>}
+                        <div className="w-1/2 flex justify-end">
+                            <RevertButton onClick={handleRevert}/>
+                        </div>
+                    </div>
+                    {showError2 && (
+                        <div className="w-full">
+                            <ErrorMessage
+                                errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
+                            />
+                        </div>
+                    )}
+                    {submitLoading && <SubmittingLoader/>}
+                    {submitError && <SubmissionError message={submitError}/>}
                     <div className="flex justify-between mt-8">
                         <SecondaryButton onClick={goPrev} disabled={submitLoading}>
                             Previous
                         </SecondaryButton>
-                        <PrimaryButton onClick={goNext} disabled={submitLoading}>
+                        <PrimaryButton onClick={handleSubmit} disabled={submitLoading}>
                             Submit
                         </PrimaryButton>
                     </div>
+                    <ConfirmChoiceModal
+                        open={showConfirmModal === 4}
+                        onCancel={handleModalCancel}
+                        onConfirm={handleModalConfirm}
+                        type={ConfirmChoiceModalType.CodeFix}
+                    />
+                    <ConfirmChoiceModal
+                        open={showRevertModal === 2}
+                        onCancel={handleRevertCancel}
+                        onConfirm={handleRevertConfirm}
+                        type={ConfirmChoiceModalType.CodeRevert}
+                    />
                 </div>
             )}
         </div>
