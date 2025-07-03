@@ -4,6 +4,7 @@ import {ExperienceSlider} from './ExperienceSlider';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 import {ConsentForm} from './ConsentForm';
 import {PrimaryButton, DisabledButton} from './SurveyButtons';
+import {SurveyInstructions} from './SurveyInstructions';
 
 // Helper to shuffle an array
 function shuffle<T>(arr: T[]): T[] {
@@ -38,14 +39,22 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
         }));
     }, []);
 
-    // 0 = consent, 1 = experience, 2..n = MCQs
     const [consent, setConsent] = useState<null | number>(null);
     const [experience, setExperience] = useState(0);
     const [mcqAnswers, setMcqAnswers] = useState<(number | null)[]>(Array(randomizedQuestions.length).fill(null));
     const [step, setStep] = useState(0);
+    // 0 = consent, 1 = instructions, 2 = experience, 3..n = MCQs
+    // For progress bar and question count, exclude consent and instructions steps
+    const totalSteps = randomizedQuestions.length + 1; // experience + MCQs only
+    // progressStep: 0=consent, 1=instructions, 2=experience, 3..n=MCQs
+    // Show progress only for experience and MCQs
+    let progressStep = 0;
+    if (step === 2) progressStep = 1; // experience is step 1
+    else if (step > 2) progressStep = step - 1; // MCQs: step-1 (since consent+instructions are skipped)
     const [participantId, setParticipantId] = useState<string | null>(null);
     const [mcqLoading, setMcqLoading] = useState(false);
     const [mcqError, setMcqError] = useState<string | null>(null);
+    const [consentSubmitting, setConsentSubmitting] = useState(false);
 
     useEffect(() => {
         onStepChange(step);
@@ -60,11 +69,13 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     };
 
     // If the user does not consent, allow them to click Next to go to thank you page
-    const canContinue = (step === 0 && consent !== null) || (step === 1) || (step > 1 && mcqAnswers[step - 2] !== null);
-    const isLast = step === randomizedQuestions.length + 1;
+    const canContinue = (step === 0 && consent !== null) || (step === 1) || (step === 2) || (step > 2 && mcqAnswers[step - 3] !== null);
+    const isLast = step === randomizedQuestions.length + 2;
 
     const handleNext = async () => {
         if (step === 0) {
+            if (consent !== 0 && consent !== 1) return;
+            setConsentSubmitting(true);
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/consent`, {
                     method: 'POST',
@@ -77,10 +88,8 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     if (data.participant_id) {
                         setParticipantId(data.participant_id);
                         localStorage.setItem('participant_id', data.participant_id);
-                        setStep(1);
-                    } else {
-                        throw new Error('No participant_id returned');
                     }
+                    setStep(1); // Always show instructions after consent
                 } else if (consent === 1) { // No, I do not consent
                     setParticipantId(null);
                     localStorage.removeItem('participant_id');
@@ -93,7 +102,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     console.log('Failed to submit consent');
                 }
             } finally {
-                console.log('Something')
+                setConsentSubmitting(false);
             }
             return;
         }
@@ -101,6 +110,12 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
         if (step === 0 && consent !== 0) return;
 
         if (step === 1) {
+            // Instructions step: just go to experience
+            setStep(2);
+            return;
+        }
+
+        if (step === 2) {
             // Experience step: send experience to backend
             if (!participantId) {
                 console.error('No participant_id found');
@@ -127,13 +142,13 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             return;
         }
 
-        if (step > 1 && step - 2 < randomizedQuestions.length) {
+        if (step > 2 && step - 3 < randomizedQuestions.length) {
             // MCQ step: send answer to backend
             if (!participantId) {
                 console.error('No participant_id found');
                 return;
             }
-            const questionIdx = step - 2;
+            const questionIdx = step - 3;
             const question = randomizedQuestions[questionIdx];
             const selectedIdx = mcqAnswers[questionIdx];
             if (selectedIdx == null) {
@@ -183,18 +198,25 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl p-8 fade-in">
-            <div
-                className="mb-8 text-sm text-gray-500">Question {step + 1} of {randomizedQuestions.length + 2}</div>
-            {step > 1 && step - 2 < randomizedQuestions.length ? (
+        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-6 fade-in">
+            <div className="mb-8 text-sm text-gray-500">
+                {step === 0 ? (
+                    <span></span>
+                ) : step === 1 ? (
+                    <span></span>
+                ) : (
+                    <span>Question {progressStep} of {totalSteps}</span>
+                )}
+            </div>
+            {step > 2 && step - 3 < randomizedQuestions.length ? (
                 <>
                     <MultipleChoiceQuestion
-                        question={randomizedQuestions[step - 2].question}
-                        options={randomizedQuestions[step - 2].options}
-                        selected={mcqAnswers[step - 2]}
-                        onSelect={handleMCQSelect(step - 2)}
-                        code={randomizedQuestions[step - 2].code}
-                        error={randomizedQuestions[step - 2].error}
+                        question={randomizedQuestions[step - 3].question}
+                        options={randomizedQuestions[step - 3].options}
+                        selected={mcqAnswers[step - 3]}
+                        onSelect={handleMCQSelect(step - 3)}
+                        code={randomizedQuestions[step - 3].code}
+                        error={randomizedQuestions[step - 3].error}
                         disabled={mcqLoading}
                     />
                     {mcqLoading && <div className="text-blue-700 mt-2">Submitting your answer...</div>}
@@ -202,9 +224,11 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 </>
             ) : step === 0 ? (
                 <>
-                    <ConsentForm value={consent} onChange={setConsent}/>
+                    <ConsentForm value={consent} onChange={setConsent} disabled={consentSubmitting}/>
                 </>
             ) : step === 1 ? (
+                <SurveyInstructions/>
+            ) : step === 2 ? (
                 <div>
                     <div className="mb-4 text-left text-gray-700 text-sm">
                         Please indicate your years of experience with Python. Use the slider or enter a number. If
@@ -220,7 +244,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 <DisabledButton>
                     Previous
                 </DisabledButton>
-                <PrimaryButton onClick={handleNext} disabled={!canContinue || mcqLoading}>
+                <PrimaryButton onClick={handleNext} disabled={!canContinue || mcqLoading || consentSubmitting}>
                     {isLast ? 'Next' : 'Next'}
                 </PrimaryButton>
             </div>
