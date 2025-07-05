@@ -114,7 +114,8 @@ export function Part2Survey(
                     setStep(3);
                 }
             } catch (e) {
-                setSubmitError('Failed to submit code. Please try again.');
+                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
+                    'Please try again after a couple of seconds.');
             } finally {
                 setSubmitLoading(false);
             }
@@ -145,7 +146,8 @@ export function Part2Survey(
                     onComplete();
                 }
             } catch (e) {
-                setSubmitError('Failed to submit code. Please try again.');
+                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
+                    'Please try again after a couple of seconds.');
             } finally {
                 setSubmitLoading(false);
             }
