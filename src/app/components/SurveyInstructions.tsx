@@ -31,7 +31,7 @@ export function SurveyInstructions() {
                 <Tabs value={tab} onChange={(_, v) => setTab(v)} centered>
                     <Tab label="General Instructions"/>
                     <Tab label="Experience Slider"/>
-                    <Tab label="MCQ"/>
+                    <Tab label="Multipe Choice Question"/>
                     <Tab label="Code Review & Fix"/>
                 </Tabs>
             </Box>
