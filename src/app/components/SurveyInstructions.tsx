@@ -11,33 +11,48 @@ import {RevertButton} from './RevertButton';
 import {ErrorMessage} from './ErrorMessage';
 
 /**
- * SurveyInstructions component provides detailed instructions for participants in the survey.
- * It explains the structure of the survey, how to navigate through different question types,
- * and what is expected from participants.
+ * Component showing clear, user-friendly instructions for participants in the survey.
+ * Guides through self-assessment, multiple-choice questions, and code review tasks.
  */
 export function SurveyInstructions() {
-    const [tab, setTab] = useState(0);
-    // Interactive state for examples
+    const [tabIndex, setTabIndex] = useState(0);
     const [sliderValue, setSliderValue] = useState(2);
-    const [mcqSelected, setMcqSelected] = useState<number | null>(null);
-    const [mcqCode, setMcqCode] = useState('print(2 + 1)');
-    const [codeReviewValue, setCodeReviewValue] = useState('def add(a, b):\n    return a + b\n\nprint(add(2))');
+    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [exampleCode] = useState('print(2 + 1)');
+    const [reviewCode, setReviewCode] = useState(
+        'def add(a, b):\n    return a + b\n\nprint(add(2))'
+    );
     const [showError, setShowError] = useState(false);
 
+    // Example error message for the code review task
+    const exampleErrorMessage = `Traceback (most recent call last):
+  File "main.py", line 3, in <module>
+    print(add(2))
+          ^^^^^^
+TypeError: add() missing 1 required positional argument: 'b'
+`;
+
     return (
-        <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl p-8 fade-in">
-            <h2 className="text-2xl font-bold mb-6 text-center text-blue-900">Survey Instructions</h2>
-            <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 3}}>
-                <Tabs value={tab} onChange={(_, v) => setTab(v)} centered>
-                    <Tab label="General"/>
-                    <Tab label="Experience Slider"/>
-                    <Tab label="MCQ"/>
-                    <Tab label="Code Review"/>
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
+
+            {/* Header */}
+            <header className="mb-6 text-center">
+                <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
+            </header>
+
+            {/* Tabs Navigation */}
+            <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
+                <Tabs value={tabIndex} onChange={(_, newIndex) => setTabIndex(newIndex)} centered>
+                    <Tab label="Overview"/>
+                    <Tab label="Your Experience"/>
+                    <Tab label="MCQ Example"/>
+                    <Tab label="Code Fix Example"/>
                 </Tabs>
             </Box>
-            {tab === 0 && (
+
+            {/* Tab Panels */}
+            {tabIndex === 0 && (
                 <div>
-                    <h3 className="text-lg font-semibold mb-2">Welcome to the Survey</h3>
                     <p className="mb-4 text-gray-700">
                         This survey consists of two main parts: <b>multiple-choice questions</b> and <b>code review/fix
                         tasks</b>.
@@ -53,10 +68,14 @@ export function SurveyInstructions() {
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left">
-                        <span className="text-blue-900 ml-1">You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button <FaInfoCircle
-                            className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                            style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}} aria-label="Info icon"/> at the top of the page. These will be available at any point during the survey should you require clarification on the
-                        expectations.</span>
+                        <span className="text-blue-900 ml-1">You can always revisit these instructions at any time
+                            during the survey by clicking the <b>INFO</b> button <FaInfoCircle
+                                className="inline text-blue-600 align-text-bottom relative -mt-0.5"
+                                style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}}
+                                aria-label="Info icon"/>
+                            at the top-right of the following pages. These will be available at any point during the
+                            survey should you require clarification on the expectations.
+                        </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
                         <li><b>Be honest and thoughtful</b> in your responses. Your answers help us understand how
@@ -79,77 +98,75 @@ export function SurveyInstructions() {
                     </ul>
                 </div>
             )}
-            {tab === 1 && (
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Self-Assess Your Python Experience</h3>
+
+            {tabIndex === 1 && (
+                <section className="space-y-4 text-gray-700">
+                    <h3 className="text-xl font-semibold">Self-Assess Your Python Experience</h3>
                     <p className="mb-4 text-gray-700">
-                        You will be asked to indicate your years of experience with Python using a slider or by entering
-                        a number. If you have no experience, set it to 0. If you have partial years (e.g., 1.5 years),
-                        round to the nearest whole number. This helps us understand your background.
+                        You will be asked to indicate your years of programming experience with Python using a slider
+                        or by entering a number. If you have no experience, set it to 0. Round to the nearest whole
+                        number (e.g., 1.5 → 2).
                     </p>
-                    <div className="mb-4">
-                        <ExperienceSlider value={sliderValue} onChange={setSliderValue}/>
-                    </div>
+                    <ExperienceSlider value={sliderValue} onChange={setSliderValue}/>
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Please honestly indicate your experience. This information is only used
-                        for research purposes and will not affect your participation.
+                        <b>What is expected:</b> Please honestly indicate your years of experience with Python.
+                        This information is only used for research purposes and will not affect your participation.
                     </p>
-                </div>
+                </section>
             )}
-            {tab === 2 && (
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Multiple-Choice Questions (MCQ)</h3>
+
+            {tabIndex === 2 && (
+                <section className="space-y-4 text-gray-700">
+                    <h3 className="text-xl font-semibold">Multiple-Choice Question Example</h3>
                     <p className="mb-4 text-gray-700">
                         You will answer a series of multiple-choice questions about Python code and errors. Read each
                         question carefully and select the answer you believe is correct. These questions help us gauge
                         your understanding of Python programming errors.
                     </p>
                     <MultipleChoiceQuestion
-                        question={"What will be the output of the following code?"}
+                        question="What will be the output of the following code?"
                         options={["3", "TypeError", "5", "None of the above"]}
-                        selected={mcqSelected}
-                        onSelect={setMcqSelected}
-                        code={mcqCode}
+                        selected={selectedOption}
+                        onSelect={setSelectedOption}
+                        code={exampleCode}
                     />
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Carefully read the code and error (if any), then select the answer you
                         believe is correct. Do not use external help or guess randomly.
                     </p>
-                </div>
+                </section>
             )}
-            {tab === 3 && (
-                <div>
-                    <h3 className="text-lg font-semibold mb-2">Code Review & Fix Tasks</h3>
+
+            {tabIndex === 3 && (
+                <section className="space-y-4 text-gray-700">
+                    <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700">
                         In the second part of the survey, you will review code snippets that contain errors. You will
-                        see
-                        the code, an error message, and be asked to fix the code. Carefully read the error message and
-                        use your knowledge to correct the code. Your edits will be submitted for evaluation.
+                        see the code, an error message, and be asked to fix the code. Carefully read the error message
+                        (see toggle below) and use your knowledge to correct the code.
+                        Your edits will be submitted for evaluation.
                     </p>
-                    <div className="mb-4">
-                        <div className="font-semibold mb-1">Example code snippet (try editing below!):</div>
-                        <CodeEditor code={codeReviewValue} onChange={setCodeReviewValue}/>
+                    <div className="space-y-3">
+                        <CodeEditor code={reviewCode} onChange={setReviewCode}/>
                         <div className="flex items-start gap-4 mt-4 w-full">
                             <div className="w-1/2 flex justify-start">
                                 <ErrorToggle label="Error Message" onToggle={setShowError}/>
                             </div>
                             <div className="w-1/2 flex justify-end">
                                 <RevertButton
-                                    onClick={() => setCodeReviewValue('def add(a, b):\n    return a + b\n\nprint(add(2))')}/>
+                                    onClick={() => setReviewCode('def add(a, b):\n    return a + b\n\nprint(add(2))')}/>
                             </div>
                         </div>
+
                         {showError && (
-                            <div className="w-full mt-3">
-                                <ErrorMessage
-                                    errorMessage={"TypeError: add() missing 1 required positional argument: 'b'"}/>
-                            </div>
+                            <ErrorMessage errorMessage={exampleErrorMessage}/>
                         )}
                     </div>
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Read the code and error message, then edit the code to fix the error.
-                        Your solution should be your own work, without external help.
+                        Your solution must be your own work, without external help.
                     </p>
-                </div>
+                </section>
             )}
         </div>
     );

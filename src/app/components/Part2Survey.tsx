@@ -8,6 +8,9 @@ import {PrimaryButton, SecondaryButton, DisabledButton} from './SurveyButtons';
 import {SubmittingLoader} from './SubmittingLoader';
 import {SubmissionError} from './SubmissionError';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {SurveyInstructions} from './SurveyInstructions';
+import {InstructionsOverlay} from './InstructionsOverlay';
+import {InfoButton} from './InfoButton';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -44,6 +47,7 @@ export function Part2Survey(
     const [showError3, setShowError3] = useState(true); // Step 3: open by default
     const [showConfirmModal, setShowConfirmModal] = useState<false | 2 | 4>(false);
     const [showRevertModal, setShowRevertModal] = useState<false | 1 | 2>(false);
+    const [showInstructions, setShowInstructions] = useState(false);
 
     // Randomly pick either 'pragmatic' or 'contingent' for each snippet for the second error message style
     const [secondErrorStyleList] = useState(() =>
@@ -64,6 +68,16 @@ export function Part2Survey(
         const pid = localStorage.getItem('participant_id');
         if (pid) setParticipantId(pid);
     }, []);
+
+    // ESC key handler for closing overlay
+    React.useEffect(() => {
+        if (!showInstructions) return;
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setShowInstructions(false);
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [showInstructions]);
 
     // Navigation helpers
     const goNext = async () => {
@@ -100,7 +114,9 @@ export function Part2Survey(
                     setStep(3);
                 }
             } catch (e) {
-                setSubmitError('Failed to submit code. Please try again.');
+                // Handle fetch error
+                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
+                    'Please try again after a couple of seconds.');
             } finally {
                 setSubmitLoading(false);
             }
@@ -131,7 +147,8 @@ export function Part2Survey(
                     onComplete();
                 }
             } catch (e) {
-                setSubmitError('Failed to submit code. Please try again.');
+                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
+                    'Please try again after a couple of seconds.');
             } finally {
                 setSubmitLoading(false);
             }
@@ -188,9 +205,15 @@ export function Part2Survey(
 
     return (
         <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
-      <span className="step-indicator">
-        Snippet {snippetIdx + 1} of {snippets.length} &mdash; Step {step} of 4<br/>
-      </span>
+            {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
+            <InfoButton onClick={() => setShowInstructions(true)}/>
+            {/* Overlay for instructions */}
+            <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
+                <SurveyInstructions/>
+            </InstructionsOverlay>
+            <span className="step-indicator">
+                Snippet {snippetIdx + 1} of {snippets.length} &mdash; Step {step} of 4<br/>
+            </span>
             <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                 <div
                     className="h-full bg-blue-600 transition-all duration-300"

@@ -5,6 +5,8 @@ import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 import {ConsentForm} from './ConsentForm';
 import {PrimaryButton, DisabledButton} from './SurveyButtons';
 import {SurveyInstructions} from './SurveyInstructions';
+import {InstructionsOverlay} from './InstructionsOverlay';
+import {InfoButton} from './InfoButton';
 
 // Helper to shuffle an array
 function shuffle<T>(arr: T[]): T[] {
@@ -55,6 +57,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const [mcqLoading, setMcqLoading] = useState(false);
     const [mcqError, setMcqError] = useState<string | null>(null);
     const [consentSubmitting, setConsentSubmitting] = useState(false);
+    const [showInstructions, setShowInstructions] = useState(false);
 
     useEffect(() => {
         onStepChange(step);
@@ -198,7 +201,15 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl p-6 fade-in">
+        <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl p-6 fade-in relative">
+            {/* Info icon at top-right - only show after instructions page (step > 1) */}
+            {step > 1 && (
+                <InfoButton onClick={() => setShowInstructions(true)}/>
+            )}
+            {/* Overlay for instructions */}
+            <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
+                <SurveyInstructions/>
+            </InstructionsOverlay>
             <div className="mb-8 text-sm text-gray-500">
                 {step === 0 ? (
                     <span></span>
@@ -232,10 +243,8 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 <div>
                     <div className="mb-4 text-left text-gray-700 text-sm">
                         Please indicate your years of experience with Python. Use the slider or enter a number. If
-                        you
-                        have no experience, set it to 0, otherwise set it to the closest whole number (e.g. 1.5
-                        years
-                        should be set to 2). This information helps us understand your background.
+                        you have no experience, set it to 0, otherwise round it to the closest whole number (e.g. 1.5
+                        years should be set to 2). This information helps us understand your background.
                     </div>
                     <ExperienceSlider value={experience} onChange={setExperience}/>
                 </div>

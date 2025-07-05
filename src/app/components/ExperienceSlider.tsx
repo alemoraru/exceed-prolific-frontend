@@ -1,5 +1,6 @@
 import React from 'react';
 import Slider from '@mui/material/Slider';
+import Input from '@mui/material/Input';
 
 /**
  * ExperienceSlider component allows users to select their years of experience with Python.
