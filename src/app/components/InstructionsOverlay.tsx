@@ -1,0 +1,38 @@
+import React from 'react';
+import {FaTimes} from 'react-icons/fa';
+
+interface InstructionsOverlayProps {
+    open: boolean;
+    onClose: () => void;
+    children: React.ReactNode;
+}
+
+export function InstructionsOverlay({open, onClose, children}: InstructionsOverlayProps) {
+    React.useEffect(() => {
+        if (!open) return;
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, [open, onClose]);
+    if (!open) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
+            <div className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-4 p-0">
+                <button
+                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 focus:outline-none"
+                    aria-label="Close instructions"
+                    onClick={onClose}
+                    type="button"
+                >
+                    <FaTimes size={22}/>
+                </button>
+                <div className="p-6 max-h-[80vh] overflow-y-auto">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+}
+
