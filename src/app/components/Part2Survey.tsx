@@ -10,7 +10,7 @@ import {SubmissionError} from './SubmissionError';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
-import {FaInfoCircle} from 'react-icons/fa';
+import {InfoButton} from './InfoButton';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -114,6 +114,7 @@ export function Part2Survey(
                     setStep(3);
                 }
             } catch (e) {
+                // Handle fetch error
                 setSubmitError('Our apologies, something went wrong while submitting your code. ' +
                     'Please try again after a couple of seconds.');
             } finally {
@@ -205,14 +206,7 @@ export function Part2Survey(
     return (
         <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
-            <button
-                className="absolute top-4 right-4 z-20 text-blue-600 hover:text-blue-800 focus:outline-none"
-                aria-label="Show instructions"
-                onClick={() => setShowInstructions(true)}
-                type="button"
-            >
-                <FaInfoCircle size={22}/>
-            </button>
+            <InfoButton onClick={() => setShowInstructions(true)}/>
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
                 <SurveyInstructions/>

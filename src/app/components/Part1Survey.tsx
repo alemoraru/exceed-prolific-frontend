@@ -6,7 +6,7 @@ import {ConsentForm} from './ConsentForm';
 import {PrimaryButton, DisabledButton} from './SurveyButtons';
 import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
-import {FaInfoCircle} from 'react-icons/fa';
+import {InfoButton} from './InfoButton';
 
 // Helper to shuffle an array
 function shuffle<T>(arr: T[]): T[] {
@@ -204,15 +204,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
         <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl p-6 fade-in relative">
             {/* Info icon at top-right - only show after instructions page (step > 1) */}
             {step > 1 && (
-                <button
-                    className="cursor-pointer absolute top-4 right-4 z-20 text-blue-600
-                    hover:text-blue-800 focus:outline-none"
-                    aria-label="Show instructions"
-                    onClick={() => setShowInstructions(true)}
-                    type="button"
-                >
-                    <FaInfoCircle size={22}/>
-                </button>
+                <InfoButton onClick={() => setShowInstructions(true)}/>
             )}
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
