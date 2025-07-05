@@ -25,14 +25,14 @@ export function SurveyInstructions() {
     const [showError, setShowError] = useState(false);
 
     return (
-        <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl p-8 fade-in">
+        <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl fade-in">
             <h2 className="text-2xl font-bold mb-6 text-center text-blue-900">Survey Instructions</h2>
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 3}}>
                 <Tabs value={tab} onChange={(_, v) => setTab(v)} centered>
-                    <Tab label="General"/>
+                    <Tab label="General Instructions"/>
                     <Tab label="Experience Slider"/>
                     <Tab label="MCQ"/>
-                    <Tab label="Code Review"/>
+                    <Tab label="Code Review & Fix"/>
                 </Tabs>
             </Box>
             {tab === 0 && (
@@ -91,8 +91,8 @@ export function SurveyInstructions() {
                         <ExperienceSlider value={sliderValue} onChange={setSliderValue}/>
                     </div>
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Please honestly indicate your experience. This information is only used
-                        for research purposes and will not affect your participation.
+                        <b>What is expected:</b> Please honestly indicate your years of experience with Python.
+                        This information is only used for research purposes and will not affect your participation.
                     </p>
                 </div>
             )}
@@ -122,9 +122,8 @@ export function SurveyInstructions() {
                     <h3 className="text-lg font-semibold mb-2">Code Review & Fix Tasks</h3>
                     <p className="mb-4 text-gray-700">
                         In the second part of the survey, you will review code snippets that contain errors. You will
-                        see
-                        the code, an error message, and be asked to fix the code. Carefully read the error message and
-                        use your knowledge to correct the code. Your edits will be submitted for evaluation.
+                        see the code, an error message, and be asked to fix the code. Carefully read the error message
+                        and use your knowledge to correct the code. Your edits will be submitted for evaluation.
                     </p>
                     <div className="mb-4">
                         <div className="font-semibold mb-1">Example code snippet (try editing below!):</div>
