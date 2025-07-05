@@ -45,9 +45,11 @@ export function ConfirmChoiceModal(
     if (type === ConfirmChoiceModalType.CodeFix) {
         title = "Confirm Code Submission";
         message = (
-            <>Are you sure you want to submit your code fix for this step? <b>Once you submit, you will not be able to
+            <>
+                Are you sure you want to submit your code fix for this step? <b>Once you submit, you will not be able to
                 return to this step to make further changes.</b> Please make sure you are satisfied with your edits
-                before submitting.</>
+                before submitting.
+            </>
         );
         confirmLabel = "Submit Code Fix";
         cancelLabel = "Keep Editing";
@@ -56,7 +58,11 @@ export function ConfirmChoiceModal(
     } else if (type === ConfirmChoiceModalType.CodeRevert) {
         title = "Revert to Original Code?";
         message = (
-            <>Are you sure you want to revert your changes? <b>All edits for this step will be lost.</b></>
+            <>
+                Are you sure you want to revert your changes? <b>All edits for this step will be lost</b> and the
+                original code that was provided will be restored. Please confirm if you want to proceed with this
+                action.
+            </>
         );
         confirmLabel = "Revert Code";
         cancelLabel = "Keep Editing";
