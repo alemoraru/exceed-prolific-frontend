@@ -18,7 +18,7 @@ export function ConsentForm(
     }) {
     return (
         <div
-            className="mb-8 w-full mx-auto text-left bg-white p-8 rounded-2xl shadow-md border border-gray-100">
+            className="mb-8 w-full mx-auto text-left bg-white px-8 rounded-2xl">
             <h2 className="text-2xl font-bold mb-8 text-center text-blue-900">Research Consent</h2>
 
             <section className="mb-8">
