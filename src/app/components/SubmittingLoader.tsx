@@ -8,7 +8,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 export function SubmittingLoader({text = "Submitting your code for verification..."}: { text?: string }) {
     return (
         <div
-            className="flex flex-col items-center gap-3 text-blue-700 mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl shadow-sm w-full max-w-md mx-auto animate-fade-in"
+            className="flex flex-row items-center justify-center gap-3 text-blue-700 mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl shadow-sm w-full mx-auto animate-fade-in"
+            style={{maxWidth: '100%'}}
             role="status" aria-live="polite" aria-busy="true">
             <CircularProgress
                 size={36}
@@ -17,7 +18,7 @@ export function SubmittingLoader({text = "Submitting your code for verification.
                 aria-label="Loading, please wait"
                 disableShrink
             />
-            <span className="font-medium text-base tracking-tight text-center mt-2">{text}</span>
+            <span className="font-medium text-base tracking-tight text-left mt-0">{text}</span>
         </div>
     );
 }
