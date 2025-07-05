@@ -20,7 +20,13 @@ export function InstructionsOverlay({open, onClose, children}: InstructionsOverl
             if (e.key === 'Escape') onClose();
         };
         window.addEventListener('keydown', handleEsc);
-        return () => window.removeEventListener('keydown', handleEsc);
+        // Prevent background scroll
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            window.removeEventListener('keydown', handleEsc);
+            document.body.style.overflow = originalOverflow;
+        };
     }, [open, onClose]);
 
     if (!open) return null;
@@ -43,4 +49,3 @@ export function InstructionsOverlay({open, onClose, children}: InstructionsOverl
         </div>
     );
 }
-
