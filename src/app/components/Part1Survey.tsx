@@ -232,10 +232,8 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 <div>
                     <div className="mb-4 text-left text-gray-700 text-sm">
                         Please indicate your years of experience with Python. Use the slider or enter a number. If
-                        you
-                        have no experience, set it to 0, otherwise set it to the closest whole number (e.g. 1.5
-                        years
-                        should be set to 2). This information helps us understand your background.
+                        you have no experience, set it to 0, otherwise round it to the closest whole number (e.g. 1.5
+                        years should be set to 2). This information helps us understand your background.
                     </div>
                     <ExperienceSlider value={experience} onChange={setExperience}/>
                 </div>

@@ -24,6 +24,7 @@ export function SurveyInstructions() {
     );
     const [showError, setShowError] = useState(false);
 
+    // Example error message for the code review task
     const exampleErrorMessage = `Traceback (most recent call last):
   File "main.py", line 3, in <module>
     print(add(2))
