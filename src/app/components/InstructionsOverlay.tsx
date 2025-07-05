@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {FaTimes} from 'react-icons/fa';
 
 interface InstructionsOverlayProps {
@@ -7,8 +7,14 @@ interface InstructionsOverlayProps {
     children: React.ReactNode;
 }
 
+/**
+ * InstructionsOverlay component displays an overlay with instructions for participants.
+ * @param open - Whether the overlay is open
+ * @param onClose - Function to call when the overlay should be closed
+ * @param children - Content to display inside the overlay
+ */
 export function InstructionsOverlay({open, onClose, children}: InstructionsOverlayProps) {
-    React.useEffect(() => {
+    useEffect(() => {
         if (!open) return;
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -16,10 +22,12 @@ export function InstructionsOverlay({open, onClose, children}: InstructionsOverl
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
     }, [open, onClose]);
+
     if (!open) return null;
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90">
-            <div className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full mx-4 p-0">
+            <div className="relative bg-white rounded-2xl shadow-xl max-w-5xl w-full mx-4 p-0">
                 <button
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 focus:outline-none"
                     aria-label="Close instructions"
@@ -28,7 +36,7 @@ export function InstructionsOverlay({open, onClose, children}: InstructionsOverl
                 >
                     <FaTimes size={22}/>
                 </button>
-                <div className="p-6 max-h-[80vh] overflow-y-auto">
+                <div className="p-6 max-h-[85vh] overflow-y-auto">
                     {children}
                 </div>
             </div>

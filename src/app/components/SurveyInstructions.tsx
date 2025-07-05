@@ -68,10 +68,14 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left">
-                        <span className="text-blue-900 ml-1">You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button <FaInfoCircle
-                            className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                            style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}} aria-label="Info icon"/> at the top of the page. These will be available at any point during the survey should you require clarification on the
-                        expectations.</span>
+                        <span className="text-blue-900 ml-1">You can always revisit these instructions at any time
+                            during the survey by clicking the <b>INFO</b> button <FaInfoCircle
+                                className="inline text-blue-600 align-text-bottom relative -mt-0.5"
+                                style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}}
+                                aria-label="Info icon"/>
+                            at the top-right of the following pages. These will be available at any point during the
+                            survey should you require clarification on the expectations.
+                        </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
                         <li><b>Be honest and thoughtful</b> in your responses. Your answers help us understand how
