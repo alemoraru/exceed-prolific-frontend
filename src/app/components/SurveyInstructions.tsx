@@ -13,9 +13,10 @@ import {ErrorMessage} from './ErrorMessage';
 /**
  * Component showing clear, user-friendly instructions for participants in the survey.
  * Guides through self-assessment, multiple-choice questions, and code review tasks.
+ * @param defaultTabIndex - (optional) which tab to show by default (0=Overview, 1=Experience, 2=MCQ, 3=Code Fix)
  */
-export function SurveyInstructions() {
-    const [tabIndex, setTabIndex] = useState(0);
+export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: number } = {}) {
+    const [tabIndex, setTabIndex] = useState(defaultTabIndex);
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [exampleCode] = useState('print(2 + 1)');
@@ -34,7 +35,6 @@ TypeError: add() missing 1 required positional argument: 'b'
 
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
-
             {/* Header */}
             <header className="mb-6 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
@@ -43,13 +43,26 @@ TypeError: add() missing 1 required positional argument: 'b'
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={(_, newIndex) => setTabIndex(newIndex)} centered>
-                    <Tab label="Overview"/>
-                    <Tab label="Your Experience"/>
-                    <Tab label="MCQ Example"/>
-                    <Tab label="Code Fix Example"/>
+                    {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                        <Tab
+                            key={label}
+                            label={label}
+                            sx={{
+                                fontWeight: tabIndex === idx ? 700 : 500,
+                                color: tabIndex === idx ? 'primary.main' : 'grey.700',
+                                backgroundColor: tabIndex === idx ? 'rgba(25,118,210,0.08)' : 'transparent',
+                                borderRadius: 2,
+                                mx: 1,
+                                transition: 'background 0.3s, color 0.3s',
+                                '&:hover': tabIndex !== idx ? {
+                                    backgroundColor: 'rgba(25,118,210,0.12)',
+                                    color: 'primary.main',
+                                } : {},
+                            }}
+                        />
+                    ))}
                 </Tabs>
             </Box>
-
             {/* Tab Panels */}
             {tabIndex === 0 && (
                 <div>
@@ -98,7 +111,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </ul>
                 </div>
             )}
-
             {tabIndex === 1 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Self-Assess Your Python Experience</h3>
@@ -114,7 +126,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </p>
                 </section>
             )}
-
             {tabIndex === 2 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Multiple-Choice Question Example</h3>
@@ -136,7 +147,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </p>
                 </section>
             )}
-
             {tabIndex === 3 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
@@ -157,7 +167,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                                     onClick={() => setReviewCode('def add(a, b):\n    return a + b\n\nprint(add(2))')}/>
                             </div>
                         </div>
-
                         {showError && (
                             <ErrorMessage errorMessage={exampleErrorMessage}/>
                         )}

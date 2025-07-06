@@ -209,7 +209,7 @@ export function Part2Survey(
             <InfoButton onClick={() => setShowInstructions(true)}/>
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
-                <SurveyInstructions/>
+                <SurveyInstructions defaultTabIndex={3} />
             </InstructionsOverlay>
             <span className="step-indicator">
                 Snippet {snippetIdx + 1} of {snippets.length} &mdash; Step {step} of 4<br/>
