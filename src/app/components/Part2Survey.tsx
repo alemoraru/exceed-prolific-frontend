@@ -11,6 +11,7 @@ import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
 import {InfoButton} from './InfoButton';
+import {Stepper, Step, StepLabel} from '@mui/material';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -209,11 +210,22 @@ export function Part2Survey(
             <InfoButton onClick={() => setShowInstructions(true)}/>
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
-                <SurveyInstructions defaultTabIndex={3} />
+                <SurveyInstructions defaultTabIndex={3}/>
             </InstructionsOverlay>
-            <span className="step-indicator">
-                Snippet {snippetIdx + 1} of {snippets.length} &mdash; Step {step} of 4<br/>
-            </span>
+            {/* Stepper for snippet progress */}
+            <div className="mb-6">
+                <Stepper activeStep={step - 1} alternativeLabel>
+                    {['Review', 'Fix #1', 'Review Error', 'Final Fix'].map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+                <div className="text-center text-gray-600 mt-2">
+                    Code Snippet {snippetIdx + 1} of {snippets.length}
+                </div>
+            </div>
+            {/* Progress bar remains */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                 <div
                     className="h-full bg-blue-600 transition-all duration-300"
