@@ -212,19 +212,12 @@ export function Part2Survey(
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
                 <SurveyInstructions defaultTabIndex={3}/>
             </InstructionsOverlay>
+
             {/* Stepper for snippet progress */}
-            <div className="mb-6">
-                <Stepper activeStep={step - 1} alternativeLabel>
-                    {['Review', 'Fix #1', 'Review Error', 'Final Fix'].map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-                <div className="text-center text-gray-600 mt-2">
-                    Code Snippet {snippetIdx + 1} of {snippets.length}
-                </div>
+            <div className="text-center text-gray-600 mt-2">
+                Code Snippet {snippetIdx + 1} of {snippets.length}
             </div>
+
             {/* Progress bar remains */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                 <div
