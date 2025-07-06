@@ -64,6 +64,7 @@ TypeError: add() missing 1 required positional argument: 'b'
                     ))}
                 </Tabs>
             </Box>
+
             {/* Tab Panels */}
             {tabIndex === 0 && (
                 <div>
