@@ -9,6 +9,7 @@ import {FaInfoCircle} from 'react-icons/fa';
 import {ErrorToggle} from './ErrorToggle';
 import {RevertButton} from './RevertButton';
 import {ErrorMessage} from './ErrorMessage';
+import {Stepper, Step, StepLabel} from '@mui/material';
 
 /**
  * Component showing clear, user-friendly instructions for participants in the survey.
@@ -151,11 +152,42 @@ TypeError: add() missing 1 required positional argument: 'b'
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700">
-                        In the second part of the survey, you will review code snippets that contain errors. You will
-                        see the code, an error message, and be asked to fix the code. Carefully read the error message
-                        (see toggle below) and use your knowledge to correct the code.
-                        Your edits will be submitted for evaluation.
+                        In the second part of the survey, you will review code snippets that contain errors. Each code
+                        review question follows a <b>multi-step approach</b>:
                     </p>
+                    <div className="mb-4 flex justify-center">
+                        <Stepper activeStep={0} alternativeLabel className="w-full">
+                            <Step key="Review">
+                                <StepLabel>Review Code & Error</StepLabel>
+                            </Step>
+                            <Step key="Fix">
+                                <StepLabel>Code Fix</StepLabel>
+                            </Step>
+                            <Step key="Review Error">
+                                <StepLabel>Review Updated Code & Error</StepLabel>
+                            </Step>
+                            <Step key="Final Fix">
+                                <StepLabel>Final Code Fix</StepLabel>
+                            </Step>
+                        </Stepper>
+                    </div>
+                    <p className="mb-4 text-gray-700 text-left">
+                        <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
+                        the issue.<br/>
+                        <b>Step 2:</b>
+                        Based on the provided code snippet and error message, attempt to fix the code by editing it in
+                        the code e
+                        <br/>
+                        <b>Step 3:</b> If your initial fix does not resolve all issues, you may receive a follow-up
+                        error message and be asked to make a final fix. Note that once you reach this step, you cannot
+                        go back to previous steps.
+                        <br/>
+                        <b>Step 4:</b> Make any final adjustments to your code based on the follow-up error message and
+                        submit your final fix that resolves all issues.
+                        <br/>
+                    </p>
+                    <span className="text-gray-600 text-sm block mt-2"><b>Note</b>: Not all questions will require all steps. Sometimes, steps 3 and 4 may not be shown if your initial fix is correct.</span>
+
                     <div className="space-y-3">
                         <CodeEditor code={reviewCode} onChange={setReviewCode}/>
                         <div className="flex items-start gap-4 mt-4 w-full">

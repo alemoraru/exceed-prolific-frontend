@@ -225,7 +225,9 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             </div>
 
             {/* Divider for separation */}
-            <div className="my-6 border-b border-gray-200"/>
+            {step > 1 && (
+                <div className="my-6 border-b border-gray-200"/>
+            )}
 
             {step > 2 && step - 3 < randomizedQuestions.length ? (
                 <>
