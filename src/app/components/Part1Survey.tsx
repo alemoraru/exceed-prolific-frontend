@@ -223,6 +223,10 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     <span>Question {progressStep} of {totalSteps}</span>
                 )}
             </div>
+
+            {/* Divider for separation */}
+            <div className="my-6 border-b border-gray-200"/>
+
             {step > 2 && step - 3 < randomizedQuestions.length ? (
                 <>
                     <MultipleChoiceQuestion
