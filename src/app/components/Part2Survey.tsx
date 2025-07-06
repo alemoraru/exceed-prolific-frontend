@@ -11,7 +11,6 @@ import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
 import {InfoButton} from './InfoButton';
-import {Stepper, Step, StepLabel} from '@mui/material';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -99,7 +98,7 @@ export function Part2Survey(
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    // Move to next snippet or finish
+                    // Move to the next snippet or finish
                     if (snippetIdx < snippets.length - 1) {
                         setSnippetIdx(snippetIdx + 1);
                         setStep(1);
@@ -114,7 +113,7 @@ export function Part2Survey(
                     setDynamicErrorMsg(data.error_msg || 'Unknown error');
                     setStep(3);
                 }
-            } catch (e) {
+            } catch {
                 // Handle fetch error
                 setSubmitError('Our apologies, something went wrong while submitting your code. ' +
                     'Please try again after a couple of seconds.');
@@ -147,7 +146,7 @@ export function Part2Survey(
                 } else {
                     onComplete();
                 }
-            } catch (e) {
+            } catch {
                 setSubmitError('Our apologies, something went wrong while submitting your code. ' +
                     'Please try again after a couple of seconds.');
             } finally {
@@ -190,7 +189,13 @@ export function Part2Survey(
         }
     };
     const handleModalConfirm = async () => {
+        // Close the modal and proceed with submission
         setShowConfirmModal(false);
+        // Before submitting, close the error toggle if it was open
+        setShowError1(false);
+        setShowError2(false);
+        setShowError3(false);
+        setShowErrorStep1(false);
         await goNext();
     };
     const handleModalCancel = () => setShowConfirmModal(false);
@@ -373,7 +378,7 @@ export function Part2Survey(
                         </div>
                     </div>
                     {showError2 && (
-                        <div className="w-full">
+                        <div className="w-full mt-3">
                             <ErrorMessage
                                 errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
                             />
