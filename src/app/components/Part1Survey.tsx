@@ -208,7 +208,11 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             )}
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
-                <SurveyInstructions/>
+                <SurveyInstructions
+                    defaultTabIndex={
+                        step === 2 ? 1 : step > 2 ? 2 : 0
+                    }
+                />
             </InstructionsOverlay>
             <div className="mb-8 text-sm text-gray-500">
                 {step === 0 ? (
@@ -219,6 +223,12 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     <span>Question {progressStep} of {totalSteps}</span>
                 )}
             </div>
+
+            {/* Divider for separation */}
+            {step > 1 && (
+                <div className="my-6 border-b border-gray-200"/>
+            )}
+
             {step > 2 && step - 3 < randomizedQuestions.length ? (
                 <>
                     <MultipleChoiceQuestion

@@ -98,7 +98,7 @@ export function Part2Survey(
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    // Move to next snippet or finish
+                    // Move to the next snippet or finish
                     if (snippetIdx < snippets.length - 1) {
                         setSnippetIdx(snippetIdx + 1);
                         setStep(1);
@@ -113,7 +113,7 @@ export function Part2Survey(
                     setDynamicErrorMsg(data.error_msg || 'Unknown error');
                     setStep(3);
                 }
-            } catch (e) {
+            } catch {
                 // Handle fetch error
                 setSubmitError('Our apologies, something went wrong while submitting your code. ' +
                     'Please try again after a couple of seconds.');
@@ -146,7 +146,7 @@ export function Part2Survey(
                 } else {
                     onComplete();
                 }
-            } catch (e) {
+            } catch {
                 setSubmitError('Our apologies, something went wrong while submitting your code. ' +
                     'Please try again after a couple of seconds.');
             } finally {
@@ -189,7 +189,13 @@ export function Part2Survey(
         }
     };
     const handleModalConfirm = async () => {
+        // Close the modal and proceed with submission
         setShowConfirmModal(false);
+        // Before submitting, close the error toggle if it was open
+        setShowError1(false);
+        setShowError2(false);
+        setShowError3(false);
+        setShowErrorStep1(false);
         await goNext();
     };
     const handleModalCancel = () => setShowConfirmModal(false);
@@ -209,17 +215,25 @@ export function Part2Survey(
             <InfoButton onClick={() => setShowInstructions(true)}/>
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
-                <SurveyInstructions/>
+                <SurveyInstructions defaultTabIndex={3}/>
             </InstructionsOverlay>
-            <span className="step-indicator">
-                Snippet {snippetIdx + 1} of {snippets.length} &mdash; Step {step} of 4<br/>
-            </span>
+
+            {/* Stepper for snippet progress */}
+            <div className="text-center text-gray-600 mt-2">
+                Code Snippet {snippetIdx + 1} of {snippets.length}
+            </div>
+
+            {/* Progress bar remains */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                 <div
                     className="h-full bg-blue-600 transition-all duration-300"
                     style={{width: `${progressPercent}%`}}
                 ></div>
             </div>
+
+            {/* Divider for separation */}
+            <div className="my-6 border-b border-gray-200"/>
+
             {/* Step 1: Show original code and standard error message below, with toggle open by default */}
             {step === 1 && (
                 <div>
@@ -364,7 +378,7 @@ export function Part2Survey(
                         </div>
                     </div>
                     {showError2 && (
-                        <div className="w-full">
+                        <div className="w-full mt-3">
                             <ErrorMessage
                                 errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
                             />

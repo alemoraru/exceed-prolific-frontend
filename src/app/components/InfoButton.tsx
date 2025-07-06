@@ -28,7 +28,7 @@ export const InfoButton: React.FC<InfoButtonProps> = (
         <div className={`absolute top-4 right-4 z-20 ${className}`}>
             <Tooltip title={tooltip} placement="bottom" arrow>
                 <button
-                    className="cursor-pointer text-blue-600 hover:text-blue-800 focus:outline-none"
+                    className="cursor-pointer text-blue-600 hover:text-blue-800 hover:scale-110 duration-120"
                     aria-label={ariaLabel}
                     onClick={onClick}
                     type="button"

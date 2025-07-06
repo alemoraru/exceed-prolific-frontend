@@ -9,13 +9,15 @@ import {FaInfoCircle} from 'react-icons/fa';
 import {ErrorToggle} from './ErrorToggle';
 import {RevertButton} from './RevertButton';
 import {ErrorMessage} from './ErrorMessage';
+import {Stepper, Step, StepLabel} from '@mui/material';
 
 /**
  * Component showing clear, user-friendly instructions for participants in the survey.
  * Guides through self-assessment, multiple-choice questions, and code review tasks.
+ * @param defaultTabIndex - (optional) which tab to show by default (0=Overview, 1=Experience, 2=MCQ, 3=Code Fix)
  */
-export function SurveyInstructions() {
-    const [tabIndex, setTabIndex] = useState(0);
+export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: number } = {}) {
+    const [tabIndex, setTabIndex] = useState(defaultTabIndex);
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [exampleCode] = useState('print(2 + 1)');
@@ -34,7 +36,6 @@ TypeError: add() missing 1 required positional argument: 'b'
 
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
-
             {/* Header */}
             <header className="mb-6 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
@@ -43,10 +44,24 @@ TypeError: add() missing 1 required positional argument: 'b'
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={(_, newIndex) => setTabIndex(newIndex)} centered>
-                    <Tab label="Overview"/>
-                    <Tab label="Your Experience"/>
-                    <Tab label="MCQ Example"/>
-                    <Tab label="Code Fix Example"/>
+                    {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                        <Tab
+                            key={label}
+                            label={label}
+                            sx={{
+                                fontWeight: tabIndex === idx ? 700 : 500,
+                                color: tabIndex === idx ? 'primary.main' : 'grey.700',
+                                backgroundColor: tabIndex === idx ? 'rgba(25,118,210,0.08)' : 'transparent',
+                                borderRadius: 2,
+                                mx: 1,
+                                transition: 'background 0.3s, color 0.3s',
+                                '&:hover': tabIndex !== idx ? {
+                                    backgroundColor: 'rgba(25,118,210,0.12)',
+                                    color: 'primary.main',
+                                } : {},
+                            }}
+                        />
+                    ))}
                 </Tabs>
             </Box>
 
@@ -98,7 +113,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </ul>
                 </div>
             )}
-
             {tabIndex === 1 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Self-Assess Your Python Experience</h3>
@@ -114,7 +128,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </p>
                 </section>
             )}
-
             {tabIndex === 2 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Multiple-Choice Question Example</h3>
@@ -136,16 +149,46 @@ TypeError: add() missing 1 required positional argument: 'b'
                     </p>
                 </section>
             )}
-
             {tabIndex === 3 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700">
-                        In the second part of the survey, you will review code snippets that contain errors. You will
-                        see the code, an error message, and be asked to fix the code. Carefully read the error message
-                        (see toggle below) and use your knowledge to correct the code.
-                        Your edits will be submitted for evaluation.
+                        In the second part of the survey, you will review code snippets that contain errors. Each code
+                        review question follows a <b>multi-step approach</b>:
                     </p>
+                    <div className="mb-4 flex justify-center">
+                        <Stepper activeStep={0} alternativeLabel className="w-full">
+                            <Step key="Review">
+                                <StepLabel>Review Code & Error</StepLabel>
+                            </Step>
+                            <Step key="Fix">
+                                <StepLabel>Code Fix</StepLabel>
+                            </Step>
+                            <Step key="Review Error">
+                                <StepLabel>Review Updated Code & Error</StepLabel>
+                            </Step>
+                            <Step key="Final Fix">
+                                <StepLabel>Final Code Fix</StepLabel>
+                            </Step>
+                        </Stepper>
+                    </div>
+                    <p className="mb-4 text-gray-700 text-left">
+                        <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
+                        the issue.<br/>
+                        <b>Step 2:</b>
+                        Based on the provided code snippet and error message, attempt to fix the code by editing it in
+                        the code e
+                        <br/>
+                        <b>Step 3:</b> If your initial fix does not resolve all issues, you may receive a follow-up
+                        error message and be asked to make a final fix. Note that once you reach this step, you cannot
+                        go back to previous steps.
+                        <br/>
+                        <b>Step 4:</b> Make any final adjustments to your code based on the follow-up error message and
+                        submit your final fix that resolves all issues.
+                        <br/>
+                    </p>
+                    <span className="text-gray-600 text-sm block mt-2"><b>Note</b>: Not all questions will require all steps. Sometimes, steps 3 and 4 may not be shown if your initial fix is correct.</span>
+
                     <div className="space-y-3">
                         <CodeEditor code={reviewCode} onChange={setReviewCode}/>
                         <div className="flex items-start gap-4 mt-4 w-full">
@@ -157,7 +200,6 @@ TypeError: add() missing 1 required positional argument: 'b'
                                     onClick={() => setReviewCode('def add(a, b):\n    return a + b\n\nprint(add(2))')}/>
                             </div>
                         </div>
-
                         {showError && (
                             <ErrorMessage errorMessage={exampleErrorMessage}/>
                         )}

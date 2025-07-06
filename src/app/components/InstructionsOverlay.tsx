@@ -40,7 +40,7 @@ export function InstructionsOverlay({open, onClose, children}: InstructionsOverl
                     onClick={onClose}
                     type="button"
                 >
-                    <FaTimes size={22}/>
+                    <FaTimes size={22} className="hover:scale-110 duration-120"/>
                 </button>
                 <div className="p-6 max-h-[85vh] overflow-y-auto">
                     {children}
