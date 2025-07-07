@@ -1,20 +1,18 @@
 'use client';
 
 import React, {useState} from "react";
-import {snippets} from "./data/snippets";
-import {Part1Survey} from "./components/Part1Survey";
+import {Part1Answers, Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
-import {questions} from "@/app/data/questions";
 
 export default function App() {
     const [part1Complete, setPart1Complete] = useState(false);
-    const [, setPart1Answers] = useState<any>(null);
+    const [, setPart1Answers] = useState<Part1Answers>(null);
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [consentDenied, setConsentDenied] = useState(false);
 
     // Calculate total steps for both parts
-    const part1Total = 1 + questions.length
-    const part2Total = snippets.length * 4;
+    const part1Total = 8 + 1; // 8 MCQs + 1 for experience/consent
+    const part2Total = 4 * 4;
     const totalSteps = part1Total + part2Total;
 
     // Track the overall step for progress bar
@@ -73,7 +71,7 @@ export default function App() {
             </main>
         );
     }
-    if (snippetIdx >= snippets.length) {
+    if (snippetIdx >= 4) {
         // All snippets done
         return (
             <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">

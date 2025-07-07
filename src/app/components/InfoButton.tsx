@@ -2,6 +2,9 @@ import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import {FaInfoCircle} from 'react-icons/fa';
 
+/**
+ * Props for the InfoButton component.
+ */
 interface InfoButtonProps {
     onClick: () => void;
     className?: string;
@@ -26,6 +29,7 @@ export const InfoButton: React.FC<InfoButtonProps> = (
     }) => {
     return (
         <div className={`absolute top-4 right-4 z-20 ${className}`}>
+            {/* Tooltip wrapper for the info button */}
             <Tooltip title={tooltip} placement="bottom" arrow>
                 <button
                     className="cursor-pointer text-blue-600 hover:text-blue-800 hover:scale-110 duration-120"

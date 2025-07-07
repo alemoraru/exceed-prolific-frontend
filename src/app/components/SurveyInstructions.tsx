@@ -28,7 +28,7 @@ export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: nu
 
     // Example error message for the code review task
     const exampleErrorMessage = `Traceback (most recent call last):
-  File "main.py", line 3, in <module>
+  File "main.py", line 4, in <module>
     print(add(2))
           ^^^^^^
 TypeError: add() missing 1 required positional argument: 'b'
@@ -175,8 +175,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                     <p className="mb-4 text-gray-700 text-left">
                         <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
                         the issue.<br/>
-                        <b>Step 2:</b>
-                        Based on the provided code snippet and error message, attempt to fix the code by editing it in
+                        <b>Step 2:</b> Based on the provided code snippet and error message, attempt to fix the code by
+                        editing it in
                         the code e
                         <br/>
                         <b>Step 3:</b> If your initial fix does not resolve all issues, you may receive a follow-up
