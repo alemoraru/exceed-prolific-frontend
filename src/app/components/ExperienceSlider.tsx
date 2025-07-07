@@ -1,6 +1,5 @@
 import React from 'react';
 import Slider from '@mui/material/Slider';
-import Input from '@mui/material/Input';
 
 /**
  * ExperienceSlider component allows users to select their years of experience with Python.
@@ -13,11 +12,15 @@ export function ExperienceSlider({value, onChange}: { value: number; onChange: (
             <label className="block font-semibold mb-2 text-gray-800 text-base">
                 How many years of experience do you have with Python?
             </label>
+
+            {/* Container for the slider and input */}
             <div className="w-full flex flex-col items-center">
                 <div className="flex w-full items-center justify-between mb-1">
                     <span className="text-xs text-gray-500">0</span>
                     <span className="text-xs text-gray-500">35</span>
                 </div>
+
+                {/* Slider component for selecting years of experience */}
                 <Slider
                     value={value}
                     onChange={(_, v) => onChange(Number(v))}
@@ -29,6 +32,8 @@ export function ExperienceSlider({value, onChange}: { value: number; onChange: (
                     sx={{width: '100%', color: '#2563eb'}}
                     aria-label="Python experience in years"
                 />
+
+                {/* Input field for manual entry */}
                 <div className="flex flex-col items-center mt-2">
                     <div className="flex items-baseline gap-1">
                         <input

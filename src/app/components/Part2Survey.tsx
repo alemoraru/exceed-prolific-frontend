@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from "react";
-import {CodeEditor} from "./CodeEditor";
-import {ErrorMessage} from "./ErrorMessage";
-import {snippets} from "../data/snippets";
-import {ErrorToggle} from './ErrorToggle';
-import {RevertButton} from './RevertButton';
-import {PrimaryButton, SecondaryButton, DisabledButton} from './SurveyButtons';
-import {SubmittingLoader} from './SubmittingLoader';
-import {SubmissionError} from './SubmissionError';
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
 import {InfoButton} from './InfoButton';
+import {Part2Step1Panel} from "./Part2Step1Panel";
+import {Part2Step2Panel} from "./Part2Step2Panel";
+import {Part2Step3Panel} from "./Part2Step3Panel";
+import {Part2Step4Panel} from "./Part2Step4Panel";
+import {CodeSnippet} from "@/app/utils/types";
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -33,44 +29,39 @@ export function Part2Survey(
         setOverallStep: (step: number) => void;
         part1Total: number;
     }) {
+    // State management
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-    const [editedCode1, setEditedCode1] = useState(snippets[0].code);
-    const [editedCode2, setEditedCode2] = useState(snippets[0].code);
+    const snippetIds = ["0", "1", "2", "3"];
+    const [currentSnippet, setCurrentSnippet] = useState<CodeSnippet | null>(null);
+    const [loadingSnippet, setLoadingSnippet] = useState(true);
+    const [snippetError, setSnippetError] = useState<string | null>(null);
+    const [editedCode1, setEditedCode1] = useState("");
+    const [editedCode2, setEditedCode2] = useState("");
     const [participantId, setParticipantId] = useState<string | null>(null);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [dynamicErrorMsg, setDynamicErrorMsg] = useState<string | null>(null);
     const [showError1, setShowError1] = useState(false);
     const [showError2, setShowError2] = useState(false);
-    const [showErrorStep1, setShowErrorStep1] = useState(true); // Step 1: open by default
-    const [showError3, setShowError3] = useState(true); // Step 3: open by default
+    const [showErrorStep1, setShowErrorStep1] = useState(true);
+    const [showError3, setShowError3] = useState(true);
     const [showConfirmModal, setShowConfirmModal] = useState<false | 2 | 4>(false);
     const [showRevertModal, setShowRevertModal] = useState<false | 1 | 2>(false);
     const [showInstructions, setShowInstructions] = useState(false);
 
-    // Randomly pick either 'pragmatic' or 'contingent' for each snippet for the second error message style
-    const [secondErrorStyleList] = useState(() =>
-        Array.from({length: snippets.length}, () => (Math.random() < 0.5 ? 'pragmatic' : 'contingent') as 'pragmatic' | 'contingent')
-    );
-    const currentSnippet = snippets[snippetIdx];
-    const currentSecondErrorStyle = secondErrorStyleList[snippetIdx];
-
-    // Step instructions for each step
-    // Update overall step in a parent component
+    // Step and snippet index effects
     useEffect(() => {
-        // Calculate the overall step: part1Total + (snippetIdx * 4) + step
         setOverallStep(part1Total + (snippetIdx * 4) + step);
     }, [snippetIdx, step, setOverallStep, part1Total]);
 
-    // Get participant_id from localStorage on mount
+    // Participant ID effect
     useEffect(() => {
-        const pid = localStorage.getItem('participant_id');
-        if (pid) setParticipantId(pid);
+        setParticipantId(localStorage.getItem('participant_id'));
     }, []);
 
-    // ESC key handler for closing overlay
-    React.useEffect(() => {
+    // Effect to handle the ESC keyboard key for closing instructions overlay
+    useEffect(() => {
         if (!showInstructions) return;
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setShowInstructions(false);
@@ -79,76 +70,63 @@ export function Part2Survey(
         return () => window.removeEventListener('keydown', handleEsc);
     }, [showInstructions]);
 
-    // Navigation helpers
+    // Effect to fetch the current code snippet based on index and participant ID
+    useEffect(() => {
+        const fetchSnippet = async () => {
+            setLoadingSnippet(true);
+            setSnippetError(null);
+            try {
+                if (!participantId) throw new Error("No participant_id found");
+                const id = snippetIds[snippetIdx];
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/snippet/${id}?participant_id=${participantId}`);
+                if (!res.ok) throw new Error(`Failed to fetch snippet ${id}`);
+                const snippet: CodeSnippet = await res.json();
+                setCurrentSnippet(snippet);
+                setEditedCode1(snippet.code || "");
+                setEditedCode2(snippet.code || "");
+            } catch (err) {
+                setSnippetError(err instanceof Error ? err.message : 'Failed to load snippet');
+                setCurrentSnippet(null);
+            } finally {
+                setLoadingSnippet(false);
+            }
+        };
+        fetchSnippet();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [snippetIdx, participantId]);
+
+    // Next and Previous navigation helpers
     const goNext = async () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
-        if (step === 2) {
+        if (!currentSnippet) return;
+        if (step === 2 || step === 4) {
             setSubmitLoading(true);
             setSubmitError(null);
             setDynamicErrorMsg(null);
             try {
+                const code = step === 2 ? editedCode1 : editedCode2;
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         participant_id: participantId,
                         snippet_id: currentSnippet.id,
-                        code: editedCode1
+                        code
                     })
                 });
                 const data = await res.json();
-                if (data.status === 'success') {
-                    // Move to the next snippet or finish
-                    if (snippetIdx < snippets.length - 1) {
-                        setSnippetIdx(snippetIdx + 1);
-                        setStep(1);
-                        setEditedCode1(snippets[snippetIdx + 1].code);
-                        setEditedCode2(snippets[snippetIdx + 1].code);
-                        setDynamicErrorMsg(null);
-                    } else {
-                        onComplete();
-                    }
-                } else {
-                    // Show backend error in step 3
+                if (step === 2 && data.status !== 'success') {
                     setDynamicErrorMsg(data.error_msg || 'Unknown error');
                     setStep(3);
-                }
-            } catch {
-                // Handle fetch error
-                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
-                    'Please try again after a couple of seconds.');
-            } finally {
-                setSubmitLoading(false);
-            }
-            return;
-        }
-        if (step === 4) {
-            setSubmitLoading(true);
-            setSubmitError(null);
-            setDynamicErrorMsg(null);
-            try {
-                await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        participant_id: participantId,
-                        snippet_id: currentSnippet.id,
-                        code: editedCode2
-                    })
-                });
-                // Regardless of success or error, go to the next snippet or finish
-                if (snippetIdx < snippets.length - 1) {
+                } else if (snippetIdx < snippetIds.length - 1) {
                     setSnippetIdx(snippetIdx + 1);
                     setStep(1);
-                    setEditedCode1(snippets[snippetIdx + 1].code);
-                    setEditedCode2(snippets[snippetIdx + 1].code);
                     setDynamicErrorMsg(null);
                 } else {
                     onComplete();
                 }
             } catch {
-                setSubmitError('Our apologies, something went wrong while submitting your code. ' +
-                    'Please try again after a couple of seconds.');
+                setSubmitError('Our apologies, something went wrong while submitting your code. Please try again after a couple of seconds.');
             } finally {
                 setSubmitLoading(false);
             }
@@ -156,11 +134,9 @@ export function Part2Survey(
         }
         if (step < 4) {
             setStep((step + 1) as 1 | 2 | 3 | 4);
-        } else if (snippetIdx < snippets.length - 1) {
+        } else if (snippetIdx < snippetIds.length - 1) {
             setSnippetIdx(snippetIdx + 1);
             setStep(1);
-            setEditedCode1(snippets[snippetIdx + 1].code);
-            setEditedCode2(snippets[snippetIdx + 1].code);
             setDynamicErrorMsg(null);
         } else {
             onComplete();
@@ -173,25 +149,22 @@ export function Part2Survey(
         } else if (snippetIdx > 0) {
             setSnippetIdx(snippetIdx - 1);
             setStep(4);
-            setEditedCode1(snippets[snippetIdx - 1].code);
-            setEditedCode2(snippets[snippetIdx - 1].code);
         }
     };
-    const rollback = () => setEditedCode1(currentSnippet.code);
-    const rollback2 = () => setEditedCode2(currentSnippet.code);
 
-    // Submission handler split for modal confirmation
-    const handleSubmit = async () => {
-        if (step === 2 || step === 4) {
-            setShowConfirmModal(step);
-        } else {
-            goNext();
-        }
+    // Rollback functions to reset code editors to the original snippet code (for Step 2 and Step 4)
+    const rollback = () => currentSnippet && setEditedCode1(currentSnippet.code);
+    const rollback2 = () => currentSnippet && setEditedCode2(currentSnippet.code);
+
+    // Submit handlers for modals (confirming code fixes or reverting changes)
+    const handleSubmit = () => {
+        if (step === 2 || step === 4) setShowConfirmModal(step);
+        else goNext();
     };
+
+    // Modal handlers for confirmation and revert actions
     const handleModalConfirm = async () => {
-        // Close the modal and proceed with submission
         setShowConfirmModal(false);
-        // Before submitting, close the error toggle if it was open
         setShowError1(false);
         setShowError2(false);
         setShowError3(false);
@@ -199,8 +172,6 @@ export function Part2Survey(
         await goNext();
     };
     const handleModalCancel = () => setShowConfirmModal(false);
-
-    // Revert handlers
     const handleRevert = () => setShowRevertModal(step === 2 ? 1 : 2);
     const handleRevertConfirm = () => {
         setShowRevertModal(false);
@@ -209,10 +180,36 @@ export function Part2Survey(
     };
     const handleRevertCancel = () => setShowRevertModal(false);
 
+    // UI for loading and error states (initial fetch of code snippet)
+    if (loadingSnippet) {
+        return (
+            <div
+                className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 flex flex-col items-center justify-center min-h-[350px]">
+                <div className="flex flex-col items-center gap-4">
+                    <svg className="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                    </svg>
+                    <div className="text-lg font-semibold text-gray-700 mt-2">Loading next code snippet...</div>
+                    <div className="text-gray-500 text-sm">Please wait while we fetch your next programming task.</div>
+                </div>
+            </div>
+        );
+    }
+    if (snippetError || !currentSnippet) {
+        return <div
+            className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">{snippetError || 'Failed to load snippet.'}</div>;
+    }
+
+    const getErrorMessage = (): string => currentSnippet?.error || '';
+
     return (
         <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
+
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
                 <SurveyInstructions defaultTabIndex={3}/>
@@ -220,10 +217,10 @@ export function Part2Survey(
 
             {/* Stepper for snippet progress */}
             <div className="text-center text-gray-600 mt-2">
-                Code Snippet {snippetIdx + 1} of {snippets.length}
+                Code Snippet {snippetIdx + 1} of {snippetIds.length}
             </div>
 
-            {/* Progress bar remains */}
+            {/* Progress bar - similar to Part1 */}
             <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                 <div
                     className="h-full bg-blue-600 transition-all duration-300"
@@ -236,177 +233,71 @@ export function Part2Survey(
 
             {/* Step 1: Show original code and standard error message below, with toggle open by default */}
             {step === 1 && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">Step 1: Review the Code and Error</h2>
-                    <p className="mb-4 text-gray-700">Carefully review the code and the error message. Try to understand
-                        what the function is intended to do and what the error means. When you are ready, click
-                        Next.</p>
-                    <div className="flex flex-col gap-3">
-                        <div className="flex-1">
-                            <div className="font-semibold mb-1">Original Code</div>
-                            <CodeEditor code={currentSnippet.code} readOnly/>
-                        </div>
-                        <div className="flex items-start gap-4 mt-4 w-full">
-                            <div className="w-1/2 flex justify-start">
-                                <ErrorToggle label="View Error Message" initialOpen onToggle={setShowErrorStep1}/>
-                            </div>
-                        </div>
-                        {showErrorStep1 && (
-                            <ErrorMessage errorMessage={currentSnippet.errorMessages["standard"]}/>
-                        )}
-                    </div>
-                    <div className="flex justify-between mt-8">
-                        <DisabledButton>
-                            Previous
-                        </DisabledButton>
-                        <PrimaryButton onClick={goNext}>
-                            Next
-                        </PrimaryButton>
-                    </div>
-                </div>
+                <Part2Step1Panel
+                    code={currentSnippet.code}
+                    error={getErrorMessage()}
+                    showError={showErrorStep1}
+                    onToggleError={setShowErrorStep1}
+                    onNext={goNext}
+                />
             )}
             {/* Step 2: Ask user to fix the code, show standard error message below code, revert button below code */}
             {step === 2 && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">Step 2: Attempt a Fix</h2>
-                    <p className="mb-4 text-gray-700 text-left">
-                        Edit the code to fix any errors you have identified. You can revert to the original snippet if
-                        needed by clicking the <b>Revert to original snippet</b> button. The error message is shown
-                        below for your reference - by default it is hidden, but you can toggle it on to see it.
-                        Once you have made your changes, click the <b>Next</b> button to submit your fix. Note that
-                        once you submit, you will not be able to come back to this step to make further changes.
-                    </p>
-                    <CodeEditor code={editedCode1} onChange={setEditedCode1} readOnly={submitLoading}/>
-                    <div className="flex items-start gap-4 mt-4 w-full">
-                        <div className="w-1/2 flex justify-start">
-                            <ErrorToggle label="Error Message" onToggle={setShowError1}/>
-                        </div>
-                        <div className="w-1/2 flex justify-end">
-                            <RevertButton onClick={handleRevert}/>
-                        </div>
-                    </div>
-                    {/* Error message shown below, not disrupting RevertButton */}
-                    {showError1 && (
-                        <div className="w-full mt-3">
-                            <ErrorMessage errorMessage={currentSnippet.errorMessages["standard"]}/>
-                        </div>
-                    )}
-                    {submitLoading && <SubmittingLoader/>}
-                    {submitError && <SubmissionError message={submitError}/>}
-                    <div className="flex justify-between mt-8">
-                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
-                            Previous
-                        </SecondaryButton>
-                        <PrimaryButton onClick={handleSubmit} disabled={submitLoading}>
-                            Next
-                        </PrimaryButton>
-                    </div>
-                    <ConfirmChoiceModal
-                        open={showConfirmModal === 2}
-                        onCancel={handleModalCancel}
-                        onConfirm={handleModalConfirm}
-                        type={ConfirmChoiceModalType.CodeFix}
-                    />
-                    <ConfirmChoiceModal
-                        open={showRevertModal === 1}
-                        onCancel={handleRevertCancel}
-                        onConfirm={handleRevertConfirm}
-                        type={ConfirmChoiceModalType.CodeRevert}
-                    />
-                </div>
+                <Part2Step2Panel
+                    code={editedCode1}
+                    onCodeChange={setEditedCode1}
+                    readOnly={submitLoading}
+                    showError={showError1}
+                    onToggleError={setShowError1}
+                    onRevert={handleRevert}
+                    showRevertModal={showRevertModal === 1}
+                    onRevertCancel={handleRevertCancel}
+                    onRevertConfirm={handleRevertConfirm}
+                    error={getErrorMessage()}
+                    submitLoading={submitLoading}
+                    submitError={submitError}
+                    onPrev={goPrev}
+                    onNext={handleSubmit}
+                    showConfirmModal={showConfirmModal === 2}
+                    onModalCancel={handleModalCancel}
+                    onModalConfirm={handleModalConfirm}
+                />
             )}
             {/* Step 3: Show code (read-only) and new error message below, with toggle open by default */}
             {step === 3 && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">Step 3: Review the New Error Message</h2>
-                    <p className="mb-4 text-gray-700 text-left">
-                        The code you submitted previously did not fully resolve all issues. Please review the new error
-                        message below, which was triggered by your code changes. Use this information to help
-                        you understand what went wrong. <b>Your goal is still to modify the code so that it achieves the
-                        desired result as initially defined within the docstrings. </b>
-                    </p>
-                    <div className="flex flex-col gap-3">
-                        <div className="flex-1">
-                            <div className="font-semibold mb-1">Code (after your initial fix)</div>
-                            <CodeEditor code={editedCode1} readOnly/>
-                        </div>
-                        <div className="flex items-start gap-4 mt-4 w-full">
-                            <div className="w-1/2 flex justify-start">
-                                <ErrorToggle label="Error Message" initialOpen onToggle={setShowError3}/>
-                            </div>
-                        </div>
-                        {showError3 && (
-                            <div className="w-full">
-                                <ErrorMessage
-                                    errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex justify-between mt-8">
-                        <SecondaryButton onClick={goPrev}>
-                            Previous
-                        </SecondaryButton>
-                        <PrimaryButton onClick={() => {
-                            setStep(4);
-                            setEditedCode2(editedCode1);
-                        }}>
-                            Next
-                        </PrimaryButton>
-                    </div>
-                </div>
+                <Part2Step3Panel
+                    code={editedCode1}
+                    error={dynamicErrorMsg || getErrorMessage()}
+                    showError={showError3}
+                    onToggleError={setShowError3}
+                    onPrev={goPrev}
+                    onNext={() => {
+                        setStep(4);
+                        setEditedCode2(editedCode1);
+                    }}
+                />
             )}
             {/* Step 4: Ask user to fix the code again, show the new error message below code, revert button below code */}
             {step === 4 && (
-                <div>
-                    <h2 className="text-lg font-semibold mb-2">Step 4: Final Fix</h2>
-                    <p className="mb-4 text-gray-700 text-left">
-                        Based on the new error message and your understanding, please make your final changes to the
-                        code below. <b>Your goal is to modify the code so that it achieves the desired result as
-                        initially defined within the docstrings.</b> You can revert to the original snippet at any time
-                        by clicking the <b>Revert to original snippet</b> button. When you are done editing, click
-                        the <b>Submit</b> button to submit your final fix. Note that once you submit, you will not be
-                        able to come back to this step to make further changes.
-                    </p>
-                    <CodeEditor code={editedCode2} onChange={setEditedCode2} readOnly={submitLoading}/>
-                    <div className="flex items-start gap-4 mt-4 w-full">
-                        <div className="w-1/2 flex justify-start">
-                            <ErrorToggle label="Error Message" onToggle={setShowError2}/>
-                        </div>
-                        <div className="w-1/2 flex justify-end">
-                            <RevertButton onClick={handleRevert}/>
-                        </div>
-                    </div>
-                    {showError2 && (
-                        <div className="w-full mt-3">
-                            <ErrorMessage
-                                errorMessage={dynamicErrorMsg || currentSnippet.errorMessages[currentSecondErrorStyle]}
-                            />
-                        </div>
-                    )}
-                    {submitLoading && <SubmittingLoader/>}
-                    {submitError && <SubmissionError message={submitError}/>}
-                    <div className="flex justify-between mt-8">
-                        <SecondaryButton onClick={goPrev} disabled={submitLoading}>
-                            Previous
-                        </SecondaryButton>
-                        <PrimaryButton onClick={handleSubmit} disabled={submitLoading}>
-                            Submit
-                        </PrimaryButton>
-                    </div>
-                    <ConfirmChoiceModal
-                        open={showConfirmModal === 4}
-                        onCancel={handleModalCancel}
-                        onConfirm={handleModalConfirm}
-                        type={ConfirmChoiceModalType.CodeFix}
-                    />
-                    <ConfirmChoiceModal
-                        open={showRevertModal === 2}
-                        onCancel={handleRevertCancel}
-                        onConfirm={handleRevertConfirm}
-                        type={ConfirmChoiceModalType.CodeRevert}
-                    />
-                </div>
+                <Part2Step4Panel
+                    code={editedCode2}
+                    onCodeChange={setEditedCode2}
+                    readOnly={submitLoading}
+                    showError={showError2}
+                    onToggleError={setShowError2}
+                    onRevert={handleRevert}
+                    showRevertModal={showRevertModal === 2}
+                    onRevertCancel={handleRevertCancel}
+                    onRevertConfirm={handleRevertConfirm}
+                    error={dynamicErrorMsg || getErrorMessage()}
+                    submitLoading={submitLoading}
+                    submitError={submitError}
+                    onPrev={goPrev}
+                    onSubmit={handleSubmit}
+                    showConfirmModal={showConfirmModal === 4}
+                    onModalCancel={handleModalCancel}
+                    onModalConfirm={handleModalConfirm}
+                />
             )}
         </div>
     );

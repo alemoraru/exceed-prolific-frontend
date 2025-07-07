@@ -15,6 +15,13 @@ export interface ConfirmChoiceModalProps {
     type: ConfirmChoiceModalType;
 }
 
+/**
+ * ConfirmChoiceModal component displays a modal dialog to confirm user choices.
+ * @param open - Whether the modal is open
+ * @param onCancel - Function to call when the user cancels the action
+ * @param onConfirm - Function to call when the user confirms the action
+ * @param type - Type of confirmation modal to display (CodeFix or CodeRevert)
+ */
 export function ConfirmChoiceModal(
     {
         open,
@@ -75,6 +82,8 @@ export function ConfirmChoiceModal(
             <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full relative animate-fade-in">
                 <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
                 <p className="mb-6 text-gray-700 text-center">{message}</p>
+
+                {/* Action buttons, which are centered, and show either confirm or cancel icons */}
                 <div className="flex justify-center gap-4 mt-6">
                     <button
                         className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
