@@ -1,12 +1,16 @@
 'use client';
 
 import React, {useState} from "react";
-import {Part1Answers, Part1Survey} from "./components/Part1Survey";
+import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
+import {Part1Answers} from "@/app/utils/types";
 
+/**
+ * App component is the main entry point for the Prolific Python Error Fixing Study application.
+ */
 export default function App() {
     const [part1Complete, setPart1Complete] = useState(false);
-    const [, setPart1Answers] = useState<Part1Answers>(null);
+    const [, setPart1Answers] = useState<Part1Answers | null>(null);
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [consentDenied, setConsentDenied] = useState(false);
 
@@ -44,11 +48,11 @@ export default function App() {
 
     if (!part1Complete) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
-                <h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>
+            <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
+                {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
 
                 {/* Unified progress bar for both parts */}
-                <div className="w-full max-w-5xl relative">
+                <div className="w-full max-w-5xl relative mt-6">
                     <div
                         className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                         <div
@@ -96,9 +100,9 @@ export default function App() {
         );
     }
     return (
-        <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
-            <h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>
-            <div className="w-full max-w-5xl relative">
+        <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
+            {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
+            <div className="w-full max-w-5xl relative mt-6">
                 <div
                     className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
                     <div
@@ -107,7 +111,7 @@ export default function App() {
                     ></div>
                 </div>
                 <Part2Survey
-                    onComplete={() => setSnippetIdx(snippets.length)}
+                    onComplete={() => setSnippetIdx(4)}
                     progressPercent={(overallStep / totalSteps) * 100}
                     setOverallStep={setOverallStep}
                     part1Total={part1Total}

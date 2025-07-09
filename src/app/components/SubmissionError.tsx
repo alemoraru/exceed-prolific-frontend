@@ -21,7 +21,7 @@ export function SubmissionError({message}: { message: string }) {
         <Alert
             severity="error"
             icon={<ErrorOutlineIcon fontSize="medium" sx={{color: '#d32f2f'}}/>}
-            className="mt-4 animate-fade-in w-full"
+            className="my-4 animate-fade-in w-full"
             sx={{
                 alignItems: 'flex-start',
                 fontSize: 16,

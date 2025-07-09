@@ -1,5 +1,6 @@
 import React from 'react';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
+import Link from 'next/link';
 
 /**
  * ConsentForm component displays the consent form for participants in the research study.
@@ -23,10 +24,14 @@ export function ConsentForm(
 
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">About the Study</h3>
-                <p className="mb-4">We are a team of researchers from <strong>Delft University of Technology in the
-                    Netherlands</strong>. This study explores how individuals interpret and respond to programming
-                    errors, with the aim of improving how such errors are explained based on a programmer’s skill level.
-                    You are invited to take part in this research project.
+                <p className="mb-4">We are a team of researchers from <strong><Link
+                    href={"https://www.tudelft.nl/en/"}
+                    className="underline hover:text-blue-700 transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Delft University of Technology in the Netherlands</Link></strong>. This study explores how individuals
+                    interpret and respond to programming errors, with the aim of improving how such errors are explained
+                    based on a programmer’s skill level. You are invited to take part in this research project.
                 </p>
             </section>
 

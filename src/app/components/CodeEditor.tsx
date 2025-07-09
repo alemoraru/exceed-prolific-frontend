@@ -38,10 +38,12 @@ export const CodeEditor = (
     return (
         <div
             ref={containerRef}
-            className="w-full border rounded-xl overflow-hidden shadow-sm text-left bg-gray-50 relative group focus-within:ring-2 focus-within:ring-blue-400">
+            className="w-full border rounded-xl overflow-hidden shadow-sm text-left bg-gray-50 relative group focus-within:ring-2 focus-within:ring-blue-400"
+        >
             <CodeMirror
                 value={code}
                 height="auto"
+                maxHeight="600px"
                 extensions={[python()]}
                 readOnly={readOnly}
                 theme="light"
