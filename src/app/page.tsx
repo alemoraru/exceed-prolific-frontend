@@ -1,6 +1,7 @@
 'use client';
 
 import React, {useState} from "react";
+import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
 import {Part1Answers} from "@/app/utils/types";
@@ -15,25 +16,20 @@ export default function App() {
     const [consentDenied, setConsentDenied] = useState(false);
 
     // Calculate total steps for both parts
-    const part1Total = 8 + 1; // 8 MCQs + 1 for experience/consent
+    const part1Total = 8 + 1 + 1; // 8 MCQs + 1 for experience/consent + 1 for instructions
     const part2Total = 4 * 4;
     const totalSteps = part1Total + part2Total;
 
     // Track the overall step for progress bar
-    const [overallStep, setOverallStep] = useState(1);
+    const [overallStep, setOverallStep] = useState(0);
 
     if (consentDenied) {
-        // Show thank you page if consent denied
         return (
             <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
-                <h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>
+                {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
                 <div className="w-full max-w-3xl bg-white rounded-2xl card-shadow p-8 relative fade-in">
-                    <div
-                        className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
-                        <div
-                            className="h-full bg-blue-600 transition-all duration-300"
-                            style={{width: `100%`}}
-                        ></div>
+                    <div className="absolute top-0 left-0 w-full h-2 z-10">
+                        <ProgressBar progress={100}/>
                     </div>
                     <h1 className="text-3xl font-bold text-green-700 mb-6">Thank you for your time!</h1>
                     <h2 className="text-lg font-semibold mb-4 text-gray-800">You have chosen not to participate.</h2>
@@ -49,28 +45,20 @@ export default function App() {
     if (!part1Complete) {
         return (
             <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-                {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
-
-                {/* Unified progress bar for both parts */}
                 <div className="w-full max-w-5xl relative mt-6">
-                    <div
-                        className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
-                        <div
-                            className="h-full bg-blue-600 transition-all duration-300"
-                            style={{width: `${(overallStep / totalSteps) * 100}%`}}
-                        ></div>
+                    {/* Progress bar at the top */}
+                    <div className="absolute top-0 left-0 w-full z-10">
+                        <ProgressBar progress={(overallStep / totalSteps) * 100}/>
                     </div>
-                    <div className="bg-white rounded-2xl card-shadow p-8 fade-in">
-                        <Part1Survey
-                            onComplete={(answers) => {
-                                setPart1Answers(answers);
-                                setPart1Complete(true);
-                                setOverallStep(part1Total + 1);
-                            }}
-                            onStepChange={(step) => setOverallStep(step + 1)}
-                            onConsentDenied={() => setConsentDenied(true)}
-                        />
-                    </div>
+                    <Part1Survey
+                        onComplete={(answers) => {
+                            setPart1Answers(answers);
+                            setPart1Complete(true);
+                            setOverallStep(part1Total);
+                        }}
+                        onStepChange={(step) => setOverallStep(step)} // Remove +1 so progress starts at 0
+                        onConsentDenied={() => setConsentDenied(true)}
+                    />
                 </div>
             </main>
         );
@@ -81,12 +69,9 @@ export default function App() {
             <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
                 <h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>
                 <div className="w-full max-w-3xl bg-white rounded-2xl card-shadow p-8 relative fade-in">
-                    <div
-                        className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
-                        <div
-                            className="h-full bg-blue-600 transition-all duration-300"
-                            style={{width: `100%`}}
-                        ></div>
+                    {/* Progress bar at the top */}
+                    <div className="absolute top-0 left-0 w-full h-2 z-10">
+                        <ProgressBar progress={100}/>
                     </div>
                     <h1 className="text-3xl font-bold text-green-700 mb-6">Thank you for your time!</h1>
                     <h2 className="text-lg font-semibold mb-4 text-gray-800">You have completed the survey.</h2>
@@ -101,18 +86,13 @@ export default function App() {
     }
     return (
         <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-            {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
             <div className="w-full max-w-5xl relative mt-6">
-                <div
-                    className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
-                    <div
-                        className="h-full bg-blue-600 transition-all duration-300"
-                        style={{width: `${(overallStep / totalSteps) * 100}%`}}
-                    ></div>
+                {/* Progress bar at the top */}
+                <div className="absolute top-0 left-0 w-full z-10">
+                    <ProgressBar progress={(overallStep / totalSteps) * 100}/>
                 </div>
                 <Part2Survey
                     onComplete={() => setSnippetIdx(4)}
-                    progressPercent={(overallStep / totalSteps) * 100}
                     setOverallStep={setOverallStep}
                     part1Total={part1Total}
                 />

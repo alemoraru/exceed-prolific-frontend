@@ -13,19 +13,16 @@ import {CodeSnippet} from "@/app/utils/types";
  * This component manages the flow of the survey, including displaying code snippets,
  * error messages, and allowing users to edit code.
  * @param onComplete - Callback function to call when the survey is completed.
- * @param progressPercent - Percentage of progress to display in the progress bar.
  * @param setOverallStep - Function to update the overall step in a parent component.
  * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate overall step.
  */
 export function Part2Survey(
     {
         onComplete,
-        progressPercent,
         setOverallStep,
         part1Total
     }: {
         onComplete: () => void;
-        progressPercent: number;
         setOverallStep: (step: number) => void;
         part1Total: number;
     }) {
@@ -218,14 +215,6 @@ export function Part2Survey(
             {/* Stepper for snippet progress */}
             <div className="text-center text-gray-600 mt-2">
                 Code Snippet {snippetIdx + 1} of {snippetIds.length}
-            </div>
-
-            {/* Progress bar - similar to Part1 */}
-            <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-t-2xl overflow-hidden progress-bar">
-                <div
-                    className="h-full bg-blue-600 transition-all duration-300"
-                    style={{width: `${progressPercent}%`}}
-                ></div>
             </div>
 
             {/* Divider for separation */}
