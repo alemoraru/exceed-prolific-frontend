@@ -61,6 +61,8 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             the <b>Submit</b> button to submit your final fix. Note that once you submit, you will not be
             able to come back to this step to make further changes.
         </p>
+        {submitLoading && <SubmittingLoader/>}
+        {submitError && <SubmissionError message={submitError}/>}
         <CodeEditor code={code} onChange={onCodeChange} readOnly={readOnly}/>
         <div className="flex items-start gap-4 mt-4 w-full">
             <div className="w-1/2 flex justify-start">
@@ -75,8 +77,6 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
                 <ErrorMessage errorMessage={error}/>
             </div>
         )}
-        {submitLoading && <SubmittingLoader/>}
-        {submitError && <SubmissionError message={submitError}/>}
         <div className="flex justify-between mt-8">
             <SecondaryButton onClick={onPrev} disabled={submitLoading}>
                 Previous

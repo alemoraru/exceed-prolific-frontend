@@ -118,7 +118,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
         }
     };
 
-    // Handle experience submission and move to next step
+    // Handle experience submission and move to the next step
     const handleExperienceNext = async () => {
         if (!participantId) return;
         try {
@@ -263,7 +263,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     };
 
     return (
-        <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl p-6 fade-in relative">
+        <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl px-6 fade-in relative">
             {/* Instructions and Progress Bar */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>

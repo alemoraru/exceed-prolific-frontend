@@ -35,7 +35,6 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
         </p>
         <div className="flex flex-col gap-3">
             <div className="flex-1">
-                <div className="font-semibold mb-1">Code (after your initial fix)</div>
                 <CodeEditor code={code} readOnly/>
             </div>
             <div className="flex items-start gap-4 mt-4 w-full">
