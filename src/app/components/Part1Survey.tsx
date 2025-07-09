@@ -14,7 +14,7 @@ import {MCQQuestion, Part1Answers} from "@/app/utils/types";
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.
  * @param onComplete - Callback function to call when the survey is completed, passing the answers.
  * @param onStepChange - Callback function to notify the parent component about step changes.
- * @param onConsentDenied - Callback function to call when consent is denied, in order to show a thank-you message.
+ * @param onConsentDenied - Callback function to call when consent is denied, to show a thank-you message.
  */
 export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     onComplete: (answers: Part1Answers) => void,
@@ -29,7 +29,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const [step, setStep] = useState(0);
     const [participantId, setParticipantId] = useState<string | null>(null);
     const [mcqLoading, setMcqLoading] = useState(false);
-    const [mcqError, setMcqError] = useState<string | null>(null);
+    const [submissionError, setSubmissionError] = useState<string | null>(null);
     const [consentSubmitting, setConsentSubmitting] = useState(false);
     const [showInstructions, setShowInstructions] = useState(false);
     const [questionsLoading, setQuestionsLoading] = useState(false);
@@ -94,6 +94,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const handleConsentNext = async () => {
         if (consent !== 0 && consent !== 1) return;
         setConsentSubmitting(true);
+        setSubmissionError(null);
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/consent`, {
                 method: 'POST',
@@ -112,7 +113,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 onConsentDenied();
             }
         } catch (e) {
-            if (e instanceof Error) console.log(e.message || 'Failed to submit consent');
+            setSubmissionError(e instanceof Error ? e.message : 'Failed to submit consent');
         } finally {
             setConsentSubmitting(false);
         }
@@ -121,6 +122,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     // Handle experience submission and move to the next step
     const handleExperienceNext = async () => {
         if (!participantId) return;
+        setSubmissionError(null);
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/experience`, {
                 method: 'POST',
@@ -129,7 +131,8 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             });
             if (!res.ok) throw new Error('Failed to submit experience');
         } catch (e) {
-            if (e instanceof Error) console.error(e.message || 'Failed to submit experience');
+            setSubmissionError(e instanceof Error ? e.message : 'Failed to submit experience');
+            return;
         }
         setStep(s => s + 1);
     };
@@ -151,7 +154,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             return next;
         });
         setMcqLoading(true);
-        setMcqError(null);
+        setSubmissionError(null);
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/question`, {
                 method: 'POST',
@@ -171,7 +174,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                 setStep(s => s + 1);
             }
         } catch (e) {
-            if (e instanceof Error) setMcqError(e.message || 'Failed to submit MCQ answer');
+            if (e instanceof Error) setSubmissionError(e.message || 'Failed to submit MCQ answer');
         } finally {
             setMcqLoading(false);
         }
@@ -200,7 +203,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     function renderExperience() {
         return (
             <div>
-                <div className="mb-4 text-left text-gray-700 text-sm">
+                <div className="mb-8 text-left text-gray-700 text-sm">
                     Please indicate your years of experience with Python. Use the slider or enter a number. If
                     you have no experience, set it to 0, otherwise round it to the closest whole number (e.g. 1.5
                     years should be set to 2). This information helps us understand your background.
@@ -227,7 +230,7 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
                     disabled={mcqLoading}
                 />
                 {showSubmittingLoader && <SubmittingLoader text="Submitting your answer..."/>}
-                {mcqError &&
+                {submissionError &&
                     <SubmissionError message={"Our apologies, something went wrong while submitting your answer. " +
                         "Please try again after a couple of seconds."}
                     />
@@ -263,21 +266,20 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     };
 
     return (
-        <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl px-6 fade-in relative">
-            {/* Instructions and Progress Bar */}
+        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+            {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
+            {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
                 <SurveyInstructions defaultTabIndex={step === 2 ? 1 : step > 2 ? 2 : 0}/>
             </InstructionsOverlay>
-            <div className="mb-8 text-sm text-gray-500">
+            <div className="text-center text-gray-600 mt-2">
                 {step > 1 ? <span>Question {progressStep} of {totalSteps}</span> : <span></span>}
             </div>
-
-            {/* Progress Bar */}
+            {/* Divider when not on the consent form page */}
             {step > 1 &&
                 <div className="my-6 border-b border-gray-200"/>
             }
-
             {/* Loading and Error Messages */}
             {questionsLoading && step === 1 &&
                 <div className="text-blue-700 mt-2">Loading questions...</div>
@@ -285,8 +287,16 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             {questionsError && step === 1 &&
                 <div className="text-red-700 mt-2">{questionsError}</div>
             }
-
             {stepContent}
+
+            {/* Consent or experience submission error */}
+            {submissionError && (step === 0 || step === 2) &&
+                <SubmissionError message={
+                    step === 0
+                        ? "Our apologies, something went wrong while submitting your consent. Please try again after a couple of seconds."
+                        : "Our apologies, something went wrong while submitting your experience. Please try again after a couple of seconds."
+                }/>
+            }
 
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
