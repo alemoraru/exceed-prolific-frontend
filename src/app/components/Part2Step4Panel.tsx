@@ -74,7 +74,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         </div>
         {showError && (
             <div className="w-full mt-3">
-                <ErrorMessage errorMessage={error}/>
+                <ErrorMessage errorMessage={error} renderMarkdown={true}/>
             </div>
         )}
         <div className="flex justify-between mt-8">
