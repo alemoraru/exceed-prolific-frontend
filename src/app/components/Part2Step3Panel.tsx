@@ -44,7 +44,7 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
             </div>
             {showError && (
                 <div className="w-full">
-                    <ErrorMessage errorMessage={error}/>
+                    <ErrorMessage errorMessage={error} renderMarkdown={true}/>
                 </div>
             )}
         </div>
