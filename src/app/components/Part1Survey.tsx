@@ -18,7 +18,7 @@ import {MCQQuestion, Part1Answers} from "@/app/utils/types";
  * @param onConsentDenied - Callback function to call when consent is denied, to show a thank-you message.
  */
 export function Part1Survey({participantId, onComplete, onStepChange, onConsentDenied}: {
-    participantId: string | null,
+    participantId: string,
     onComplete: (answers: Part1Answers) => void,
     onStepChange: (step: number) => void,
     onConsentDenied: () => void
@@ -94,10 +94,6 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     // Consent submission handler
     const handleConsentNext = async () => {
         if (consent !== 0 && consent !== 1) return;
-        if (!participantId) {
-            setSubmissionError('Missing participant ID. Please access the study via the correct link.');
-            return;
-        }
         setConsentSubmitting(true);
         setSubmissionError(null);
         try {
