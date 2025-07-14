@@ -12,11 +12,13 @@ import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 
 /**
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.
+ * @param participantId - The participant's ID, which is used to fetch questions and submit answers.
  * @param onComplete - Callback function to call when the survey is completed, passing the answers.
  * @param onStepChange - Callback function to notify the parent component about step changes.
  * @param onConsentDenied - Callback function to call when consent is denied, to show a thank-you message.
  */
-export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
+export function Part1Survey({participantId, onComplete, onStepChange, onConsentDenied}: {
+    participantId: string,
     onComplete: (answers: Part1Answers) => void,
     onStepChange: (step: number) => void,
     onConsentDenied: () => void
@@ -27,7 +29,6 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
     const [experience, setExperience] = useState(0);
     const [mcqAnswers, setMcqAnswers] = useState<(number | null)[]>([]);
     const [step, setStep] = useState(0);
-    const [participantId, setParticipantId] = useState<string | null>(null);
     const [mcqLoading, setMcqLoading] = useState(false);
     const [submissionError, setSubmissionError] = useState<string | null>(null);
     const [consentSubmitting, setConsentSubmitting] = useState(false);
@@ -99,16 +100,18 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/consent`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({consent: consent === 0})
+                body: JSON.stringify({
+                    participant_id: participantId,
+                    consent: consent === 0
+                })
             });
             if (!res.ok) throw new Error('Failed to submit consent');
             const data = await res.json();
             if (consent === 0 && data.participant_id) {
-                setParticipantId(data.participant_id);
+                // No need to setParticipantId, just store in localStorage for redundancy
                 localStorage.setItem('participant_id', data.participant_id);
                 setStep(1);
             } else if (consent === 1) {
-                setParticipantId(null);
                 localStorage.removeItem('participant_id');
                 onConsentDenied();
             }
@@ -290,14 +293,13 @@ export function Part1Survey({onComplete, onStepChange, onConsentDenied}: {
             {stepContent}
 
             {/* Consent or experience submission error */}
-            {submissionError && (step === 0 || step === 2) &&
+            {submissionError && (step === 0 || step === 2) && (
                 <SubmissionError message={
                     step === 0
                         ? "Our apologies, something went wrong while submitting your consent. Please try again after a couple of seconds."
                         : "Our apologies, something went wrong while submitting your experience. Please try again after a couple of seconds."
                 }/>
-            }
-
+            )}
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
                 <DisabledButton>Previous</DisabledButton>
