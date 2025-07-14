@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
@@ -22,6 +22,22 @@ export default function App() {
 
     // Track the overall step for progress bar
     const [overallStep, setOverallStep] = useState(0);
+    const [participantId, setParticipantId] = useState<string | null>(null);
+
+    // Extract PROLIFIC_PID from URL on mount
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pid = urlParams.get('PROLIFIC_PID');
+            if (pid) {
+                setParticipantId(pid);
+                localStorage.setItem('participant_id', pid);
+            } else {
+                // Optionally, handle missing PID (e.g., show error or block progress)
+                setParticipantId(null);
+            }
+        }
+    }, []);
 
     if (consentDenied) {
         return (
@@ -51,6 +67,7 @@ export default function App() {
                         <ProgressBar progress={(overallStep / totalSteps) * 100}/>
                     </div>
                     <Part1Survey
+                        participantId={participantId}
                         onComplete={(answers) => {
                             setPart1Answers(answers);
                             setPart1Complete(true);
