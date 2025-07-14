@@ -34,11 +34,23 @@ export default function App() {
                 setParticipantId(pid);
                 localStorage.setItem('participant_id', pid);
             } else {
-                // Optionally, handle missing PID (e.g., show error or block progress)
                 setParticipantId(null);
             }
         }
     }, []);
+
+    // Block access if no PROLIFIC_PID in URL
+    if (participantId === null) {
+        return (
+            <SurveyStatusMessage
+                title="Access Denied"
+                subtitle="Missing Prolific ID"
+                message="You must access this study using your personalized Prolific link. Please return to Prolific and use the provided link to participate."
+                showStudyTitle={true}
+                isNotFound={true}
+            />
+        );
+    }
 
     // If a participant ID is not set (i.e., no consent), show a message
     if (consentDenied) {
@@ -52,6 +64,7 @@ export default function App() {
         );
     }
 
+    // If part 1 is not complete, show the Part 1 survey
     if (!part1Complete) {
         return (
             <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
@@ -74,6 +87,7 @@ export default function App() {
             </main>
         );
     }
+
     // Once part 1 and part 2 are complete, show the final message
     if (snippetIdx >= 4) {
         return (
