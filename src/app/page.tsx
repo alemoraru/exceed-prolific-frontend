@@ -1,10 +1,11 @@
 'use client';
 
 import React, {useState, useEffect} from "react";
+import {Part1Answers} from "@/app/utils/types";
 import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
-import {Part1Answers} from "@/app/utils/types";
+import {SurveyStatusMessage} from "./components/SurveyStatusMessage";
 
 /**
  * App component is the main entry point for the Prolific Python Error Fixing Study application.
@@ -39,22 +40,15 @@ export default function App() {
         }
     }, []);
 
+    // If a participant ID is not set (i.e., no consent), show a message
     if (consentDenied) {
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
-                {/*<h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>*/}
-                <div className="w-full max-w-3xl bg-white rounded-2xl card-shadow p-8 relative fade-in">
-                    <div className="absolute top-0 left-0 w-full h-2 z-10">
-                        <ProgressBar progress={100}/>
-                    </div>
-                    <h1 className="text-3xl font-bold text-green-700 mb-6">Thank you for your time!</h1>
-                    <h2 className="text-lg font-semibold mb-4 text-gray-800">You have chosen not to participate.</h2>
-                    <p className="mb-6 text-gray-700">
-                        Your choice has been recorded.
-                    </p>
-                    <div className="text-gray-500 text-sm mt-8">You may now close this window.</div>
-                </div>
-            </main>
+            <SurveyStatusMessage
+                title="Thank you for your time!"
+                subtitle="You have chosen not to participate."
+                message="Your choice has been recorded."
+                showStudyTitle={true}
+            />
         );
     }
 
@@ -80,25 +74,15 @@ export default function App() {
             </main>
         );
     }
+    // Once part 1 and part 2 are complete, show the final message
     if (snippetIdx >= 4) {
-        // All snippets done
         return (
-            <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center">
-                <h1 className="text-2xl font-bold text-black mb-8">Prolific Python Error Fixing Study</h1>
-                <div className="w-full max-w-3xl bg-white rounded-2xl card-shadow p-8 relative fade-in">
-                    {/* Progress bar at the top */}
-                    <div className="absolute top-0 left-0 w-full h-2 z-10">
-                        <ProgressBar progress={100}/>
-                    </div>
-                    <h1 className="text-3xl font-bold text-green-700 mb-6">Thank you for your time!</h1>
-                    <h2 className="text-lg font-semibold mb-4 text-gray-800">You have completed the survey.</h2>
-                    <p className="mb-6 text-gray-700">
-                        We appreciate your effort and attention in helping us improve code
-                        understanding and error fixing. Your responses have been recorded.
-                    </p>
-                    <div className="text-gray-500 text-sm mt-8">You may now close this window.</div>
-                </div>
-            </main>
+            <SurveyStatusMessage
+                title="Thank you for your consideration!"
+                subtitle="You have completed the survey."
+                message="We appreciate your effort and attention in helping us improve code understanding and error fixing. Your responses have been recorded."
+                showStudyTitle={true}
+            />
         );
     }
     return (
