@@ -38,7 +38,6 @@ export function Part2Survey(
     const [participantId, setParticipantId] = useState<string | null>(null);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
-    const [dynamicErrorMsg, setDynamicErrorMsg] = useState<string | null>(null);
     const [showError1, setShowError1] = useState(false);
     const [showError2, setShowError2] = useState(false);
     const [showErrorStep1, setShowErrorStep1] = useState(true);
@@ -46,6 +45,7 @@ export function Part2Survey(
     const [showConfirmModal, setShowConfirmModal] = useState<false | 2 | 4>(false);
     const [showRevertModal, setShowRevertModal] = useState<false | 1 | 2>(false);
     const [showInstructions, setShowInstructions] = useState(false);
+    const [rephrasedError, setRephrasedError] = useState<string>("");
 
     // Step and snippet index effects
     useEffect(() => {
@@ -81,6 +81,7 @@ export function Part2Survey(
                 setCurrentSnippet(snippet);
                 setEditedCode1(snippet.code || "");
                 setEditedCode2(snippet.code || "");
+                setRephrasedError("");
             } catch (err) {
                 setSnippetError(err instanceof Error ? err.message : 'Failed to load snippet');
                 setCurrentSnippet(null);
@@ -99,7 +100,6 @@ export function Part2Survey(
         if (step === 2 || step === 4) {
             setSubmitLoading(true);
             setSubmitError(null);
-            setDynamicErrorMsg(null);
             try {
                 const code = step === 2 ? editedCode1 : editedCode2;
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
@@ -113,12 +113,11 @@ export function Part2Survey(
                 });
                 const data = await res.json();
                 if (step === 2 && data.status !== 'success') {
-                    setDynamicErrorMsg(data.error_msg || 'Unknown error');
+                    setRephrasedError(data.error_msg || 'Unknown error');
                     setStep(3);
                 } else if (snippetIdx < snippetIds.length - 1) {
                     setSnippetIdx(snippetIdx + 1);
                     setStep(1);
-                    setDynamicErrorMsg(null);
                 } else {
                     onComplete();
                 }
@@ -134,7 +133,6 @@ export function Part2Survey(
         } else if (snippetIdx < snippetIds.length - 1) {
             setSnippetIdx(snippetIdx + 1);
             setStep(1);
-            setDynamicErrorMsg(null);
         } else {
             onComplete();
         }
@@ -255,14 +253,14 @@ export function Part2Survey(
             {/* Step 3: Show code (read-only) and new error message below, with toggle open by default */}
             {step === 3 && (
                 <Part2Step3Panel
-                    code={editedCode1}
-                    error={dynamicErrorMsg || getErrorMessage()}
+                    code={currentSnippet.code}
+                    error={rephrasedError}
                     showError={showError3}
                     onToggleError={setShowError3}
                     onPrev={goPrev}
                     onNext={() => {
                         setStep(4);
-                        setEditedCode2(editedCode1);
+                        setEditedCode2(currentSnippet.code || "");
                     }}
                 />
             )}
@@ -278,7 +276,7 @@ export function Part2Survey(
                     showRevertModal={showRevertModal === 2}
                     onRevertCancel={handleRevertCancel}
                     onRevertConfirm={handleRevertConfirm}
-                    error={dynamicErrorMsg || getErrorMessage()}
+                    error={rephrasedError}
                     submitLoading={submitLoading}
                     submitError={submitError}
                     onPrev={goPrev}
