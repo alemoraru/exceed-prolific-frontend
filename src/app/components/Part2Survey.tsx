@@ -46,6 +46,7 @@ export function Part2Survey(
     const [showRevertModal, setShowRevertModal] = useState<false | 1 | 2>(false);
     const [showInstructions, setShowInstructions] = useState(false);
     const [rephrasedError, setRephrasedError] = useState<string>("");
+    const [submitStartTime, setSubmitStartTime] = useState<number | null>(null);
 
     // Step and snippet index effects
     useEffect(() => {
@@ -93,6 +94,15 @@ export function Part2Survey(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [snippetIdx, participantId]);
 
+    // Track when we enter step 2 or 4, and start timer accordingly
+    useEffect(() => {
+        if (step === 2 || step === 4) {
+            setSubmitStartTime(Date.now());
+        } else {
+            setSubmitStartTime(null);
+        }
+    }, [step]);
+
     // Next and Previous navigation helpers
     const goNext = async () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -100,6 +110,10 @@ export function Part2Survey(
         if (step === 2 || step === 4) {
             setSubmitLoading(true);
             setSubmitError(null);
+            let time_taken_ms = 0;
+            if (submitStartTime) {
+                time_taken_ms = Date.now() - submitStartTime;
+            }
             try {
                 const code = step === 2 ? editedCode1 : editedCode2;
                 const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/code/submit`, {
@@ -108,7 +122,8 @@ export function Part2Survey(
                     body: JSON.stringify({
                         participant_id: participantId,
                         snippet_id: currentSnippet.id,
-                        code
+                        code: code,
+                        time_taken_ms: time_taken_ms
                     })
                 });
                 const data = await res.json();
