@@ -165,7 +165,7 @@ TypeError: add() missing 1 required positional argument: 'b'
                                 <StepLabel>Code Fix</StepLabel>
                             </Step>
                             <Step key="Review Error">
-                                <StepLabel>Review Updated Code & Error</StepLabel>
+                                <StepLabel>Review Different Error</StepLabel>
                             </Step>
                             <Step key="Final Fix">
                                 <StepLabel>Final Code Fix</StepLabel>
@@ -176,18 +176,16 @@ TypeError: add() missing 1 required positional argument: 'b'
                         <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
                         the issue.<br/>
                         <b>Step 2:</b> Based on the provided code snippet and error message, attempt to fix the code by
-                        editing it in
-                        the code e
+                        editing it in the code editor.
                         <br/>
-                        <b>Step 3:</b> If your initial fix does not resolve all issues, you may receive a follow-up
-                        error message and be asked to make a final fix. Note that once you reach this step, you cannot
-                        go back to previous steps.
+                        <b>Step 3:</b> If your first fix does not resolve all issues, you may receive a new
+                        error message and be asked to fix the code again. Please read the new error message carefully to
+                        understand what needs to be fixed.
                         <br/>
                         <b>Step 4:</b> Make any final adjustments to your code based on the follow-up error message and
-                        submit your final fix that resolves all issues.
+                        submit your final fix that resolves all issues. Note that you cannot go back to previous steps.
                         <br/>
                     </p>
-                    <span className="text-gray-600 text-sm block mt-2"><b>Note</b>: Not all questions will require all steps. Sometimes, steps 3 and 4 may not be shown if your initial fix is correct.</span>
 
                     <div className="space-y-3">
                         <CodeEditor code={reviewCode} onChange={setReviewCode}/>
