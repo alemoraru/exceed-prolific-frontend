@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState, useEffect} from "react";
-import {Part1Answers} from "@/app/utils/types";
+import {Part1Answers, SurveyStatusType} from "@/app/utils/types";
 import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
@@ -24,6 +24,7 @@ export default function App() {
     // Track the overall step for progress bar
     const [overallStep, setOverallStep] = useState(0);
     const [participantId, setParticipantId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     // Extract PROLIFIC_PID from URL on mount
     useEffect(() => {
@@ -36,20 +37,21 @@ export default function App() {
             } else {
                 setParticipantId(null);
             }
+            setLoading(false);
         }
     }, []);
 
-    // Block access if no PROLIFIC_PID in URL
+    // Wait for loading to finish before rendering anything
+    if (loading) {
+        return null;
+    }
+
+    // Redirect to /missing-prolific-id if no PROLIFIC_PID in URL
     if (participantId === null) {
-        return (
-            <SurveyStatusMessage
-                title="Access Denied"
-                subtitle="Missing Prolific ID"
-                message="You must access this study using your personalized Prolific link. Please return to Prolific and use the provided link to participate."
-                showStudyTitle={true}
-                isNotFound={true}
-            />
-        );
+        if (typeof window !== 'undefined') {
+            window.location.replace('/missing-prolific-id');
+        }
+        return null;
     }
 
     // If a participant ID is not set (i.e., no consent), show a message
@@ -58,8 +60,10 @@ export default function App() {
             <SurveyStatusMessage
                 title="Thank you for your time!"
                 subtitle="You have chosen not to participate."
-                message="Your choice has been recorded."
+                message="Because you have not consented, you will not be able to participate
+                in this study and will not receive any compensation. Your choice has been recorded."
                 showStudyTitle={true}
+                type={SurveyStatusType.Info}
             />
         );
     }
@@ -92,10 +96,11 @@ export default function App() {
     if (snippetIdx >= 4) {
         return (
             <SurveyStatusMessage
-                title="Thank you for your consideration!"
+                title="Thank you for your time!"
                 subtitle="You have completed the survey."
                 message="We appreciate your effort and attention in helping us improve code understanding and error fixing. Your responses have been recorded."
                 showStudyTitle={true}
+                type={SurveyStatusType.Success}
             />
         );
     }
