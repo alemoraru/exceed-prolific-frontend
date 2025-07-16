@@ -28,16 +28,18 @@ export const InfoButton: React.FC<InfoButtonProps> = (
         tooltip = 'Show instructions',
     }) => {
     return (
-        <div className={`absolute top-4 right-4 z-20 ${className}`}>
+        <div className={`absolute top-6 right-6 z-20 flex items-center gap-1 ${className}`}>
             {/* Tooltip wrapper for the info button */}
             <Tooltip title={tooltip} placement="bottom" arrow>
                 <button
-                    className="cursor-pointer text-blue-600 hover:text-blue-800 hover:scale-110 duration-120"
+                    className="flex items-center gap-1 cursor-pointer text-blue-600 hover:text-blue-800 duration-120
+                    px-2 py-1 bg-white bg-opacity-80 rounded-lg shadow-sm border border-blue-100 hover:bg-blue-50"
                     aria-label={ariaLabel}
                     onClick={onClick}
                     type="button"
                 >
                     <FaInfoCircle size={22}/>
+                    <span className="ml-1 font-medium text-base text-gray-700">Instructions</span>
                 </button>
             </Tooltip>
         </div>
