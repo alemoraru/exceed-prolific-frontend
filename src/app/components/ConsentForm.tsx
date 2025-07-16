@@ -98,6 +98,15 @@ export function ConsentForm(
             </section>
 
             <section className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-blue-800">Contact Information</h3>
+                <p className="mb-4">
+                    You can further contact the researchers for any clarification. To do this, send an email to
+                    <a href="mailto:amoraru@tudelft.nl"
+                       className="text-blue-700 underline ml-1">amoraru@tudelft.nl</a> for any questions.
+                </p>
+            </section>
+
+            <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Your Rights</h3>
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-2">
                     <span className="font-semibold">By clicking &nbsp;
