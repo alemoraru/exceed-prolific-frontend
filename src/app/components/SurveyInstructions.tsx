@@ -102,7 +102,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         The tabs above show examples of each type of question you will encounter. Please explore each
                         tab to
                         familiarize yourself with the layout and what will be expected of you. You can interact with the
-                        example components to get a feel for how the survey works.
+                        example components to get a feel for how the survey works. These will not affect your
+                        participation or results.
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left">
@@ -111,27 +112,17 @@ TypeError: add() missing 1 required positional argument: 'b'
                                 className="inline text-blue-600 align-text-bottom relative -mt-0.5"
                                 style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}}
                                 aria-label="Info icon"/>
-                            at the top-right of the following pages. These will be available at any point during the
-                            survey should you require clarification on the expectations.
+                            at the top-right of the following survey pages. These will be available at any point during
+                            the survey should you require clarification on the expectations.
                         </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
                         <li><b>Be honest and thoughtful</b> in your responses. Your answers help us understand how
-                            programmers interact with errors and code.
+                            programmers interact with programming errors and code.
                         </li>
                         <li><b>Do not use external help</b> (AI tools, search engines, or others) to answer questions or
-                            fix code. Your own reasoning is essential for the study.
-                        </li>
-                        <li>
-                            Engage with each question and task to the best of your ability. If you have questions,
-                            you can always refer back to these instructions using the <span
-                            className="inline-flex items-center"><FaInfoCircle
-                            className="inline text-blue-600 align-text-bottom relative -mt-0.5 mr-1"
-                            style={{verticalAlign: 'middle'}} aria-label="Info icon"/>INFO button</span> at the top of
-                            the page.
-                        </li>
-                        <li>You can experiment with the interactive examples in each tab to see how the survey interface
-                            works.
+                            fix code. Your own reasoning is essential for the study. We will monitor for any signs of
+                            external assistance, and any detected use of external help will result in disqualification.
                         </li>
                     </ul>
                 </div>
@@ -167,8 +158,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         code={exampleCode}
                     />
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Carefully read the code and error (if any), then select the answer you
-                        believe is correct. Do not use external help or guess randomly.
+                        <b>What is expected:</b> Carefully read the code snippet and error (if any), then select
+                        the answer you believe is correct. Do not use external help or guess randomly.
                     </p>
                 </section>
             )}
@@ -226,8 +217,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         )}
                     </div>
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Read the code and error message, then edit the code to fix the error.
-                        Your solution must be your own work, without external help.
+                        <b>What is expected:</b> Read the code snippet and error message, then edit the code to
+                        fix the error. Your solution must be your own work, without external help (whicever it may be).
                     </p>
                 </section>
             )}
