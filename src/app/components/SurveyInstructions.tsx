@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -15,9 +15,22 @@ import {Stepper, Step, StepLabel} from '@mui/material';
  * Component showing clear, user-friendly instructions for participants in the survey.
  * Guides through self-assessment, multiple-choice questions, and code review tasks.
  * @param defaultTabIndex - (optional) which tab to show by default (0=Overview, 1=Experience, 2=MCQ, 3=Code Fix)
+ * @param requireAllTabs - (optional) if true, requires all tabs to be visited before proceeding
+ * @param onAllTabsVisited - (optional) callback when all tabs have been visited
  */
-export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: number } = {}) {
+export function SurveyInstructions(
+    {
+        defaultTabIndex = 0,
+        requireAllTabs = false,
+        onAllTabsVisited
+    }: {
+        defaultTabIndex?: number,
+        requireAllTabs?: boolean,
+        onAllTabsVisited?: () => void
+    } = {}) {
+
     const [tabIndex, setTabIndex] = useState(defaultTabIndex);
+    const [visitedTabs, setVisitedTabs] = useState(() => new Set([defaultTabIndex]));
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [exampleCode] = useState('print(2 + 1)');
@@ -34,6 +47,13 @@ export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: nu
 TypeError: add() missing 1 required positional argument: 'b'
 `;
 
+    // Effect to handle when all tabs have been visited
+    useEffect(() => {
+        if (requireAllTabs && visitedTabs.size === 4 && onAllTabsVisited) {
+            onAllTabsVisited();
+        }
+    }, [visitedTabs, requireAllTabs, onAllTabsVisited]);
+
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
             {/* Header */}
@@ -43,7 +63,10 @@ TypeError: add() missing 1 required positional argument: 'b'
 
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
-                <Tabs value={tabIndex} onChange={(_, newIndex) => setTabIndex(newIndex)} centered>
+                <Tabs value={tabIndex} onChange={(_, newIndex) => {
+                    setTabIndex(newIndex);
+                    setVisitedTabs(prev => new Set(prev).add(newIndex));
+                }} centered>
                     {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
                         <Tab
                             key={label}
@@ -79,7 +102,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         The tabs above show examples of each type of question you will encounter. Please explore each
                         tab to
                         familiarize yourself with the layout and what will be expected of you. You can interact with the
-                        example components to get a feel for how the survey works.
+                        example components to get a feel for how the survey works. These will not affect your
+                        participation or results.
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left">
@@ -88,27 +112,17 @@ TypeError: add() missing 1 required positional argument: 'b'
                                 className="inline text-blue-600 align-text-bottom relative -mt-0.5"
                                 style={{verticalAlign: 'middle', marginLeft: 2, marginRight: 2}}
                                 aria-label="Info icon"/>
-                            at the top-right of the following pages. These will be available at any point during the
-                            survey should you require clarification on the expectations.
+                            at the top-right of the following survey pages. These will be available at any point during
+                            the survey should you require clarification on the expectations.
                         </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
                         <li><b>Be honest and thoughtful</b> in your responses. Your answers help us understand how
-                            programmers interact with errors and code.
+                            programmers interact with programming errors and code.
                         </li>
                         <li><b>Do not use external help</b> (AI tools, search engines, or others) to answer questions or
-                            fix code. Your own reasoning is essential for the study.
-                        </li>
-                        <li>
-                            Engage with each question and task to the best of your ability. If you have questions,
-                            you can always refer back to these instructions using the <span
-                            className="inline-flex items-center"><FaInfoCircle
-                            className="inline text-blue-600 align-text-bottom relative -mt-0.5 mr-1"
-                            style={{verticalAlign: 'middle'}} aria-label="Info icon"/>INFO button</span> at the top of
-                            the page.
-                        </li>
-                        <li>You can experiment with the interactive examples in each tab to see how the survey interface
-                            works.
+                            fix code. Your own reasoning is essential for the study. We will monitor for any signs of
+                            external assistance, and any detected use of external help will result in disqualification.
                         </li>
                     </ul>
                 </div>
@@ -144,8 +158,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         code={exampleCode}
                     />
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Carefully read the code and error (if any), then select the answer you
-                        believe is correct. Do not use external help or guess randomly.
+                        <b>What is expected:</b> Carefully read the code snippet and error (if any), then select
+                        the answer you believe is correct. Do not use external help or guess randomly.
                     </p>
                 </section>
             )}
@@ -165,7 +179,7 @@ TypeError: add() missing 1 required positional argument: 'b'
                                 <StepLabel>Code Fix</StepLabel>
                             </Step>
                             <Step key="Review Error">
-                                <StepLabel>Review Updated Code & Error</StepLabel>
+                                <StepLabel>Review Different Error</StepLabel>
                             </Step>
                             <Step key="Final Fix">
                                 <StepLabel>Final Code Fix</StepLabel>
@@ -176,18 +190,16 @@ TypeError: add() missing 1 required positional argument: 'b'
                         <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
                         the issue.<br/>
                         <b>Step 2:</b> Based on the provided code snippet and error message, attempt to fix the code by
-                        editing it in
-                        the code e
+                        editing it in the code editor.
                         <br/>
-                        <b>Step 3:</b> If your initial fix does not resolve all issues, you may receive a follow-up
-                        error message and be asked to make a final fix. Note that once you reach this step, you cannot
-                        go back to previous steps.
+                        <b>Step 3:</b> If your first fix does not resolve all issues, you may receive a new
+                        error message and be asked to fix the code again. Please read the new error message carefully to
+                        understand what needs to be fixed.
                         <br/>
                         <b>Step 4:</b> Make any final adjustments to your code based on the follow-up error message and
-                        submit your final fix that resolves all issues.
+                        submit your final fix that resolves all issues. Note that you cannot go back to previous steps.
                         <br/>
                     </p>
-                    <span className="text-gray-600 text-sm block mt-2"><b>Note</b>: Not all questions will require all steps. Sometimes, steps 3 and 4 may not be shown if your initial fix is correct.</span>
 
                     <div className="space-y-3">
                         <CodeEditor code={reviewCode} onChange={setReviewCode}/>
@@ -205,8 +217,8 @@ TypeError: add() missing 1 required positional argument: 'b'
                         )}
                     </div>
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Read the code and error message, then edit the code to fix the error.
-                        Your solution must be your own work, without external help.
+                        <b>What is expected:</b> Read the code snippet and error message, then edit the code to
+                        fix the error. Your solution must be your own work, without external help (whicever it may be).
                     </p>
                 </section>
             )}

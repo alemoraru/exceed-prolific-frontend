@@ -43,7 +43,8 @@ export function ConsentForm(
                     part of the study and will help us gauge your proficiency in Python. In the second part, you’ll be
                     asked to review and correct code snippets that contain errors.
                 </p>
-                <p className="mb-4">You don’t need any special equipment to participate.
+                <p className="mb-4">You don’t need any special equipment to participate other than the ability to type
+                    code in a text editor. The study is designed to be completed entirely online.
                     <span className="font-semibold">Your involvement is completely voluntary</span>, and you are free to
                     withdraw at any point without penalty. Note, however, that if you choose to withdraw,
                     <span
@@ -58,12 +59,17 @@ export function ConsentForm(
                     <span style={{color: '#B45309'}} className="font-bold">Important:</span> To maintain the integrity
                     of this
                     study, please complete all tasks independently, without using external assistance such as large
-                    language models (LLMs), AI tools, search engines, or help from others. Your responses must reflect
+                    language models (LLMs), AI tools, search engines, or help from others. <span className="font-bold">Copy-pasting code or answers from any source, including external websites or tools, is strictly prohibited and will result in immediate disqualification.</span> Your
+                    responses must reflect
                     your own reasoning and understanding. It is essential that you thoughtfully engage with each
                     question rather than submitting answers at random or without proper consideration. We will be
                     actively checking for signs of inauthentic or careless participation.
                     <br/><br/>
-                    <span style={{color: 'red'}} className="font-bold text-red-700">The use of LLMs (e.g., ChatGPT, Copilot), or failing to engage meaningfully with the task, will result in your responses being invalidated and you will NOT be eligible for compensation.</span>
+                    <span style={{color: 'red'}} className="font-bold text-red-700">
+                        The use of LLMs (e.g., ChatGPT, Copilot),
+                        copy-paste commands, or failing to engage meaningfully with the task, will result in your
+                        responses being invalidated and you will NOT be eligible for compensation.
+                    </span>
                 </div>
             </section>
 
@@ -95,6 +101,15 @@ export function ConsentForm(
                     may be published or shared in anonymized form. This anonymized dataset may include your responses to
                     the survey and coding tasks, but will exclude any personal identifiers (such as usernames or
                     participant IDs), ensuring that your responses cannot be linked back to you.</p>
+            </section>
+
+            <section className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-blue-800">Contact Information</h3>
+                <p className="mb-4">
+                    You can further contact the researchers for any clarification. To do this, send an email to
+                    <a href="mailto:amoraru@tudelft.nl"
+                       className="text-blue-700 underline ml-1">amoraru@tudelft.nl</a> for any questions.
+                </p>
             </section>
 
             <section className="mb-8">
