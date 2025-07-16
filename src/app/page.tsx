@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState, useEffect} from "react";
-import {Part1Answers} from "@/app/utils/types";
+import {Part1Answers, SurveyStatusType} from "@/app/utils/types";
 import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
@@ -60,8 +60,10 @@ export default function App() {
             <SurveyStatusMessage
                 title="Thank you for your time!"
                 subtitle="You have chosen not to participate."
-                message="Your choice has been recorded."
+                message="Because you have not consented, you will not be able to participate
+                in this study and will not receive any compensation. Your choice has been recorded."
                 showStudyTitle={true}
+                type={SurveyStatusType.Info}
             />
         );
     }
@@ -94,10 +96,11 @@ export default function App() {
     if (snippetIdx >= 4) {
         return (
             <SurveyStatusMessage
-                title="Thank you for your consideration!"
+                title="Thank you for your time!"
                 subtitle="You have completed the survey."
                 message="We appreciate your effort and attention in helping us improve code understanding and error fixing. Your responses have been recorded."
                 showStudyTitle={true}
+                type={SurveyStatusType.Success}
             />
         );
     }

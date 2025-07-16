@@ -30,3 +30,12 @@ export interface CodeSnippet {
     code: string;
     error: string;
 }
+
+/**
+ * Enum representing the possible status types for the survey status message.
+ */
+export enum SurveyStatusType {
+    Success = "success",
+    Error = "error",
+    Info = "info"
+}
