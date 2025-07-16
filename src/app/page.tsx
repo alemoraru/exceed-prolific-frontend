@@ -24,6 +24,7 @@ export default function App() {
     // Track the overall step for progress bar
     const [overallStep, setOverallStep] = useState(0);
     const [participantId, setParticipantId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     // Extract PROLIFIC_PID from URL on mount
     useEffect(() => {
@@ -36,20 +37,21 @@ export default function App() {
             } else {
                 setParticipantId(null);
             }
+            setLoading(false);
         }
     }, []);
 
-    // Block access if no PROLIFIC_PID in URL
+    // Wait for loading to finish before rendering anything
+    if (loading) {
+        return null;
+    }
+
+    // Redirect to /missing-prolific-id if no PROLIFIC_PID in URL
     if (participantId === null) {
-        return (
-            <SurveyStatusMessage
-                title="Access Denied"
-                subtitle="Missing Prolific ID"
-                message="You must access this study using your personalized Prolific link. Please return to Prolific and use the provided link to participate."
-                showStudyTitle={true}
-                isNotFound={true}
-            />
-        );
+        if (typeof window !== 'undefined') {
+            window.location.replace('/missing-prolific-id');
+        }
+        return null;
     }
 
     // If a participant ID is not set (i.e., no consent), show a message
