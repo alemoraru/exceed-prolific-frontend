@@ -1,5 +1,4 @@
 import React from 'react';
-import Tooltip from '@mui/material/Tooltip';
 import {FaInfoCircle} from 'react-icons/fa';
 
 /**
@@ -25,23 +24,20 @@ export const InfoButton: React.FC<InfoButtonProps> = (
         onClick,
         className = '',
         ariaLabel = 'Show instructions',
-        tooltip = 'Show instructions',
     }) => {
     return (
         <div className={`absolute top-6 right-6 z-20 flex items-center gap-1 ${className}`}>
             {/* Tooltip wrapper for the info button */}
-            <Tooltip title={tooltip} placement="bottom" arrow>
-                <button
-                    className="flex items-center gap-1 cursor-pointer text-blue-600 hover:text-blue-800 duration-120
+            <button
+                className="flex items-center gap-1 cursor-pointer text-blue-600 hover:text-blue-800 duration-120
                     px-2 py-1 bg-white bg-opacity-80 rounded-lg shadow-sm border border-blue-100 hover:bg-blue-50"
-                    aria-label={ariaLabel}
-                    onClick={onClick}
-                    type="button"
-                >
-                    <FaInfoCircle size={22}/>
-                    <span className="ml-1 font-medium text-base text-gray-700">Instructions</span>
-                </button>
-            </Tooltip>
+                aria-label={ariaLabel}
+                onClick={onClick}
+                type="button"
+            >
+                <FaInfoCircle size={22}/>
+                <span className="ml-1 font-medium text-base text-gray-700">Instructions</span>
+            </button>
         </div>
     );
 };
