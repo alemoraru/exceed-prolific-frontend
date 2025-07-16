@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -15,9 +15,22 @@ import {Stepper, Step, StepLabel} from '@mui/material';
  * Component showing clear, user-friendly instructions for participants in the survey.
  * Guides through self-assessment, multiple-choice questions, and code review tasks.
  * @param defaultTabIndex - (optional) which tab to show by default (0=Overview, 1=Experience, 2=MCQ, 3=Code Fix)
+ * @param requireAllTabs - (optional) if true, requires all tabs to be visited before proceeding
+ * @param onAllTabsVisited - (optional) callback when all tabs have been visited
  */
-export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: number } = {}) {
+export function SurveyInstructions(
+    {
+        defaultTabIndex = 0,
+        requireAllTabs = false,
+        onAllTabsVisited
+    }: {
+        defaultTabIndex?: number,
+        requireAllTabs?: boolean,
+        onAllTabsVisited?: () => void
+    } = {}) {
+
     const [tabIndex, setTabIndex] = useState(defaultTabIndex);
+    const [visitedTabs, setVisitedTabs] = useState(() => new Set([defaultTabIndex]));
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [exampleCode] = useState('print(2 + 1)');
@@ -34,6 +47,13 @@ export function SurveyInstructions({defaultTabIndex = 0}: { defaultTabIndex?: nu
 TypeError: add() missing 1 required positional argument: 'b'
 `;
 
+    // Effect to handle when all tabs have been visited
+    useEffect(() => {
+        if (requireAllTabs && visitedTabs.size === 4 && onAllTabsVisited) {
+            onAllTabsVisited();
+        }
+    }, [visitedTabs, requireAllTabs, onAllTabsVisited]);
+
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
             {/* Header */}
@@ -43,7 +63,10 @@ TypeError: add() missing 1 required positional argument: 'b'
 
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
-                <Tabs value={tabIndex} onChange={(_, newIndex) => setTabIndex(newIndex)} centered>
+                <Tabs value={tabIndex} onChange={(_, newIndex) => {
+                    setTabIndex(newIndex);
+                    setVisitedTabs(prev => new Set(prev).add(newIndex));
+                }} centered>
                     {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
                         <Tab
                             key={label}

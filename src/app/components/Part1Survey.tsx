@@ -38,6 +38,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const [showSubmittingLoader, setShowSubmittingLoader] = useState(false);
     const [mcqTimes, setMcqTimes] = useState<number[]>([]);
     const [mcqStartTime, setMcqStartTime] = useState<number | null>(null);
+    const [allInstructionTabsVisited, setAllInstructionTabsVisited] = useState(false);
 
     // Fetch questions after consent and participantId is set
     useEffect(() => {
@@ -199,7 +200,8 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
 
     // Survey Instructions renderer
     function renderInstructions() {
-        return <SurveyInstructions/>;
+        return <SurveyInstructions requireAllTabs={step === 1}
+                                   onAllTabsVisited={() => setAllInstructionTabsVisited(true)} defaultTabIndex={0}/>;
     }
 
     // Experience slider renderer
@@ -259,7 +261,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const handleNext = async () => {
         if (step === 0) return handleConsentNext();
         if (step === 1) {
-            if (!questionsLoading && questions) setStep(2);
+            if (!questionsLoading && questions && allInstructionTabsVisited) setStep(2);
             return;
         }
         if (step === 2) return handleExperienceNext();
@@ -305,7 +307,12 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 <DisabledButton>Previous</DisabledButton>
                 <PrimaryButton
                     onClick={handleNext}
-                    disabled={!canContinue || mcqLoading || consentSubmitting || (step === 1 && (questionsLoading || !questions))}>
+                    disabled={
+                        !canContinue ||
+                        mcqLoading ||
+                        consentSubmitting ||
+                        (step === 1 && (!questions || questionsLoading || !allInstructionTabsVisited))
+                    }>
                     {isLast ? 'Next' : 'Next'}
                 </PrimaryButton>
             </div>
