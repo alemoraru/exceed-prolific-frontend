@@ -137,6 +137,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                     message={errorMessage}
                     isVisible={state.showErrorPanel}
                     onCloseAction={handleToggleError}
+                    step={step}
                 />
             </div>
             {/* Bottom Panel */}

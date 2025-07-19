@@ -2,6 +2,7 @@
 
 import React from "react";
 import {AlertTriangle, X} from "lucide-react";
+import {ErrorMessage} from "../ErrorMessage";
 
 interface ErrorPanelProps {
     /** The error message to display */
@@ -10,19 +11,21 @@ interface ErrorPanelProps {
     isVisible: boolean;
     /** Called when the user clicks the X‑button */
     onCloseAction: () => void;
+    /** The current step in the process */
+    step: 1 | 2 | 3 | 4;
 }
 
 /**
  * ErrorPanel component displays an error message in a panel.
  */
-export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onCloseAction}) => {
+export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onCloseAction, step}) => {
 
     // If the panel is not visible, return null to avoid rendering
     if (!isVisible) return null;
 
     return (
         <div
-            className="flex flex-col flex-shrink-0 bg-red-50 border-t border-red-400 text-red-700 shadow-inner"
+            className="flex flex-col flex-shrink-0 bg-red-100 border-t border-red-400 text-red-700 shadow-inner"
             style={{height: 'auto', minHeight: 0}}
         >
             <header className="flex items-center justify-between px-4 py-2">
@@ -38,10 +41,7 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
                     <X size={18}/>
                 </button>
             </header>
-
-            <pre className="px-4 py-2 text-xs whitespace-pre-wrap flex-1 text-red-800 break-words">
-                {message || "No error message."}
-            </pre>
+            <ErrorMessage errorMessage={message} renderMarkdown={step === 3 || step === 4}/>
         </div>
     );
 };
