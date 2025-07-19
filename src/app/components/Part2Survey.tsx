@@ -217,7 +217,7 @@ export function Part2Survey(
             </div>
 
             {/* Divider for separation */}
-            <div className="mt-6 border-b border-gray-200"/>
+            <div className="mt-6"/>
 
             {/* Step 1: Show original code and standard error message below, with toggle open by default */}
             {step === 1 && (

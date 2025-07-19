@@ -113,7 +113,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
 
     return (
         <div
-            className={autoHeight ? 'flex flex-col bg-background overflow-hidden text-center' : 'h-[80vh] flex flex-col bg-background overflow-hidden text-center'}>
+            className={autoHeight ? 'flex flex-col bg-background overflow-hidden text-center border border-gray-200 rounded-lg shadow-sm' :
+                'h-[80vh] flex flex-col bg-background overflow-hidden text-center border border-gray-200 rounded-lg shadow-sm'}>
             {/* Header */}
             <Header
                 title={title}
