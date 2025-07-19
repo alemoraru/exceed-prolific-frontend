@@ -7,11 +7,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {Stepper, Step, StepLabel} from '@mui/material';
 import {ExperienceSlider} from './ExperienceSlider';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
-import {CodeEditor} from './CodeEditor';
+import {CodeEditor} from './editor/CodeEditor';
 import {FaInfoCircle, FaCheckCircle} from 'react-icons/fa';
-import {ErrorToggle} from './ErrorToggle';
-import {RevertButton} from './RevertButton';
-import {ErrorMessage} from './ErrorMessage';
 
 /**
  * Component showing clear, user‑friendly instructions for participants in the survey.
@@ -43,7 +40,6 @@ export function SurveyInstructions(
     const [reviewCode, setReviewCode] = useState(
         'def add(a, b):\n    return a + b\n\nprint(add(2))'
     );
-    const [showError, setShowError] = useState(false);
     const visitedCount = visitedTabs.size;
     const allVisited = visitedCount === totalTabs;
 
@@ -255,17 +251,16 @@ export function SurveyInstructions(
                     </p>
 
                     <div className="space-y-3">
-                        <CodeEditor code={reviewCode} onChange={setReviewCode}/>
-                        <div className="flex items-start gap-4 mt-4 w-full">
-                            <div className="w-1/2 flex justify-start">
-                                <ErrorToggle label="Error Message" onToggle={setShowError}/>
-                            </div>
-                            <div className="w-1/2 flex justify-end">
-                                <RevertButton
-                                    onClick={() => setReviewCode('def add(a, b):\n    return a + b\n\nprint(add(2))')}/>
-                            </div>
-                        </div>
-                        {showError && <ErrorMessage errorMessage={exampleErrorMessage}/>}
+                        <CodeEditor
+                            title="Code Review Example"
+                            instructions="Edit the code below to fix the error."
+                            code={reviewCode}
+                            errorMessage={exampleErrorMessage}
+                            step={1}
+                            onSubmitAction={setReviewCode}
+                            readOnly={false}
+                            autoHeight={true}
+                        />
                     </div>
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Read the code snippet and error message, then edit the code to fix the
