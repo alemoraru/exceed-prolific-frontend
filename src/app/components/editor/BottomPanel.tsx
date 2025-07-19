@@ -41,7 +41,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                         aria-label={showErrorPanel ? "Hide error panel" : "Show error panel"}
                     >
                         <AlertTriangle size={14} className={showErrorPanel ? "text-red-500" : "text-gray-400"}/>
-                        <span>Error</span>
+                        <span>Error Message</span>
                     </button>
                 )}
                 <button
@@ -54,13 +54,13 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                     aria-label="Revert to original code"
                 >
                     <RotateCcw size={14} className="text-blue-400"/>
-                    <span>Revert</span>
+                    <span>Revert Code</span>
                 </button>
             </div>
             <div className="flex items-center gap-3">
                 <button
                     onClick={onPrev}
-                    disabled={submitLoading}
+                    disabled={submitLoading || step === 1}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-600 border
                     border-gray-300 hover:bg-gray-100 transition-colors shadow-sm disabled:opacity-50
                     disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"

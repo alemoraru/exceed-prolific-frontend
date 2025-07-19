@@ -101,7 +101,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     const canRevert = state.code !== code;
 
     return (
-        <div className="h-[70vh] flex flex-col bg-background overflow-hidden text-center">
+        <div className="h-[80vh] flex flex-col bg-background overflow-hidden text-center">
             {/* Header */}
             <Header
                 title={title}

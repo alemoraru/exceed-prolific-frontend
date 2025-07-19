@@ -36,7 +36,7 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
                 <button
                     onClick={onCloseAction}
                     aria-label="Close error panel"
-                    className="p-1 rounded hover:bg-red-100 transition-colors cursor-pointer"
+                    className="p-1 rounded hover:bg-red-200 transition-colors cursor-pointer"
                 >
                     <X size={18}/>
                 </button>
