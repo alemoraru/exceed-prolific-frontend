@@ -115,6 +115,7 @@ export default function App() {
                     onComplete={() => setSnippetIdx(4)}
                     setOverallStep={setOverallStep}
                     part1Total={part1Total}
+                    onConsentDenied={() => setConsentDenied(true)}
                 />
             </div>
         </main>

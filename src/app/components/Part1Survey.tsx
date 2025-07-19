@@ -282,9 +282,25 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const showQuitButton = step > 0 && step < (questions ? questions.length + 3 : 9999);
 
     // Handler for quit study
-    const handleQuitConfirm = () => {
+    const [quitError, setQuitError] = useState<string | null>(null);
+    const handleQuitConfirm = async () => {
         setShowQuitModal(false);
-        // Call onConsentDenied to show the thank-you message and erase data
+        setQuitError(null);
+        const participant_id = localStorage.getItem('participant_id');
+        if (participant_id) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/revoke-consent`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({participant_id})
+                });
+                if (!res.ok) throw new Error('Failed to revoke consent.');
+            } catch {
+                setQuitError('Sorry, something went wrong while revoking your consent. Please try again.');
+                return;
+            }
+        }
+        localStorage.removeItem('participant_id');
         onConsentDenied();
     };
     const handleQuitCancel = () => setShowQuitModal(false);
@@ -305,6 +321,8 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 onConfirm={handleQuitConfirm}
                 type={ConfirmChoiceModalType.QuitStudy}
             />
+            {/* Error toast for quit error */}
+            {quitError && <ErrorToast message={quitError}/>}
             {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
             {/* Overlay for instructions */}

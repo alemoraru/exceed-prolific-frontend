@@ -9,6 +9,7 @@ import {Part2Step4Panel} from "./Part2Step4Panel";
 import {CodeSnippet} from "@/app/utils/types";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
+import {ErrorToast} from './toast/ErrorToast';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -16,18 +17,15 @@ import {QuitStudyButton} from './QuitStudyButton';
  * error messages, and allowing users to edit code.
  * @param onComplete - Callback function to call when the survey is completed.
  * @param setOverallStep - Function to update the overall step in a parent component.
- * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate overall step.
+ * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate the overall step.
+ * @param onConsentDenied - Callback function to call when the user denies consent.
  */
-export function Part2Survey(
-    {
-        onComplete,
-        setOverallStep,
-        part1Total
-    }: {
-        onComplete: () => void;
-        setOverallStep: (step: number) => void;
-        part1Total: number;
-    }) {
+export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDenied}: {
+    onComplete: () => void;
+    setOverallStep: (step: number) => void;
+    part1Total: number;
+    onConsentDenied: () => void
+}) {
     // State management
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -197,10 +195,26 @@ export function Part2Survey(
     const showQuitButton = true; // Always show in Part2Survey, since consent is already given
 
     // Handler for quit study
-    const handleQuitConfirm = () => {
+    const [quitError, setQuitError] = useState<string | null>(null);
+    const handleQuitConfirm = async () => {
         setShowQuitModal(false);
-        // You may want to redirect or show a thank you message here
-        window.location.reload(); // Or call a parent handler if available
+        setQuitError(null);
+        const participant_id = localStorage.getItem('participant_id');
+        if (participant_id) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/revoke-consent`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({participant_id})
+                });
+                if (!res.ok) throw new Error('Failed to revoke consent.');
+            } catch {
+                setQuitError('Sorry, something went wrong while revoking your consent. Please try again.');
+                return;
+            }
+        }
+        localStorage.removeItem('participant_id');
+        onConsentDenied();
     };
     const handleQuitCancel = () => setShowQuitModal(false);
 
@@ -231,6 +245,8 @@ export function Part2Survey(
                 onConfirm={handleQuitConfirm}
                 type={ConfirmChoiceModalType.QuitStudy}
             />
+            {/* Error toast for quit error */}
+            {quitError && <ErrorToast message={quitError}/>}
 
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
