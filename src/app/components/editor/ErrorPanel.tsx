@@ -28,9 +28,9 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
             className="flex flex-col flex-shrink-0 bg-red-100 border-t border-red-400 text-red-700 shadow-inner"
             style={{height: 'auto', minHeight: 0}}
         >
-            <header className="flex items-center justify-between px-4 py-2">
+            <header className="flex items-center justify-between px-4 py-1">
                 <div className="flex items-center gap-2 font-semibold">
-                    <AlertTriangle size={18} className="text-red-600"/>
+                    <AlertTriangle size={14} className="text-red-600"/>
                     Error
                 </div>
                 <button

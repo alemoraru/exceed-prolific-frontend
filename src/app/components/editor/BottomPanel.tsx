@@ -29,7 +29,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
     }) => {
     const nextLabel = (step === 2 || step === 4) ? 'Submit' : 'Next';
     return (
-        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3 flex items-center justify-between">
+        <div className="bg-gray-50 border-t border-gray-300 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
                 {hasError && (
                     <button

@@ -21,7 +21,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = (
         renderMarkdown = false,
     }) => (
     <div
-        className="p-4 rounded text-left shadow-md relative animate-fade-in text-xs"
+        className="px-4 py-2 rounded text-left shadow-xs relative animate-fade-in text-xs"
         role="alert"
         aria-live="assertive"
     >
