@@ -61,6 +61,8 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             errorMessage={error}
             readOnly={readOnly}
             onSubmitAction={onSubmit}
+            instructions="Based on the new error message and your understanding, please make your final changes to the code below. Your goal is to modify the code so that it achieves the desired result as initially defined within the docstrings. You can revert to the original snippet at any time by clicking the Revert to original snippet button. When you are done editing, click the Submit button to submit your final fix. Note that once you submit, you will not be able to come back to this step to make further changes."
+            title="Step 4: Final Fix"
         />
         <div className="flex justify-between mt-8">
             <SecondaryButton onClick={onPrev} disabled={submitLoading}>

@@ -22,19 +22,14 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
         onNext
     }) => (
     <div>
-        <h2 className="text-lg font-semibold mb-2">Step 3: Review the New Error Message</h2>
-        <p className="mb-4 text-gray-700 text-left">
-            The code you submitted previously did not fully resolve all issues. Please review the new error
-            message below, which was triggered by your code changes. Use this information to help
-            you understand what went wrong. <b>Your goal is still to modify the code so that it achieves the
-            desired result as initially defined within the docstrings. </b>
-        </p>
         <div className="flex flex-col gap-3">
             <div className="flex-1">
                 <CodeEditor
                     code={code}
                     readOnly
                     errorMessage={error}
+                    instructions="The code you submitted previously did not fully resolve all issues. Please review the new error message below, which was triggered by your code changes. Use this information to help you understand what went wrong. Your goal is still to modify the code so that it achieves the desired result as initially defined within the docstrings."
+                    title="Step 3: Review the New Error Message"
                 />
             </div>
         </div>

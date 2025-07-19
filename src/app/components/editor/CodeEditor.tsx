@@ -131,7 +131,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 <ErrorPanel
                     message={errorMessage}
                     isVisible={state.showErrorPanel}
-                    onClose={handleToggleError}
+                    onCloseAction={handleToggleError}
                     height={state.errorPanelHeight}
                 />
             </div>

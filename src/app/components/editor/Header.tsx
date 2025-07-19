@@ -10,21 +10,18 @@ interface HeaderProps {
     onToggle: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = (
-    {
-        title = "Code Editor",
-        instructions = "Please fix the code below",
-        isVisible,
-        onToggle,
-    }) => {
+/**
+ * Header component displays a title and instructions with a toggle button to show or hide them.
+ */
+export const Header: React.FC<HeaderProps> = ({title, instructions, isVisible, onToggle}) => {
     return (
         <div className="bg-white border-b border-gray-200">
             {isVisible && (
                 <div className="px-6 py-4 space-y-4">
-                    <div className="flex items-center justify-between text-center">
-                        <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
+                    <div className="flex items-center justify-center text-center">
+                        <h1 className="text-xl font-semibold text-gray-900 text-center w-full">{title}</h1>
                     </div>
-                    <p className="text-gray-500 leading-relaxed">{instructions}</p>
+                    <p className="text-gray-500 leading-relaxed text-left w-full">{instructions}</p>
                 </div>
             )}
 
