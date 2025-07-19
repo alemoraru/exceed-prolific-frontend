@@ -212,7 +212,7 @@ export function Part2Survey(
             </InstructionsOverlay>
 
             {/* Stepper for snippet progress */}
-            <div className="text-center text-gray-600 mt-2">
+            <div className="text-center text-gray-600 mt-0">
                 Code Snippet {snippetIdx + 1} of {snippetIds.length}
             </div>
 

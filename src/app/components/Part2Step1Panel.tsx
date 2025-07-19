@@ -24,7 +24,10 @@ export const Part2Step1Panel: React.FC<PanelProps> = (
                     code={code}
                     readOnly
                     errorMessage={error}
-                    instructions="Carefully review the code and the error message. Try to understand what the function is intended to do and what the error means. When you are ready, click Next."
+                    instructions="Carefully review the code and the error message.
+                    Try to understand what the code is intended to do and what the error means.
+                    When you are ready, click the Next button. Note that this step is for review only,
+                    therefore you cannot make any changes to the code at this point."
                     title="Step 1: Review the Code and Error"
                     step={1}
                     onPrev={() => {
