@@ -8,7 +8,7 @@ import React from 'react';
 export function PrimaryButton({children, ...props}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
             {...props}
         >
             {children}

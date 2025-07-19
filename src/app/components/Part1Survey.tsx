@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 import {ConsentForm} from './ConsentForm';
-import {PrimaryButton, DisabledButton} from './SurveyButtons';
+import {PrimaryButton} from './SurveyButtons';
 import {SurveyInstructions} from './instructions/SurveyInstructions';
 import {InstructionsOverlay} from './instructions/InstructionsOverlay';
 import {InfoButton} from './instructions/InfoButton';
@@ -11,6 +11,7 @@ import {LoaderToast} from './toast/LoaderToast';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
+import {ArrowRight} from 'lucide-react';
 
 /**
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.
@@ -354,8 +355,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 }/>
             )}
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-                <DisabledButton>Previous</DisabledButton>
+            <div className="flex justify-end mt-8 px-8">
                 <PrimaryButton
                     onClick={handleNext}
                     disabled={
@@ -363,8 +363,12 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                         mcqLoading ||
                         consentSubmitting ||
                         (step === 1 && (!questions || questionsLoading || !allInstructionTabsVisited))
-                    }>
-                    {isLast ? 'Next' : 'Next'}
+                    }
+                >
+                    <span className="flex items-center">
+                        Next
+                        <ArrowRight size={14}/>
+                    </span>
                 </PrimaryButton>
             </div>
         </div>
