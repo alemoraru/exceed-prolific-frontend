@@ -1,6 +1,5 @@
 import React from "react";
 import {CodeEditor} from "./editor/CodeEditor";
-import {PrimaryButton, SecondaryButton} from "./SurveyButtons";
 import {SubmittingLoader} from "./SubmittingLoader";
 import {SubmissionError} from "./SubmissionError";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./ConfirmChoiceModal";
@@ -63,15 +62,11 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             onSubmitAction={onSubmit}
             instructions="Based on the new error message and your understanding, please make your final changes to the code below. Your goal is to modify the code so that it achieves the desired result as initially defined within the docstrings. You can revert to the original snippet at any time by clicking the Revert to original snippet button. When you are done editing, click the Submit button to submit your final fix. Note that once you submit, you will not be able to come back to this step to make further changes."
             title="Step 4: Final Fix"
+            step={4}
+            onPrev={onPrev}
+            onNext={onSubmit}
+            submitLoading={submitLoading}
         />
-        <div className="flex justify-between mt-8">
-            <SecondaryButton onClick={onPrev} disabled={submitLoading}>
-                Previous
-            </SecondaryButton>
-            <PrimaryButton onClick={onSubmit} disabled={submitLoading}>
-                Submit
-            </PrimaryButton>
-        </div>
         <ConfirmChoiceModal
             open={showConfirmModal}
             onCancel={onModalCancel}

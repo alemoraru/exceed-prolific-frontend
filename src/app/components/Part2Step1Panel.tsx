@@ -1,6 +1,5 @@
 import React from "react";
 import {CodeEditor} from "./editor/CodeEditor";
-import {PrimaryButton, DisabledButton} from "./SurveyButtons";
 
 interface PanelProps {
     code: string;
@@ -27,16 +26,12 @@ export const Part2Step1Panel: React.FC<PanelProps> = (
                     errorMessage={error}
                     instructions="Carefully review the code and the error message. Try to understand what the function is intended to do and what the error means. When you are ready, click Next."
                     title="Step 1: Review the Code and Error"
+                    step={1}
+                    onPrev={() => {
+                    }}
+                    onNext={onNext}
                 />
             </div>
-        </div>
-        <div className="flex justify-between mt-8">
-            <DisabledButton>
-                Previous
-            </DisabledButton>
-            <PrimaryButton onClick={onNext}>
-                Next
-            </PrimaryButton>
         </div>
     </div>
 );

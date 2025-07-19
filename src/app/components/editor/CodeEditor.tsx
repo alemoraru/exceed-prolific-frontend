@@ -15,6 +15,10 @@ interface CodeEditorProps {
     progress?: number;
     maxProgress?: number;
     onSubmitAction?: (code: string) => void;
+    onPrev?: () => void;
+    onNext?: () => void;
+    step: 1 | 2 | 3 | 4;
+    submitLoading?: boolean;
     language?: string;
     readOnly?: boolean;
 }
@@ -44,6 +48,10 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         code,
         errorMessage,
         onSubmitAction,
+        onPrev,
+        onNext,
+        step,
+        submitLoading,
         language = 'python',
         readOnly = false,
     }) => {
@@ -103,7 +111,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 isVisible={state.showHeader}
                 onToggle={handleToggleHeader}
             />
-
             {/* Editor Container */}
             <div className="flex flex-col min-h-0 flex-1 text-left">
                 {/* Code Editor */}
@@ -134,16 +141,18 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                     onCloseAction={handleToggleError}
                 />
             </div>
-
             {/* Bottom Panel */}
             <BottomPanel
                 hasError={hasError}
                 showErrorPanel={state.showErrorPanel}
                 onToggleError={handleToggleError}
                 onRevert={handleRevert}
-                onSubmit={handleSubmit}
+                onPrev={onPrev || (() => {})}
+                onNext={onNext || handleSubmit}
                 isSubmitted={state.isSubmitted}
                 canRevert={canRevert}
+                step={step}
+                submitLoading={submitLoading}
             />
         </div>
     );
