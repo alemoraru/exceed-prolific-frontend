@@ -1,7 +1,5 @@
 import React from "react";
-import {CodeEditor} from "./CodeEditor";
-import {ErrorMessage} from "./ErrorMessage";
-import {ErrorToggle} from "./ErrorToggle";
+import {CodeEditor} from "./editor/CodeEditor";
 import {PrimaryButton, SecondaryButton} from "./SurveyButtons";
 
 interface PanelProps {
@@ -20,8 +18,6 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
     {
         code,
         error,
-        showError,
-        onToggleError,
         onPrev,
         onNext
     }) => (
@@ -35,18 +31,12 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
         </p>
         <div className="flex flex-col gap-3">
             <div className="flex-1">
-                <CodeEditor code={code} readOnly/>
+                <CodeEditor
+                    code={code}
+                    readOnly
+                    errorMessage={error}
+                />
             </div>
-            <div className="flex items-start gap-4 mt-4 w-full">
-                <div className="w-1/2 flex justify-start">
-                    <ErrorToggle label="Error Message" initialOpen onToggle={onToggleError}/>
-                </div>
-            </div>
-            {showError && (
-                <div className="w-full">
-                    <ErrorMessage errorMessage={error} renderMarkdown={true}/>
-                </div>
-            )}
         </div>
         <div className="flex justify-between mt-8">
             <SecondaryButton onClick={onPrev}>

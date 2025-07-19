@@ -192,21 +192,7 @@ export function Part2Survey(
 
     // UI for loading and error states (initial fetch of code snippet)
     if (loadingSnippet) {
-        return (
-            <div
-                className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 flex flex-col items-center justify-center min-h-[350px]">
-                <div className="flex flex-col items-center gap-4">
-                    <svg className="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-                    </svg>
-                    <div className="text-lg font-semibold text-gray-700 mt-2">Loading next code snippet...</div>
-                    <div className="text-gray-500 text-sm">Please wait while we fetch your next programming task.</div>
-                </div>
-            </div>
-        );
+        return null; // Optionally show a loading spinner here
     }
     if (snippetError || !currentSnippet) {
         return <div
@@ -216,7 +202,7 @@ export function Part2Survey(
     const getErrorMessage = (): string => currentSnippet?.error || '';
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
 
@@ -239,7 +225,6 @@ export function Part2Survey(
                     code={currentSnippet.code}
                     error={getErrorMessage()}
                     showError={showErrorStep1}
-                    onToggleError={setShowErrorStep1}
                     onNext={goNext}
                 />
             )}

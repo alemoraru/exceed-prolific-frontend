@@ -3,7 +3,6 @@
 import React, {useCallback, useMemo, useState} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {python} from '@codemirror/lang-python';
-import {oneDark} from '@codemirror/theme-one-dark';
 import {Header} from './Header';
 import {BottomPanel} from './BottomPanel';
 import {ErrorPanel} from './ErrorPanel';
@@ -11,11 +10,11 @@ import {ErrorPanel} from './ErrorPanel';
 interface CodeEditorProps {
     title?: string;
     instructions?: string;
-    initialCode: string;
-    errorMessage?: string;
+    code: string;
+    errorMessage: string;
     progress?: number;
     maxProgress?: number;
-    onSubmit: (code: string) => void;
+    onSubmitAction?: (code: string) => void;
     language?: string;
     readOnly?: boolean;
 }
@@ -32,33 +31,29 @@ interface CodeEditorState {
  * CodeEditor component provides a code editor interface using CodeMirror.
  * @param title - Optional title for the editor.
  * @param instructions - Optional instructions to display in the header.
- * @param initialCode - The initial code to display in the editor.
+ * @param code - The code to display in the editor.
  * @param errorMessage - Optional error message to display in the error panel.
- * @param progress - Optional progress value (between 0 and maxProgress) to display in the header.
- * @param maxProgress - Optional maximum progress value (default is 1).
  * @param onSubmit - Callback function to handle code submission.
  * @param language - Optional programming language for syntax highlighting (default is 'python').
  * @param readOnly - Optional flag to make the editor read-only (default is false).
  */
-export const CodeEditor: React.FC<CodeEditorProps> = ({
-                                                          title,
-                                                          instructions,
-                                                          initialCode,
-                                                          errorMessage,
-                                                          progress = 1,
-                                                          maxProgress = 1,
-                                                          onSubmit,
-                                                          language = 'python',
-                                                          readOnly = false,
-                                                      }) => {
+export const CodeEditor: React.FC<CodeEditorProps> = (
+    {
+        title,
+        instructions,
+        code,
+        errorMessage,
+        onSubmitAction,
+        language = 'python',
+        readOnly = false,
+    }) => {
     const [state, setState] = useState<CodeEditorState>({
-        code: initialCode,
+        code: code,
         isSubmitted: false,
         showHeader: true,
         showErrorPanel: false,
         errorPanelHeight: 200,
     });
-
     const extensions = useMemo(() => {
         const exts = [];
         if (language === 'python') {
@@ -76,15 +71,17 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
     const handleSubmit = useCallback(() => {
         if (!state.isSubmitted) {
             setState(prev => ({...prev, isSubmitted: true}));
-            onSubmit(state.code);
+            if (onSubmitAction) {
+                onSubmitAction(state.code);
+            }
         }
-    }, [state.isSubmitted, state.code, onSubmit]);
+    }, [state.isSubmitted, state.code, onSubmitAction]);
 
     const handleRevert = useCallback(() => {
         if (!state.isSubmitted) {
-            setState(prev => ({...prev, code: initialCode}));
+            setState(prev => ({...prev, code: code}));
         }
-    }, [initialCode, state.isSubmitted]);
+    }, [code, state.isSubmitted]);
 
     const handleToggleHeader = useCallback(() => {
         setState(prev => ({...prev, showHeader: !prev.showHeader}));
@@ -95,28 +92,26 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
     }, []);
 
     const hasError = Boolean(errorMessage);
-    const canRevert = state.code !== initialCode;
+    const canRevert = state.code !== code;
 
     return (
-        <div className="h-screen flex flex-col bg-background overflow-hidden relative">
+        <div className="h-screen flex flex-col bg-background overflow-hidden text-center">
             {/* Header */}
             <Header
                 title={title}
                 instructions={instructions}
-                progress={progress}
-                maxProgress={maxProgress}
                 isVisible={state.showHeader}
                 onToggle={handleToggleHeader}
             />
 
             {/* Editor Container */}
-            <div className="flex-1 flex flex-col min-h-0 relative">
+            <div className="flex flex-col min-h-0 flex-1 text-left">
                 {/* Code Editor */}
-                <div className="flex-1 overflow-auto relative">
+                <div className="flex-1 overflow-auto">
                     <CodeMirror
                         value={state.code}
                         onChange={handleCodeChange}
-                        theme={oneDark}
+                        theme={"light"}
                         extensions={extensions}
                         readOnly={state.isSubmitted || readOnly}
                         className="h-full"
@@ -132,14 +127,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({
                             highlightSelectionMatches: false,
                         }}
                     />
-                    {/* Error Panel overlays the bottom of the editor */}
-                    <ErrorPanel
-                        message={errorMessage || ''}
-                        isVisible={state.showErrorPanel}
-                        onClose={handleToggleError}
-                        height={state.errorPanelHeight}
-                    />
                 </div>
+                <ErrorPanel
+                    message={errorMessage}
+                    isVisible={state.showErrorPanel}
+                    onClose={handleToggleError}
+                    height={state.errorPanelHeight}
+                />
             </div>
 
             {/* Bottom Panel */}

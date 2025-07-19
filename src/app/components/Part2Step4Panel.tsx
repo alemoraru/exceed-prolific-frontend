@@ -1,8 +1,5 @@
 import React from "react";
-import {CodeEditor} from "./CodeEditor";
-import {ErrorMessage} from "./ErrorMessage";
-import {ErrorToggle} from "./ErrorToggle";
-import {RevertButton} from "./RevertButton";
+import {CodeEditor} from "./editor/CodeEditor";
 import {PrimaryButton, SecondaryButton} from "./SurveyButtons";
 import {SubmittingLoader} from "./SubmittingLoader";
 import {SubmissionError} from "./SubmissionError";
@@ -34,11 +31,7 @@ interface PanelProps {
 export const Part2Step4Panel: React.FC<PanelProps> = (
     {
         code,
-        onCodeChange,
         readOnly,
-        showError,
-        onToggleError,
-        onRevert,
         showRevertModal,
         onRevertCancel,
         onRevertConfirm,
@@ -63,20 +56,12 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         </p>
         {submitLoading && <SubmittingLoader/>}
         {submitError && <SubmissionError message={submitError}/>}
-        <CodeEditor code={code} onChange={onCodeChange} readOnly={readOnly}/>
-        <div className="flex items-start gap-4 mt-4 w-full">
-            <div className="w-1/2 flex justify-start">
-                <ErrorToggle label="Error Message" onToggle={onToggleError}/>
-            </div>
-            <div className="w-1/2 flex justify-end">
-                <RevertButton onClick={onRevert}/>
-            </div>
-        </div>
-        {showError && (
-            <div className="w-full mt-3">
-                <ErrorMessage errorMessage={error} renderMarkdown={true}/>
-            </div>
-        )}
+        <CodeEditor
+            code={code}
+            errorMessage={error}
+            readOnly={readOnly}
+            onSubmitAction={onSubmit}
+        />
         <div className="flex justify-between mt-8">
             <SecondaryButton onClick={onPrev} disabled={submitLoading}>
                 Previous

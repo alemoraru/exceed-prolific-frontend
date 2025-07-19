@@ -72,7 +72,7 @@ export default function App() {
     if (!part1Complete) {
         return (
             <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-                <div className="w-full max-w-5xl relative mt-6">
+                <div className="w-full max-w-5xl relative mt-4">
                     {/* Progress bar at the top */}
                     <div className="absolute top-0 left-0 w-full z-10">
                         <ProgressBar progress={(overallStep / totalSteps) * 100}/>
@@ -106,7 +106,7 @@ export default function App() {
     }
     return (
         <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-            <div className="w-full max-w-5xl relative mt-6">
+            <div className="w-full max-w-5xl relative mt-4">
                 {/* Progress bar at the top */}
                 <div className="absolute top-0 left-0 w-full z-10">
                     <ProgressBar progress={(overallStep / totalSteps) * 100}/>

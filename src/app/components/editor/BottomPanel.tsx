@@ -11,25 +11,26 @@ interface BottomPanelProps {
     canRevert: boolean;
 }
 
-export const BottomPanel: React.FC<BottomPanelProps> = ({
-                                                            hasError,
-                                                            showErrorPanel,
-                                                            onToggleError,
-                                                            onRevert,
-                                                            onSubmit,
-                                                            isSubmitted,
-                                                            canRevert,
-                                                        }) => {
+export const BottomPanel: React.FC<BottomPanelProps> = (
+    {
+        hasError,
+        showErrorPanel,
+        onToggleError,
+        onRevert,
+        onSubmit,
+        isSubmitted,
+        canRevert,
+    }) => {
     return (
-        <div className="bg-card border-t border-border px-4 py-2 flex items-center justify-between">
+        <div className="bg-white border-t border-gray-200 px-4 py-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
                 {hasError && (
                     <button
                         onClick={onToggleError}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm transition-colors ${
+                        className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm transition-colors ${
                             showErrorPanel
-                                ? 'bg-destructive/20 text-destructive'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                                ? 'bg-red-100 text-red-600'
+                                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                         }`}
                         aria-label={showErrorPanel ? "Hide error panel" : "Show error panel"}
                     >
@@ -41,7 +42,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
                 <button
                     onClick={onRevert}
                     disabled={!canRevert || isSubmitted}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Revert to original code"
                 >
                     <RotateCcw size={14}/>
@@ -54,8 +55,8 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
                 disabled={isSubmitted}
                 className={`flex items-center gap-2 px-4 py-1.5 rounded-sm text-sm font-medium transition-colors ${
                     isSubmitted
-                        ? 'bg-success/20 text-success cursor-not-allowed'
-                        : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        ? 'bg-green-100 text-green-600 cursor-not-allowed'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
                 aria-label={isSubmitted ? "Code submitted" : "Submit code"}
             >
