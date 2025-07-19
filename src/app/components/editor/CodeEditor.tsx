@@ -95,7 +95,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     const canRevert = state.code !== code;
 
     return (
-        <div className="h-screen flex flex-col bg-background overflow-hidden text-center">
+        <div className="h-[70vh] flex flex-col bg-background overflow-hidden text-center">
             {/* Header */}
             <Header
                 title={title}
@@ -132,7 +132,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                     message={errorMessage}
                     isVisible={state.showErrorPanel}
                     onCloseAction={handleToggleError}
-                    height={state.errorPanelHeight}
                 />
             </div>
 
