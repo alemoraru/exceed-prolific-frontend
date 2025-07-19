@@ -48,12 +48,12 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                     onClick={onRevert}
                     disabled={!canRevert || isSubmitted}
                     className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-600
-                    border border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition-colors
+                    border border-gray-300 hover:bg-yellow-50 hover:text-yellow-700 transition-colors
                     shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2
-                    focus:ring-blue-300 cursor-pointer"
+                    focus:ring-yellow-300 cursor-pointer"
                     aria-label="Revert to original code"
                 >
-                    <RotateCcw size={14} className="text-blue-400"/>
+                    <RotateCcw size={14} className="text-gray-400"/>
                     <span>Revert Code</span>
                 </button>
             </div>
@@ -72,12 +72,12 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                     onClick={onNext}
                     disabled={isSubmitted || submitLoading}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-600 border
-                    border-gray-300 hover:bg-gray-100 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed
+                    border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed
                     focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
                     aria-label={nextLabel}
                 >
                     <span>{nextLabel}</span>
-                    {nextLabel === 'Submit' ? <Send size={14}/> : <ArrowRight size={14}/>}
+                    {nextLabel === 'Submit' ? <Send size={14} className="text-blue-400"/> : <ArrowRight size={14}/>}
                 </button>
             </div>
         </div>

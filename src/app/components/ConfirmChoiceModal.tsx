@@ -110,9 +110,12 @@ export function ConfirmChoiceModal(
                         {cancelLabel}
                     </button>
                     <button
-                        className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition 
-                        shadow ${type === ConfirmChoiceModalType.QuitStudy ? 'bg-red-600 text-white hover:bg-red-700 ' +
-                            'border border-red-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+                        className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition shadow
+                        ${type === ConfirmChoiceModalType.QuitStudy
+                            ? 'bg-red-600 text-white hover:bg-red-700 border border-red-700'
+                            : type === ConfirmChoiceModalType.CodeFix
+                                ? 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-700'
+                                : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-200 border border-yellow-300'}`}
                         onClick={onConfirm}
                         type="button"
                     >
