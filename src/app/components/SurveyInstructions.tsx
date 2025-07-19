@@ -57,7 +57,7 @@ export function SurveyInstructions(
     };
 
     return (
-        <div className="max-w-6xl mx-auto bg-white rounded-2xl px-6 fade-in">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-6 fade-in">
             {/* Header */}
             <header className="mb-6 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
@@ -215,7 +215,7 @@ export function SurveyInstructions(
                         question follows a <b>multi‑step approach</b>:
                     </p>
                     <div className="mb-4 flex justify-center">
-                        <Stepper activeStep={0} alternativeLabel className="w-full">
+                        <Stepper activeStep={1} alternativeLabel className="w-full">
                             <Step key="Review">
                                 <StepLabel>Review Code & Error</StepLabel>
                             </Step>
@@ -252,8 +252,8 @@ export function SurveyInstructions(
 
                     <div className="space-y-3">
                         <CodeEditor
-                            title="Code Review Example"
-                            instructions="Edit the code below to fix the error."
+                            instructions="Edit the code to fix any errors you have identified. You can revert to the original snippet if needed by clicking the Revert to original snippet button. The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it. Once you have made your changes, click the Next button to submit your fix. Note that once you submit, you will not be able to come back to this step to make further changes."
+                            title="Step 2: Attempt a Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
                             step={1}
