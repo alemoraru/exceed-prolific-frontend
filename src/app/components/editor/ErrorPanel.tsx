@@ -2,7 +2,7 @@
 
 import React from "react";
 import {AlertTriangle, X} from "lucide-react";
-import {ErrorMessage} from "../ErrorMessage";
+import {ErrorMessage} from "./ErrorMessage";
 
 interface ErrorPanelProps {
     /** The error message to display */

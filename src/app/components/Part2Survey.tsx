@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
-import {SurveyInstructions} from './SurveyInstructions';
-import {InstructionsOverlay} from './InstructionsOverlay';
-import {InfoButton} from './InfoButton';
+import {SurveyInstructions} from './instructions/SurveyInstructions';
+import {InstructionsOverlay} from './instructions/InstructionsOverlay';
+import {InfoButton} from './instructions/InfoButton';
 import {Part2Step1Panel} from "./Part2Step1Panel";
 import {Part2Step2Panel} from "./Part2Step2Panel";
 import {Part2Step3Panel} from "./Part2Step3Panel";
