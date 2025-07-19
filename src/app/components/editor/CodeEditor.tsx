@@ -28,7 +28,6 @@ interface CodeEditorState {
     isSubmitted: boolean;
     showHeader: boolean;
     showErrorPanel: boolean;
-    errorPanelHeight: number;
 }
 
 /**
@@ -59,8 +58,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         code: code,
         isSubmitted: false,
         showHeader: true,
-        showErrorPanel: false,
-        errorPanelHeight: 200,
+        showErrorPanel: step === 1 || step === 3, // Show the error panel by default for steps 1 and 3
     });
     const extensions = useMemo(() => {
         const exts = [];
@@ -147,7 +145,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 showErrorPanel={state.showErrorPanel}
                 onToggleError={handleToggleError}
                 onRevert={handleRevert}
-                onPrev={onPrev || (() => {})}
+                onPrev={onPrev || (() => {
+                })}
                 onNext={onNext || handleSubmit}
                 isSubmitted={state.isSubmitted}
                 canRevert={canRevert}
