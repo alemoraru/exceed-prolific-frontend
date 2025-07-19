@@ -1,7 +1,7 @@
 import React from "react";
 import {CodeEditor} from "./editor/CodeEditor";
-import {SubmittingLoader} from "./SubmittingLoader";
-import {SubmissionError} from "./SubmissionError";
+import {LoaderToast} from "./toast/LoaderToast";
+import {ErrorToast} from "./toast/ErrorToast";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./ConfirmChoiceModal";
 
 interface PanelProps {
@@ -44,8 +44,8 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         onModalConfirm
     }) => (
     <div>
-        {submitLoading && <SubmittingLoader/>}
-        {submitError && <SubmissionError message={submitError}/>}
+        {submitLoading && <LoaderToast/>}
+        {submitError && <ErrorToast message={submitError}/>}
         <CodeEditor
             code={code}
             errorMessage={error}

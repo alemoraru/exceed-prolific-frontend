@@ -6,8 +6,8 @@ import {SurveyInstructions} from './SurveyInstructions';
 import {InstructionsOverlay} from './InstructionsOverlay';
 import {InfoButton} from './InfoButton';
 import {ExperienceSlider} from './ExperienceSlider';
-import {SubmissionError} from './SubmissionError';
-import {SubmittingLoader} from './SubmittingLoader';
+import {ErrorToast} from './toast/ErrorToast';
+import {LoaderToast} from './toast/LoaderToast';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 
 /**
@@ -239,9 +239,9 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                     error={q.error}
                     disabled={mcqLoading}
                 />
-                {showSubmittingLoader && <SubmittingLoader text="Submitting your answer..."/>}
+                {showSubmittingLoader && <LoaderToast text="Submitting your answer..."/>}
                 {submissionError &&
-                    <SubmissionError message={"Our apologies, something went wrong while submitting your answer. " +
+                    <ErrorToast message={"Our apologies, something went wrong while submitting your answer. " +
                         "Please try again after a couple of seconds."}
                     />
                 }
@@ -301,7 +301,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
 
             {/* Consent or experience submission error */}
             {submissionError && (step === 0 || step === 2) && (
-                <SubmissionError message={
+                <ErrorToast message={
                     step === 0
                         ? "Our apologies, something went wrong while submitting your consent. Please try again after a couple of seconds."
                         : "Our apologies, something went wrong while submitting your experience. Please try again after a couple of seconds."

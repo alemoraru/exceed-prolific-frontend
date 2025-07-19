@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
  * SubmittingLoader component displays a loading spinner with a message indicating that the code is being submitted for verification.
  * @param text - Optional text to display alongside the spinner, defaults to "Submitting your code for verification...".
  */
-export function SubmittingLoader({text = "Submitting your code for verification..."}: { text?: string }) {
+export function LoaderToast({text = "Submitting your code for verification..."}: { text?: string }) {
     return (
         <div
             className="flex flex-row items-center justify-center gap-3 text-blue-700 my-4 p-4 bg-blue-50 border border-blue-200 rounded-xl shadow-sm w-full mx-auto animate-fade-in"
