@@ -22,6 +22,7 @@ interface CodeEditorProps {
     language?: string;
     readOnly?: boolean;
     autoHeight?: boolean; // new prop to control dynamic height
+    onRevert?: () => void;
 }
 
 interface CodeEditorState {
@@ -55,6 +56,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         language = 'python',
         readOnly = false,
         autoHeight = false,
+        onRevert,
     }) => {
     const [state, setState] = useState<CodeEditorState>({
         code: code,
@@ -158,7 +160,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 hasError={hasError}
                 showErrorPanel={state.showErrorPanel}
                 onToggleError={handleToggleError}
-                onRevert={handleRevert}
+                onRevert={typeof onRevert === 'function' ? onRevert : handleRevert}
                 onPrev={onPrev || (() => {
                 })}
                 onNext={onNext || handleSubmit}

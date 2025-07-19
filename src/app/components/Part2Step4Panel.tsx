@@ -33,6 +33,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         readOnly,
         showRevertModal,
         onRevertCancel,
+        onRevert,
         onRevertConfirm,
         error,
         submitLoading,
@@ -61,6 +62,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             onPrev={onPrev}
             onNext={onSubmit}
             submitLoading={submitLoading}
+            onRevert={onRevert}
         />
         <ConfirmChoiceModal
             open={showConfirmModal}
