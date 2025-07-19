@@ -1,5 +1,5 @@
 import React from 'react';
-import {CodeEditor} from './CodeEditor';
+import {SimpleCodeEditor} from './SimpleCodeEditor';
 import ReactMarkdown from 'react-markdown';
 
 interface MCQProps {
@@ -30,7 +30,7 @@ export function MultipleChoiceQuestion({question, options, selected, onSelect, c
             {/* Display code snippet if provided */}
             {code && (
                 <div className="mb-4">
-                    <CodeEditor code={code} readOnly/>
+                    <SimpleCodeEditor code={code} readOnly/>
                 </div>
             )}
 

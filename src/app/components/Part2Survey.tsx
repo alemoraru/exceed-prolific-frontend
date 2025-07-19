@@ -1,12 +1,15 @@
 import React, {useState, useEffect} from "react";
-import {SurveyInstructions} from './SurveyInstructions';
-import {InstructionsOverlay} from './InstructionsOverlay';
-import {InfoButton} from './InfoButton';
+import {SurveyInstructions} from './instructions/SurveyInstructions';
+import {InstructionsOverlay} from './instructions/InstructionsOverlay';
+import {InfoButton} from './instructions/InfoButton';
 import {Part2Step1Panel} from "./Part2Step1Panel";
 import {Part2Step2Panel} from "./Part2Step2Panel";
 import {Part2Step3Panel} from "./Part2Step3Panel";
 import {Part2Step4Panel} from "./Part2Step4Panel";
 import {CodeSnippet} from "@/app/utils/types";
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {QuitStudyButton} from './QuitStudyButton';
+import {ErrorToast} from './toast/ErrorToast';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -14,18 +17,15 @@ import {CodeSnippet} from "@/app/utils/types";
  * error messages, and allowing users to edit code.
  * @param onComplete - Callback function to call when the survey is completed.
  * @param setOverallStep - Function to update the overall step in a parent component.
- * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate overall step.
+ * @param part1Total - Total number of steps in Part 1 of the survey, used to calculate the overall step.
+ * @param onConsentDenied - Callback function to call when the user denies consent.
  */
-export function Part2Survey(
-    {
-        onComplete,
-        setOverallStep,
-        part1Total
-    }: {
-        onComplete: () => void;
-        setOverallStep: (step: number) => void;
-        part1Total: number;
-    }) {
+export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDenied}: {
+    onComplete: () => void;
+    setOverallStep: (step: number) => void;
+    part1Total: number;
+    onConsentDenied: () => void
+}) {
     // State management
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -47,6 +47,7 @@ export function Part2Survey(
     const [showInstructions, setShowInstructions] = useState(false);
     const [rephrasedError, setRephrasedError] = useState<string>("");
     const [submitStartTime, setSubmitStartTime] = useState<number | null>(null);
+    const [showQuitModal, setShowQuitModal] = useState(false);
 
     // Step and snippet index effects
     useEffect(() => {
@@ -190,23 +191,36 @@ export function Part2Survey(
     };
     const handleRevertCancel = () => setShowRevertModal(false);
 
+    // Show quit button only after consent form and before end-of-study
+    const showQuitButton = true; // Always show in Part2Survey, since consent is already given
+
+    // Handler for quit study
+    const [quitError, setQuitError] = useState<string | null>(null);
+    const handleQuitConfirm = async () => {
+        setShowQuitModal(false);
+        setQuitError(null);
+        const participant_id = localStorage.getItem('participant_id');
+        if (participant_id) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/revoke-consent`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({participant_id})
+                });
+                if (!res.ok) throw new Error('Failed to revoke consent.');
+            } catch {
+                setQuitError('Sorry, something went wrong while revoking your consent. Please try again.');
+                return;
+            }
+        }
+        localStorage.removeItem('participant_id');
+        onConsentDenied();
+    };
+    const handleQuitCancel = () => setShowQuitModal(false);
+
     // UI for loading and error states (initial fetch of code snippet)
     if (loadingSnippet) {
-        return (
-            <div
-                className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 flex flex-col items-center justify-center min-h-[350px]">
-                <div className="flex flex-col items-center gap-4">
-                    <svg className="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
-                    </svg>
-                    <div className="text-lg font-semibold text-gray-700 mt-2">Loading next code snippet...</div>
-                    <div className="text-gray-500 text-sm">Please wait while we fetch your next programming task.</div>
-                </div>
-            </div>
-        );
+        return null; // Optionally show a loading spinner here
     }
     if (snippetError || !currentSnippet) {
         return <div
@@ -216,7 +230,24 @@ export function Part2Survey(
     const getErrorMessage = (): string => currentSnippet?.error || '';
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
+            {/* Fixed Quit Study button */}
+            {showQuitButton && (
+                <QuitStudyButton
+                    onClick={() => setShowQuitModal(true)}
+                    disabled={showQuitModal}
+                />
+            )}
+            {/* Quit Study Modal */}
+            <ConfirmChoiceModal
+                open={showQuitModal}
+                onCancel={handleQuitCancel}
+                onConfirm={handleQuitConfirm}
+                type={ConfirmChoiceModalType.QuitStudy}
+            />
+            {/* Error toast for quit error */}
+            {quitError && <ErrorToast message={quitError}/>}
+
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
 
@@ -226,12 +257,12 @@ export function Part2Survey(
             </InstructionsOverlay>
 
             {/* Stepper for snippet progress */}
-            <div className="text-center text-gray-600 mt-2">
+            <div className="text-center text-gray-600 mt-0">
                 Code Snippet {snippetIdx + 1} of {snippetIds.length}
             </div>
 
             {/* Divider for separation */}
-            <div className="my-6 border-b border-gray-200"/>
+            <div className="mt-6"/>
 
             {/* Step 1: Show original code and standard error message below, with toggle open by default */}
             {step === 1 && (
@@ -239,7 +270,6 @@ export function Part2Survey(
                     code={currentSnippet.code}
                     error={getErrorMessage()}
                     showError={showErrorStep1}
-                    onToggleError={setShowErrorStep1}
                     onNext={goNext}
                 />
             )}

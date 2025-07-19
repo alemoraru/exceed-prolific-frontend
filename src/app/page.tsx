@@ -60,7 +60,7 @@ export default function App() {
             <SurveyStatusMessage
                 title="Thank you for your time!"
                 subtitle="You have chosen not to participate."
-                message="Because you have not consented, you will not be able to participate
+                message="Because you have either not consented or quit the study, you will not be able to participate
                 in this study and will not receive any compensation. Your choice has been recorded."
                 showStudyTitle={true}
                 type={SurveyStatusType.Info}
@@ -72,7 +72,7 @@ export default function App() {
     if (!part1Complete) {
         return (
             <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-                <div className="w-full max-w-5xl relative mt-6">
+                <div className="w-full max-w-6xl relative mt-4">
                     {/* Progress bar at the top */}
                     <div className="absolute top-0 left-0 w-full z-10">
                         <ProgressBar progress={(overallStep / totalSteps) * 100}/>
@@ -106,7 +106,7 @@ export default function App() {
     }
     return (
         <main className="min-h-screen flex flex-col items-center bg-gray-100 p-4 text-center">
-            <div className="w-full max-w-5xl relative mt-6">
+            <div className="w-full max-w-6xl relative mt-4">
                 {/* Progress bar at the top */}
                 <div className="absolute top-0 left-0 w-full z-10">
                     <ProgressBar progress={(overallStep / totalSteps) * 100}/>
@@ -115,6 +115,7 @@ export default function App() {
                     onComplete={() => setSnippetIdx(4)}
                     setOverallStep={setOverallStep}
                     part1Total={part1Total}
+                    onConsentDenied={() => setConsentDenied(true)}
                 />
             </div>
         </main>

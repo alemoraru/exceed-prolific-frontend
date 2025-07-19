@@ -1,11 +1,7 @@
 import React from "react";
-import {CodeEditor} from "./CodeEditor";
-import {ErrorMessage} from "./ErrorMessage";
-import {ErrorToggle} from "./ErrorToggle";
-import {RevertButton} from "./RevertButton";
-import {PrimaryButton, SecondaryButton} from "./SurveyButtons";
-import {SubmittingLoader} from "./SubmittingLoader";
-import {SubmissionError} from "./SubmissionError";
+import {CodeEditor} from "./editor/CodeEditor";
+import {LoaderToast} from "./toast/LoaderToast";
+import {ErrorToast} from "./toast/ErrorToast";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./ConfirmChoiceModal";
 
 interface PanelProps {
@@ -34,13 +30,10 @@ interface PanelProps {
 export const Part2Step4Panel: React.FC<PanelProps> = (
     {
         code,
-        onCodeChange,
         readOnly,
-        showError,
-        onToggleError,
-        onRevert,
         showRevertModal,
         onRevertCancel,
+        onRevert,
         onRevertConfirm,
         error,
         submitLoading,
@@ -52,39 +45,25 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         onModalConfirm
     }) => (
     <div>
-        <h2 className="text-lg font-semibold mb-2">Step 4: Final Fix</h2>
-        <p className="mb-4 text-gray-700 text-left">
-            Based on the new error message and your understanding, please make your final changes to the
-            code below. <b>Your goal is to modify the code so that it achieves the desired result as
-            initially defined within the docstrings.</b> You can revert to the original snippet at any time
-            by clicking the <b>Revert to original snippet</b> button. When you are done editing, click
-            the <b>Submit</b> button to submit your final fix. Note that once you submit, you will not be
-            able to come back to this step to make further changes.
-        </p>
-        {submitLoading && <SubmittingLoader/>}
-        {submitError && <SubmissionError message={submitError}/>}
-        <CodeEditor code={code} onChange={onCodeChange} readOnly={readOnly}/>
-        <div className="flex items-start gap-4 mt-4 w-full">
-            <div className="w-1/2 flex justify-start">
-                <ErrorToggle label="Error Message" onToggle={onToggleError}/>
-            </div>
-            <div className="w-1/2 flex justify-end">
-                <RevertButton onClick={onRevert}/>
-            </div>
-        </div>
-        {showError && (
-            <div className="w-full mt-3">
-                <ErrorMessage errorMessage={error} renderMarkdown={true}/>
-            </div>
-        )}
-        <div className="flex justify-between mt-8">
-            <SecondaryButton onClick={onPrev} disabled={submitLoading}>
-                Previous
-            </SecondaryButton>
-            <PrimaryButton onClick={onSubmit} disabled={submitLoading}>
-                Submit
-            </PrimaryButton>
-        </div>
+        {submitLoading && <LoaderToast/>}
+        {submitError && <ErrorToast message={submitError}/>}
+        <CodeEditor
+            code={code}
+            errorMessage={error}
+            readOnly={readOnly}
+            onSubmitAction={onSubmit}
+            instructions="Based on the new error message and your understanding, please make your final changes to the code below.
+            Your goal is to modify the code so that it achieves the desired result as initially defined within the docstrings.
+            You can revert to the original snippet at any time by clicking the Revert to original snippet button.
+            When you are done editing, click the Submit button to submit your final fix.
+            Note that once you submit, you will not be able to come back to this step to make further changes."
+            title="Step 4: Final Fix"
+            step={4}
+            onPrev={onPrev}
+            onNext={onSubmit}
+            submitLoading={submitLoading}
+            onRevert={onRevert}
+        />
         <ConfirmChoiceModal
             open={showConfirmModal}
             onCancel={onModalCancel}

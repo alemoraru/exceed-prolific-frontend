@@ -1,8 +1,5 @@
 import React from "react";
-import {CodeEditor} from "./CodeEditor";
-import {ErrorMessage} from "./ErrorMessage";
-import {ErrorToggle} from "./ErrorToggle";
-import {PrimaryButton, SecondaryButton} from "./SurveyButtons";
+import {CodeEditor} from "./editor/CodeEditor";
 
 interface PanelProps {
     code: string;
@@ -20,41 +17,28 @@ export const Part2Step3Panel: React.FC<PanelProps> = (
     {
         code,
         error,
-        showError,
-        onToggleError,
         onPrev,
         onNext
     }) => (
     <div>
-        <h2 className="text-lg font-semibold mb-2">Step 3: Review the New Error Message</h2>
-        <p className="mb-4 text-gray-700 text-left">
-            The code you submitted previously did not fully resolve all issues. Please review the new error
-            message below, which was triggered by your code changes. Use this information to help
-            you understand what went wrong. <b>Your goal is still to modify the code so that it achieves the
-            desired result as initially defined within the docstrings. </b>
-        </p>
         <div className="flex flex-col gap-3">
             <div className="flex-1">
-                <CodeEditor code={code} readOnly/>
+                <CodeEditor
+                    code={code}
+                    readOnly
+                    errorMessage={error}
+                    instructions="The code you submitted previously did not fully resolve all issues.
+                    Please review the new error message below, which was triggered by your code changes.
+                    Use this information to help you understand what went wrong.
+                    Your goal is still to modify the code so that it achieves the desired result as initially defined within the docstrings.
+                    When you are ready, click the Next button. Note that this step is for review only,
+                    therefore you cannot make any changes to the code at this point."
+                    title="Step 3: Review the New Error Message"
+                    step={3}
+                    onPrev={onPrev}
+                    onNext={onNext}
+                />
             </div>
-            <div className="flex items-start gap-4 mt-4 w-full">
-                <div className="w-1/2 flex justify-start">
-                    <ErrorToggle label="Error Message" initialOpen onToggle={onToggleError}/>
-                </div>
-            </div>
-            {showError && (
-                <div className="w-full">
-                    <ErrorMessage errorMessage={error} renderMarkdown={true}/>
-                </div>
-            )}
-        </div>
-        <div className="flex justify-between mt-8">
-            <SecondaryButton onClick={onPrev}>
-                Previous
-            </SecondaryButton>
-            <PrimaryButton onClick={onNext}>
-                Next
-            </PrimaryButton>
         </div>
     </div>
 );

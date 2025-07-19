@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {MultipleChoiceQuestion} from './MultipleChoiceQuestion';
 import {ConsentForm} from './ConsentForm';
-import {PrimaryButton, DisabledButton} from './SurveyButtons';
-import {SurveyInstructions} from './SurveyInstructions';
-import {InstructionsOverlay} from './InstructionsOverlay';
-import {InfoButton} from './InfoButton';
+import {PrimaryButton} from './SurveyButtons';
+import {SurveyInstructions} from './instructions/SurveyInstructions';
+import {InstructionsOverlay} from './instructions/InstructionsOverlay';
+import {InfoButton} from './instructions/InfoButton';
 import {ExperienceSlider} from './ExperienceSlider';
-import {SubmissionError} from './SubmissionError';
-import {SubmittingLoader} from './SubmittingLoader';
+import {ErrorToast} from './toast/ErrorToast';
+import {LoaderToast} from './toast/LoaderToast';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
+import {ArrowRight} from 'lucide-react';
 
 /**
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.
@@ -39,6 +42,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const [mcqTimes, setMcqTimes] = useState<number[]>([]);
     const [mcqStartTime, setMcqStartTime] = useState<number | null>(null);
     const [allInstructionTabsVisited, setAllInstructionTabsVisited] = useState(false);
+    const [showQuitModal, setShowQuitModal] = useState(false);
 
     // Fetch questions after consent and participantId is set
     useEffect(() => {
@@ -200,8 +204,13 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
 
     // Survey Instructions renderer
     function renderInstructions() {
-        return <SurveyInstructions requireAllTabs={step === 1}
-                                   onAllTabsVisited={() => setAllInstructionTabsVisited(true)} defaultTabIndex={0}/>;
+        return (
+            <SurveyInstructions
+                requireAllTabs={step === 1}
+                onAllTabsVisited={() => setAllInstructionTabsVisited(true)}
+                defaultTabIndex={0}
+            />
+        );
     }
 
     // Experience slider renderer
@@ -234,9 +243,9 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                     error={q.error}
                     disabled={mcqLoading}
                 />
-                {showSubmittingLoader && <SubmittingLoader text="Submitting your answer..."/>}
+                {showSubmittingLoader && <LoaderToast text="Submitting your answer..."/>}
                 {submissionError &&
-                    <SubmissionError message={"Our apologies, something went wrong while submitting your answer. " +
+                    <ErrorToast message={"Our apologies, something went wrong while submitting your answer. " +
                         "Please try again after a couple of seconds."}
                     />
                 }
@@ -270,8 +279,51 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         else setStep(s => s + 1);
     };
 
+    // Show quit button only after consent form and before end-of-study/consent-denied
+    const showQuitButton = step > 0 && step < (questions ? questions.length + 3 : 9999);
+
+    // Handler for quit study
+    const [quitError, setQuitError] = useState<string | null>(null);
+    const handleQuitConfirm = async () => {
+        setShowQuitModal(false);
+        setQuitError(null);
+        const participant_id = localStorage.getItem('participant_id');
+        if (participant_id) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/revoke-consent`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({participant_id})
+                });
+                if (!res.ok) throw new Error('Failed to revoke consent.');
+            } catch {
+                setQuitError('Sorry, something went wrong while revoking your consent. Please try again.');
+                return;
+            }
+        }
+        localStorage.removeItem('participant_id');
+        onConsentDenied();
+    };
+    const handleQuitCancel = () => setShowQuitModal(false);
+
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+            {/* Fixed Quit Study button */}
+            {showQuitButton && (
+                <QuitStudyButton
+                    onClick={() => setShowQuitModal(true)}
+                    disabled={showQuitModal}
+                />
+            )}
+            {/* Quit Study Modal */}
+            <ConfirmChoiceModal
+                open={showQuitModal}
+                onCancel={handleQuitCancel}
+                onConfirm={handleQuitConfirm}
+                type={ConfirmChoiceModalType.QuitStudy}
+            />
+            {/* Error toast for quit error */}
+            {quitError && <ErrorToast message={quitError}/>}
             {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
             {/* Overlay for instructions */}
@@ -296,15 +348,14 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
 
             {/* Consent or experience submission error */}
             {submissionError && (step === 0 || step === 2) && (
-                <SubmissionError message={
+                <ErrorToast message={
                     step === 0
                         ? "Our apologies, something went wrong while submitting your consent. Please try again after a couple of seconds."
                         : "Our apologies, something went wrong while submitting your experience. Please try again after a couple of seconds."
                 }/>
             )}
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-                <DisabledButton>Previous</DisabledButton>
+            <div className="flex justify-end mt-8 px-8">
                 <PrimaryButton
                     onClick={handleNext}
                     disabled={
@@ -312,8 +363,12 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                         mcqLoading ||
                         consentSubmitting ||
                         (step === 1 && (!questions || questionsLoading || !allInstructionTabsVisited))
-                    }>
-                    {isLast ? 'Next' : 'Next'}
+                    }
+                >
+                    <span className="flex items-center">
+                        Next
+                        <ArrowRight size={14}/>
+                    </span>
                 </PrimaryButton>
             </div>
         </div>

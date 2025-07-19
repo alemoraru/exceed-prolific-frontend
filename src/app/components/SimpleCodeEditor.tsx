@@ -10,7 +10,7 @@ import {python} from '@codemirror/lang-python';
  * @param onChange - Optional callback function to handle changes in the code.
  * @param readOnly - Optional flag to make the editor read-only (default is false).
  */
-export const CodeEditor = (
+export const SimpleCodeEditor = (
     {
         code,
         onChange,
