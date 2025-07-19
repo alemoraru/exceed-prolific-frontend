@@ -60,7 +60,7 @@ export default function App() {
             <SurveyStatusMessage
                 title="Thank you for your time!"
                 subtitle="You have chosen not to participate."
-                message="Because you have not consented, you will not be able to participate
+                message="Because you have either not consented or quit the study, you will not be able to participate
                 in this study and will not receive any compensation. Your choice has been recorded."
                 showStudyTitle={true}
                 type={SurveyStatusType.Info}

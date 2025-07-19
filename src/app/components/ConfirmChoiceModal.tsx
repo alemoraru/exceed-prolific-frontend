@@ -2,10 +2,13 @@ import React, {useEffect} from "react";
 import {FaRegKeyboard} from "react-icons/fa";
 import {MdSend} from "react-icons/md";
 import {MdRestore} from "react-icons/md";
+import {MdOutlineExitToApp} from "react-icons/md";
+import {MdOutlineThumbUp} from "react-icons/md";
 
 export enum ConfirmChoiceModalType {
     CodeFix = "CodeFix",
-    CodeRevert = "CodeRevert"
+    CodeRevert = "CodeRevert",
+    QuitStudy = "QuitStudy"
 }
 
 export interface ConfirmChoiceModalProps {
@@ -75,6 +78,19 @@ export function ConfirmChoiceModal(
         cancelLabel = "Keep Editing";
         confirmIcon = <MdRestore className="text-lg"/>;
         cancelIcon = <FaRegKeyboard className="text-lg"/>;
+    } else if (type === ConfirmChoiceModalType.QuitStudy) {
+        title = "Quit & Revoke Consent?";
+        message = (
+            <>
+                Are you sure you want to quit the study and revoke your consent? <b>If you proceed, all your data will
+                be erased and you will no longer receive compensation for your time spent on the study so far.</b> This
+                action cannot be undone.
+            </>
+        );
+        confirmLabel = "Quit & Revoke Consent";
+        cancelLabel = "Continue Study";
+        confirmIcon = <MdOutlineExitToApp className="text-lg"/>;
+        cancelIcon = <MdOutlineThumbUp className="text-lg"/>;
     }
 
     return (
@@ -94,7 +110,9 @@ export function ConfirmChoiceModal(
                         {cancelLabel}
                     </button>
                     <button
-                        className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow"
+                        className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition 
+                        shadow ${type === ConfirmChoiceModalType.QuitStudy ? 'bg-red-600 text-white hover:bg-red-700 ' +
+                            'border border-red-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                         onClick={onConfirm}
                         type="button"
                     >

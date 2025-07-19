@@ -8,6 +8,8 @@ import {InfoButton} from './instructions/InfoButton';
 import {ExperienceSlider} from './ExperienceSlider';
 import {ErrorToast} from './toast/ErrorToast';
 import {LoaderToast} from './toast/LoaderToast';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 
 /**
@@ -39,6 +41,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const [mcqTimes, setMcqTimes] = useState<number[]>([]);
     const [mcqStartTime, setMcqStartTime] = useState<number | null>(null);
     const [allInstructionTabsVisited, setAllInstructionTabsVisited] = useState(false);
+    const [showQuitModal, setShowQuitModal] = useState(false);
 
     // Fetch questions after consent and participantId is set
     useEffect(() => {
@@ -275,8 +278,33 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         else setStep(s => s + 1);
     };
 
+    // Show quit button only after consent form and before end-of-study/consent-denied
+    const showQuitButton = step > 0 && step < (questions ? questions.length + 3 : 9999);
+
+    // Handler for quit study
+    const handleQuitConfirm = () => {
+        setShowQuitModal(false);
+        // Call onConsentDenied to show the thank-you message and erase data
+        onConsentDenied();
+    };
+    const handleQuitCancel = () => setShowQuitModal(false);
+
     return (
         <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+            {/* Fixed Quit Study button */}
+            {showQuitButton && (
+                <QuitStudyButton
+                    onClick={() => setShowQuitModal(true)}
+                    disabled={showQuitModal}
+                />
+            )}
+            {/* Quit Study Modal */}
+            <ConfirmChoiceModal
+                open={showQuitModal}
+                onCancel={handleQuitCancel}
+                onConfirm={handleQuitConfirm}
+                type={ConfirmChoiceModalType.QuitStudy}
+            />
             {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
             {/* Overlay for instructions */}

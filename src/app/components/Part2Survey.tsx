@@ -7,6 +7,8 @@ import {Part2Step2Panel} from "./Part2Step2Panel";
 import {Part2Step3Panel} from "./Part2Step3Panel";
 import {Part2Step4Panel} from "./Part2Step4Panel";
 import {CodeSnippet} from "@/app/utils/types";
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {QuitStudyButton} from './QuitStudyButton';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -47,6 +49,7 @@ export function Part2Survey(
     const [showInstructions, setShowInstructions] = useState(false);
     const [rephrasedError, setRephrasedError] = useState<string>("");
     const [submitStartTime, setSubmitStartTime] = useState<number | null>(null);
+    const [showQuitModal, setShowQuitModal] = useState(false);
 
     // Step and snippet index effects
     useEffect(() => {
@@ -190,6 +193,17 @@ export function Part2Survey(
     };
     const handleRevertCancel = () => setShowRevertModal(false);
 
+    // Show quit button only after consent form and before end-of-study
+    const showQuitButton = true; // Always show in Part2Survey, since consent is already given
+
+    // Handler for quit study
+    const handleQuitConfirm = () => {
+        setShowQuitModal(false);
+        // You may want to redirect or show a thank you message here
+        window.location.reload(); // Or call a parent handler if available
+    };
+    const handleQuitCancel = () => setShowQuitModal(false);
+
     // UI for loading and error states (initial fetch of code snippet)
     if (loadingSnippet) {
         return null; // Optionally show a loading spinner here
@@ -203,6 +217,21 @@ export function Part2Survey(
 
     return (
         <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
+            {/* Fixed Quit Study button */}
+            {showQuitButton && (
+                <QuitStudyButton
+                    onClick={() => setShowQuitModal(true)}
+                    disabled={showQuitModal}
+                />
+            )}
+            {/* Quit Study Modal */}
+            <ConfirmChoiceModal
+                open={showQuitModal}
+                onCancel={handleQuitCancel}
+                onConfirm={handleQuitConfirm}
+                type={ConfirmChoiceModalType.QuitStudy}
+            />
+
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
 
