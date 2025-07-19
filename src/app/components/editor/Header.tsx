@@ -27,7 +27,8 @@ export const Header: React.FC<HeaderProps> = ({title, instructions, isVisible, o
 
             <button
                 onClick={onToggle}
-                className="cursor-pointer w-full py-2 px-6 flex items-center justify-center gap-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                className="cursor-pointer w-full py-2 px-6 flex items-center justify-center gap-2 text-gray-500
+                hover:text-blue-600 hover:bg-gray-100 transition-colors"
                 aria-label={isVisible ? "Hide header" : "Show header"}
             >
                 {isVisible ? (

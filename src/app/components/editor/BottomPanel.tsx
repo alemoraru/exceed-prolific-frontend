@@ -30,7 +30,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                         className={`cursor-pointer flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm transition-colors ${
                             showErrorPanel
                                 ? 'bg-red-100 text-red-600'
-                                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                                : 'text-gray-500 hover:text-blue-600 hover:bg-gray-100'
                         }`}
                         aria-label={showErrorPanel ? "Hide error panel" : "Show error panel"}
                     >
@@ -42,7 +42,8 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                 <button
                     onClick={onRevert}
                     disabled={!canRevert || isSubmitted}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-sm text-sm text-gray-500 hover:text-blue-600
+                    hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Revert to original code"
                 >
                     <RotateCcw size={14}/>

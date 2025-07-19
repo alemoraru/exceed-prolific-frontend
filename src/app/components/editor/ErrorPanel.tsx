@@ -22,7 +22,7 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
 
     return (
         <div
-            className="flex flex-col flex-shrink-0 bg-red-50 border-t border-red-400 text-red-900 shadow-inner"
+            className="flex flex-col flex-shrink-0 bg-red-50 border-t border-red-400 text-red-700 shadow-inner"
             style={{height: 'auto', minHeight: 0}}
         >
             <header className="flex items-center justify-between px-4 py-2">
@@ -33,7 +33,7 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
                 <button
                     onClick={onCloseAction}
                     aria-label="Close error panel"
-                    className="p-1 rounded hover:bg-red-200 transition-colors cursor-pointer"
+                    className="p-1 rounded hover:bg-red-100 transition-colors cursor-pointer"
                 >
                     <X size={18}/>
                 </button>
