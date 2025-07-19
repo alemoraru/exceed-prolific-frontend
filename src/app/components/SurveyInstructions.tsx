@@ -37,7 +37,7 @@ export function SurveyInstructions(
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [exampleCode] = useState('print(2 + 1)');
-    const [reviewCode, setReviewCode] = useState(
+    const [reviewCode] = useState(
         'def add(a, b):\n    return a + b\n\nprint(add(2))'
     );
     const visitedCount = visitedTabs.size;
@@ -256,8 +256,9 @@ export function SurveyInstructions(
                             title="Step 2: Attempt a Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
-                            step={1}
-                            onSubmitAction={setReviewCode}
+                            step={2}
+                            onSubmitAction={() => {
+                            }}
                             readOnly={false}
                             autoHeight={true}
                         />

@@ -20,7 +20,7 @@ user studies.
 ```
 src/app/
   components/
-    CodeEditor.tsx             # Python code editor (readonly/editable)
+    SimpleCodeEditor.tsx             # Python code editor (readonly/editable)
     ErrorMessage.tsx           # Error message display for code tasks
     ExperienceSlider.tsx       # Slider for years of Python experience
     MultipleChoiceQuestion.tsx # Generic MCQ component
