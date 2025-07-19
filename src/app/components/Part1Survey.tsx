@@ -200,8 +200,13 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
 
     // Survey Instructions renderer
     function renderInstructions() {
-        return <SurveyInstructions requireAllTabs={step === 1}
-                                   onAllTabsVisited={() => setAllInstructionTabsVisited(true)} defaultTabIndex={0}/>;
+        return (
+            <SurveyInstructions
+                requireAllTabs={step === 1}
+                onAllTabsVisited={() => setAllInstructionTabsVisited(true)}
+                defaultTabIndex={0}
+            />
+        );
     }
 
     // Experience slider renderer
@@ -271,7 +276,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 relative fade-in">
             {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
             {/* Overlay for instructions */}

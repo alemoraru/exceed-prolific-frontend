@@ -202,7 +202,7 @@ export function Part2Survey(
     const getErrorMessage = (): string => currentSnippet?.error || '';
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
+        <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
             {/* Info icon at top-right, not shown on consent form (not relevant for Part2) */}
             <InfoButton onClick={() => setShowInstructions(true)}/>
 

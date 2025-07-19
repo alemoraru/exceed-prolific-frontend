@@ -33,7 +33,7 @@ export function SurveyInstructions(
         onAllTabsVisited?: () => void;
     } = {}) {
 
-    /* State management for the instructions component */
+    /* State management for the instruction component */
     const totalTabs = 4;
     const [tabIndex, setTabIndex] = useState(defaultTabIndex);
     const [visitedTabs, setVisitedTabs] = useState<Set<number>>(() => new Set([defaultTabIndex]));
@@ -61,7 +61,7 @@ export function SurveyInstructions(
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl px-6 fade-in">
+        <div className="max-w-6xl mx-auto bg-white rounded-2xl px-6 fade-in">
             {/* Header */}
             <header className="mb-6 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
@@ -280,7 +280,7 @@ export function SurveyInstructions(
 
 /**
  * Example error message used in the code‑fix demo.
- */LinearProgress
+ */
 const exampleErrorMessage = `Traceback (most recent call last):
   File "main.py", line 4, in <module>
     print(add(2))
