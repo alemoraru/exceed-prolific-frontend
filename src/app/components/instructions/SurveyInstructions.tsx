@@ -9,6 +9,7 @@ import {ExperienceSlider} from '../ExperienceSlider';
 import {MultipleChoiceQuestion} from '../MultipleChoiceQuestion';
 import {CodeEditor} from '../editor/CodeEditor';
 import {FaInfoCircle, FaCheckCircle} from 'react-icons/fa';
+import {MdOutlineExitToApp} from "react-icons/md";
 
 /**
  * Component showing clear, user‑friendly instructions for participants in the survey.
@@ -57,9 +58,9 @@ export function SurveyInstructions(
     };
 
     return (
-        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-6 fade-in">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-2 fade-in">
             {/* Header */}
-            <header className="mb-6 text-center">
+            <header className="mb-4 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
             </header>
 
@@ -76,7 +77,7 @@ export function SurveyInstructions(
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                    {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                    {["Welcome & Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
                         <Tab
                             key={label}
                             iconPosition="end"
@@ -104,7 +105,7 @@ export function SurveyInstructions(
 
             {/* Call‑out if not yet complete */}
             {!allVisited && requireAllTabs && (
-                <Box className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded" role="alert">
+                <Box className="mb-3 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded" role="alert">
                     <Typography variant="body2" color="text.secondary" textAlign="center">
                         Please review <strong>all</strong> tabs above before continuing. Your answers depend on
                         understanding each
@@ -135,9 +136,9 @@ export function SurveyInstructions(
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
-                            <FaInfoCircle className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                                          aria-label="Info icon"/>{' '}
+                            <b>Note:</b> You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
+                            &#34;<FaInfoCircle className="inline text-blue-600 align-text-bottom relative -mt-0.5"
+                                               aria-label="Info icon"/>&#34;{' '}
                             at the top‑right of the following survey pages. These will be available at any point during the survey
                             should you require clarification on the expectations.
                         </span>
@@ -156,6 +157,13 @@ export function SurveyInstructions(
                             detected use of external help will result in disqualification.
                         </li>
                     </ul>
+                    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded text-red-700 text-left">
+                        <b>Note:</b> You can exit the study and revoke your consent at any time by clicking the <b>Quit
+                        & Revoke Consent</b> icon &#34;<MdOutlineExitToApp
+                        className="inline relative -mt-0.5"/>&#34;{' '}
+                        in the top-left corner of the page. If you choose to do so, all your
+                        data will be deleted and you will no longer receive compensation for your participation.
+                    </div>
                 </div>
             )}
 
