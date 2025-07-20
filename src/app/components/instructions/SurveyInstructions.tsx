@@ -117,14 +117,14 @@ export function SurveyInstructions(
             {/* Tab Panel - Main Overview */}
             {tabIndex === 0 && (
                 <div>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         This survey consists of two main parts: <b>multiple‑choice questions</b> and <b>code review/fix
                         tasks</b>.
                         You will first be asked to self‑assess your Python experience, then answer several
                         multiple‑choice questions about Python code and errors, and finally review and fix code snippets
                         with errors.
                     </p>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         The tabs above show examples of each type of question you will encounter. Please explore each
                         tab to
                         familiarise yourself with the layout and what will be expected of you. You can interact with the
@@ -140,18 +140,21 @@ export function SurveyInstructions(
                             <ul className="list-disc pl-6 mt-2 space-y-1">
                                 <li>
                                     You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
-                                    &#34;<FaInfoCircle
-                                    className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                                    aria-label="Info icon"/>&#34;{' '}
-                                    at the top‑right of the following survey pages. These will be available at any point should you require clarification on the expectations,
-                                    or if you need to review the task instructions.
+                                    <FaInfoCircle className="inline text-blue-600"
+                                                  aria-label="Info icon"/>{' '}
+                                    at the top‑right of the following survey pages. These will be available at any point should you require clarification on the expectations, or if you need to review the task instructions.
                                 </li>
                                 <li>
                                     You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
-                                    &#34;<MdOutlineExitToApp
-                                    className="inline relative -mt-0.5 text-red-400"/>&#34;{' '}
+                                    {' '}<MdOutlineExitToApp className="inline relative -mt-0.5 text-red-400"/>{' '}
                                     in the top-left corner of the page. If you choose to do so, all your data will be deleted, however,
                                     you will NO longer receive compensation for your time and participation.
+                                </li>
+                                <li>
+                                    <span className="text-red-700 font-semibold">Refreshing or closing the tab / browser is strongly discouraged until finishing the survey. </span>
+                                    If you do so, a dialog will appear to confirm your choice, but if you proceed,
+                                    your progress will be lost and you will not be able to participate in the survey again.
+                                    Please avoid refreshing or closing the tab to ensure your responses are recorded and you receive compensation.
                                 </li>
                             </ul>
                         </span>
@@ -177,12 +180,10 @@ export function SurveyInstructions(
             {tabIndex === 1 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Self‑Assess Your Python Experience</h3>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         You will be asked to indicate your years of programming experience with Python using a slider or
-                        by
-                        entering a number. If you have no experience, set it to 0. Round to the nearest whole number
-                        (e.g., 1.5 →
-                        2).
+                        by entering a number. If you have no experience, set it to 0. Round to the nearest whole number
+                        (e.g., 1.5 → 2).
                     </p>
                     <ExperienceSlider value={sliderValue} onChange={setSliderValue}/>
                     <p className="text-gray-600 text-sm">
