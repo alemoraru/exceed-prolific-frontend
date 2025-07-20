@@ -15,6 +15,7 @@ export default function App() {
     const [, setPart1Answers] = useState<Part1Answers | null>(null);
     const [snippetIdx, setSnippetIdx] = useState(0);
     const [consentDenied, setConsentDenied] = useState(false);
+    const [alreadyParticipated, setAlreadyParticipated] = useState(false);
 
     // Calculate total steps for both parts
     const part1Total = 8 + 1 + 1; // 8 MCQs + 1 for experience/consent + 1 for instructions
@@ -34,6 +35,18 @@ export default function App() {
             if (pid) {
                 setParticipantId(pid);
                 localStorage.setItem('participant_id', pid);
+                // Check if participant already exists
+                fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/participant-exists`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({participant_id: pid})
+                })
+                    .then(async res => {
+                        if (!res.ok) throw new Error('Failed to check participant');
+                        const data = await res.json();
+                        if (data.exists) setAlreadyParticipated(true);
+                    })
+                    .catch(() => setAlreadyParticipated(false));
             } else {
                 setParticipantId(null);
             }
@@ -64,6 +77,21 @@ export default function App() {
                 in this study and will not receive any compensation. Your choice has been recorded."
                 showStudyTitle={true}
                 type={SurveyStatusType.Info}
+            />
+        );
+    }
+
+    // If already participated, show a different message
+    if (alreadyParticipated) {
+        return (
+            <SurveyStatusMessage
+                title="Already Participated"
+                subtitle="You have already completed this study."
+                message="Our records show that you have already participated in this survey.
+                Thank you for your contribution! Even though we appreciate your interest, you cannot participate again.
+                If you believe this is an error, please reach out to us via the contact information provided below."
+                showStudyTitle={true}
+                type={SurveyStatusType.AlreadyParticipated}
             />
         );
     }
