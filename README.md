@@ -1,72 +1,83 @@
 # EXCEED Prolific Frontend
 
-This is a Next.js web application for a two-part Python error-fixing and experience survey, designed for research and
-user studies.
+This repository contains the frontend code for the EXCEED Prolific application, a study aimed at investigating code
+understanding and error correction using Python code snippets and error messages. The frontend is built with Next.js and
+React, providing a survey interface for participants to provide their experience with Python, answer MCQs, and
+participate in code debugging tasks.
 
-## Features
+---
 
-- **Consent Form**: Participants must provide consent before starting the survey.
-- **Part 1: Experience & Knowledge**
-    - Python experience slider (years of experience)
-    - Eight (8) multiple-choice questions (MCQs), some with code snippets and error messages
-- **Part 2: Code Debugging Tasks**
-    - Four (4) Python code snippets, each with a 4-step error-fixing workflow
-    - Randomized error message style per snippet
-- **Unified Progress Bar**: Tracks progress across both parts of the survey
-- **Modern UI**: Responsive, clean, and user-friendly interface
+## 🧩 Stack Overview
 
-## Project Structure
+- **TypeScript**
+- **React** (with Next.js App Router)
+- **Next.js** for SSR and routing
+- **Tailwind CSS** for styling
+- **Docker** for containerization (optional)
 
-```
-src/app/
-  components/
-    SimpleCodeEditor.tsx       # Python code editor (readonly/editable)
-    ErrorMessage.tsx           # Error message display for code tasks
-    ExperienceSlider.tsx       # Slider for years of Python experience
-    MultipleChoiceQuestion.tsx # Generic MCQ component
-    Part1Survey.tsx            # Handles consent, experience, and MCQs
-    Part2Survey.tsx            # Handles code debugging tasks
-  data/
-    questions.ts               # Data for Part 1 MCQs
-    snippets.ts                # Data for Part 2 code snippets
-  page.tsx                     # Main app entry and survey flow
-  globals.css                  # Global styles
-  layout.tsx                   # App layout
-```
+---
 
-## Getting Started
+## ⚡ QuickStart
 
-1. **Install dependencies:**
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/alemoraru/exceed-prolific-frontend.git
+   cd exceed-prolific-frontend
+   ```
+2. **Install dependencies:**
    ```bash
    npm install
-   # or
-   yarn install
    ```
-
-2. **Run the development server:**
+3. **Run the development server:**
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
-
-3. **Open your browser:**
+4. **Open your browser:**
    Visit [http://localhost:3000](http://localhost:3000) to use the survey.
 
-## Customization
+> Note: The frontend expects the backend API to be running and accessible. See
+> the [backend README](https://github.com/alemoraru/exceed-prolific-backend) for setup instructions.
 
-- **Add/modify MCQs:** Edit `src/app/data/questions.ts`.
-- **Add/modify code snippets:** Edit `src/app/data/snippets.ts`.
-- **UI components:** All survey logic and UI are in `src/app/components/`.
+---
 
-## Technologies Used
+## ⚙️ Environment Variables
 
-- [Next.js](https://nextjs.org/) (App Router)
-- [React](https://react.dev/)
-- [@uiw/react-codemirror](https://github.com/uiwjs/react-codemirror) for code editing
-- [TypeScript](https://www.typescriptlang.org/)
-- Tailwind CSS (via global styles)
+| Variable                 | Description                              | Example Value         |
+|--------------------------|------------------------------------------|-----------------------|
+| NEXT_PUBLIC_BACKEND_HOST | Backend API base URL (for REST requests) | http://localhost:8000 |
 
-## License
+Set environment variables in a `.env.local` file in the project root. Make sure to not commit this file to version
+control; it is already included in the `.gitignore`.
 
-This project is for research and demonstration purposes. As such, we provide an MIT license for use and modification.
+---
+
+## 📝 Notes
+
+- The frontend is designed to work with the EXCEED Prolific
+  backend ([EXCEED Prolific Backend](https://github.com/amoraru/exceed-prolific-backend)).
+- Error messages and code snippets are fetched from the backend.
+- The survey flow includes consent, experience, MCQs, and code debugging tasks.
+- Cheating detection and progress tracking are implemented client-side.
+
+---
+
+## 🛠️ Prerequisites
+
+- [Node.js](https://nodejs.org/en/download/)
+- [Docker](https://www.docker.com/get-started) (optional, for containerized deployment)
+- Backend API running and accessible (see backend README)
+
+---
+
+## 🤝 Contributing
+
+This project was developed as part of the EXCEED MSc Thesis project at Technische Universiteit Delft. As such,
+contributions of any sort will not be accepted. This repository is provided for replication and educational purposes
+ONLY. Since it was used to orchestrate the deployment of our study on Prolific, it is NOT intended for further
+development or contributions.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

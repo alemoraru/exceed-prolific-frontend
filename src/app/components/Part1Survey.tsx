@@ -12,6 +12,7 @@ import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceM
 import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 import {ArrowRight} from 'lucide-react';
+import {useCheatingDetection} from '../hooks/useCheatingDetection';
 
 /**
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.
@@ -96,6 +97,15 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         window.addEventListener("beforeunload", handleBeforeUnload);
         return () => window.removeEventListener("beforeunload", handleBeforeUnload);
     }, [step, consent]);
+
+    // Track if cheating detection should be active
+    // Only active when MCQs start (step > 2), consent given, and before survey end
+    const cheatingDetectionActive =
+        consent === 0 && // consent given
+        step > 2 && // MCQs started
+        (!questions || step < questions.length + 3); // before survey end
+
+    useCheatingDetection(cheatingDetectionActive);
 
     // Handlers
     const handleMCQSelect = (idx: number) => (ans: number) => {
