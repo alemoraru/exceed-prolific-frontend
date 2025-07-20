@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useState, useRef, useEffect} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
@@ -22,10 +22,15 @@ interface CodeEditorProps {
     submitLoading?: boolean;
     language?: string;
     readOnly?: boolean;
-    autoHeight?: boolean; // new prop to control dynamic height
+    autoHeight?: boolean;
     onRevert?: () => void;
+    onCodeChange?: (code: string) => void;
 }
 
+/**
+ * Manage the state of the code editor, including the current code,
+ * submission status, header visibility, and error panel visibility.
+ */
 interface CodeEditorState {
     code: string;
     isSubmitted: boolean;
@@ -56,21 +61,37 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         readOnly = false,
         autoHeight = false,
         onRevert,
+        onCodeChange,
     }) => {
+
+    // Store the true original code only once on mount
+    const originalCodeRef = useRef<string>("");
+    useEffect(() => {
+        if (originalCodeRef.current === "") {
+            originalCodeRef.current = code;
+        }
+    }, [code]);
+
+    // Initialize state with the original code
     const [state, setState] = useState<CodeEditorState>({
         code: code,
         isSubmitted: false,
         showHeader: true,
         showErrorPanel: step === 1 || step === 3, // Show the error panel by default for steps 1 and 3
     });
+
+    // State to control the revert modal visibility
     const [showRevertModal, setShowRevertModal] = useState(false);
 
+    // Effect to reset the code when the step changes
     const handleCodeChange = useCallback((value: string) => {
         if (!state.isSubmitted && !readOnly) {
             setState(prev => ({...prev, code: value}));
+            if (onCodeChange) onCodeChange(value);
         }
-    }, [state.isSubmitted, readOnly]);
+    }, [state.isSubmitted, readOnly, onCodeChange]);
 
+    // Handle code submission
     const handleSubmit = useCallback(() => {
         if (!state.isSubmitted) {
             setState(prev => ({...prev, isSubmitted: true}));
@@ -80,30 +101,37 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         }
     }, [state.isSubmitted, state.code, onSubmitAction]);
 
+    // Handle revert click to show the confirmation modal
     const handleRevertClick = useCallback(() => {
         setShowRevertModal(true);
     }, []);
 
+    // Handle revert confirmation
     const handleRevertConfirm = useCallback(() => {
         setShowRevertModal(false);
-        setState(prev => ({...prev, code: code}));
+        setState(prev => ({...prev, code: originalCodeRef.current}));
         if (onRevert) onRevert();
-    }, [code, onRevert]);
+        if (onCodeChange) onCodeChange(originalCodeRef.current);
+    }, [onRevert, onCodeChange]);
 
+    // Handle revert cancel
     const handleRevertCancel = useCallback(() => {
         setShowRevertModal(false);
     }, []);
 
+    // Handle header toggle
     const handleToggleHeader = useCallback(() => {
         setState(prev => ({...prev, showHeader: !prev.showHeader}));
     }, []);
 
+    // Handle error panel toggle
     const handleToggleError = useCallback(() => {
         setState(prev => ({...prev, showErrorPanel: !prev.showErrorPanel}));
     }, []);
 
+    // Determine if there is an error and if the code can be reverted
     const hasError = Boolean(errorMessage);
-    const canRevert = state.code !== code;
+    const canRevert = state.code !== originalCodeRef.current;
 
     // If autoHeight is true, do not enforce height; otherwise, use h-[80vh]
     const editorClass = autoHeight ? 'overflow-auto' : 'h-[80vh] overflow-auto';

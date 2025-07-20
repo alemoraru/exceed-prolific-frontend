@@ -37,7 +37,8 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
         onNext,
         showConfirmModal,
         onModalCancel,
-        onModalConfirm
+        onModalConfirm,
+        onCodeChange
     }) => (
     <div>
         {submitLoading && <LoaderToast/>}
@@ -47,6 +48,7 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
             errorMessage={error}
             readOnly={readOnly}
             onSubmitAction={onNext}
+            onCodeChange={onCodeChange}
             instructions="Edit the code to fix any errors you have identified.
                 You can revert to the original snippet if needed by clicking the Revert to original snippet button.
                 The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it.

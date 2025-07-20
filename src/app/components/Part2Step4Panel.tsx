@@ -37,7 +37,8 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         onSubmit,
         showConfirmModal,
         onModalCancel,
-        onModalConfirm
+        onModalConfirm,
+        onCodeChange
     }) => (
     <div>
         {submitLoading && <LoaderToast/>}
@@ -47,6 +48,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             errorMessage={error}
             readOnly={readOnly}
             onSubmitAction={onSubmit}
+            onCodeChange={onCodeChange}
             instructions="Based on the new error message and your understanding, please make your final changes to the code below.
             Your goal is to modify the code so that it achieves the desired result as initially defined within the docstrings.
             You can revert to the original snippet at any time by clicking the Revert to original snippet button.
