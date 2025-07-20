@@ -4,7 +4,6 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
-import {Stepper, Step, StepLabel} from '@mui/material';
 import {ExperienceSlider} from '../ExperienceSlider';
 import {MultipleChoiceQuestion} from '../MultipleChoiceQuestion';
 import {CodeEditor} from '../editor/CodeEditor';
