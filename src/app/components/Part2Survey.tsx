@@ -174,10 +174,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
         }
     };
 
-    // Rollback functions to reset code editors to the original snippet code (for Step 2 and Step 4)
-    const rollback = () => currentSnippet && setEditedCode1(currentSnippet.code);
-    const rollback2 = () => currentSnippet && setEditedCode2(currentSnippet.code);
-
     // Submit handlers for modals (confirming code fixes or reverting changes)
     const handleSubmit = () => {
         if (step === 2 || step === 4) setShowConfirmModal(step);
@@ -195,12 +191,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     };
     const handleModalCancel = () => setShowConfirmModal(false);
     const handleRevert = () => setShowRevertModal(step === 2 ? 1 : 2);
-    const handleRevertConfirm = () => {
-        setShowRevertModal(false);
-        if (step === 2) rollback();
-        else if (step === 4) rollback2();
-    };
-    const handleRevertCancel = () => setShowRevertModal(false);
 
     // Show quit button only after consent form and before end-of-study
     const showQuitButton = true; // Always show in Part2Survey, since consent is already given
