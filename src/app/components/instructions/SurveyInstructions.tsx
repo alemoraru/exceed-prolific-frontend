@@ -136,11 +136,22 @@ export function SurveyInstructions(
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            <b>Note:</b> You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
-                            &#34;<FaInfoCircle className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                                               aria-label="Info icon"/>&#34;{' '}
-                            at the top‑right of the following survey pages. These will be available at any point during the survey
-                            should you require clarification on the expectations.
+                            <b>Notes:</b>
+                            <ul className="list-disc pl-6 mt-2 space-y-1">
+                                <li>
+                                    You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
+                                    &#34;<FaInfoCircle
+                                    className="inline text-blue-600 align-text-bottom relative -mt-0.5"
+                                    aria-label="Info icon"/>&#34;{' '}
+                                    at the top‑right of the survey pages. These will be available at any point should you require clarification on the expectations.
+                                </li>
+                                <li>
+                                    You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
+                                    &#34;<MdOutlineExitToApp
+                                    className="inline relative -mt-0.5 text-red-400"/>&#34;{' '}
+                                    in the top-left corner of the page. If you choose to do so, all your data will be deleted and you will NO longer receive compensation for your participation.
+                                </li>
+                            </ul>
                         </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
@@ -157,13 +168,6 @@ export function SurveyInstructions(
                             detected use of external help will result in disqualification.
                         </li>
                     </ul>
-                    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded text-red-700 text-left">
-                        <b>Note:</b> You can exit the study and revoke your consent at any time by clicking the <b>Quit
-                        & Revoke Consent</b> icon &#34;<MdOutlineExitToApp
-                        className="inline relative -mt-0.5"/>&#34;{' '}
-                        in the top-left corner of the page. If you choose to do so, all your
-                        data will be deleted and you will no longer receive compensation for your participation.
-                    </div>
                 </div>
             )}
 
