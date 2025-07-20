@@ -104,13 +104,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     const hasError = Boolean(errorMessage);
     const canRevert = state.code !== code;
 
-    // Dynamic height calculation based on code length
-    const minHeight = 120; // px
-    const maxHeight = 480; // px
-    const lineHeight = 22; // px (approximate for CodeMirror)
-    const codeLines = state.code.split('\n').length;
-    // If autoHeight is true, use dynamic height, else use h-[80vh]
-    const editorHeight = autoHeight ? Math.max(minHeight, Math.min(maxHeight, codeLines * lineHeight + 32)) : undefined;
+    // If autoHeight is true, do not enforce height; otherwise, use h-[80vh]
     const editorClass = autoHeight ? 'overflow-auto' : 'h-[80vh] overflow-auto';
 
     return (
@@ -127,14 +121,14 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
             {/* Editor Container */}
             <div className="flex flex-col min-h-0 flex-1 text-left">
                 {/* Code Editor */}
-                <div style={autoHeight ? {height: editorHeight, minHeight, maxHeight} : {}} className={editorClass}>
+                <div className={editorClass}>
                     <CodeMirror
                         value={state.code}
                         onChange={handleCodeChange}
                         theme={"light"}
                         extensions={extensions}
                         readOnly={state.isSubmitted || readOnly}
-                        className="h-full"
+                        className={autoHeight ? "h-auto" : "h-full"}
                         basicSetup={{
                             lineNumbers: true,
                             foldGutter: true,
