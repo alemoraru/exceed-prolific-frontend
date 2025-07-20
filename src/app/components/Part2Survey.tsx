@@ -10,6 +10,7 @@ import {CodeSnippet} from "@/app/utils/types";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {ErrorToast} from './toast/ErrorToast';
+import {useCheatingDetection} from '../hooks/useCheatingDetection';
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -48,6 +49,11 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     const [rephrasedError, setRephrasedError] = useState<string>("");
     const [submitStartTime, setSubmitStartTime] = useState<number | null>(null);
     const [showQuitModal, setShowQuitModal] = useState(false);
+
+    // Track if cheating detection should be active
+    const cheatingDetectionActive = Boolean(participantId)
+        && !showQuitModal && !snippetError && snippetIdx < snippetIds.length;
+    useCheatingDetection(cheatingDetectionActive);
 
     // Step and snippet index effects
     useEffect(() => {
