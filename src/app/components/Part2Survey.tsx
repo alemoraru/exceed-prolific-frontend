@@ -294,8 +294,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     onToggleError={setShowError1}
                     onRevert={handleRevert}
                     showRevertModal={showRevertModal === 1}
-                    onRevertCancel={handleRevertCancel}
-                    onRevertConfirm={handleRevertConfirm}
                     error={getErrorMessage()}
                     submitLoading={submitLoading}
                     submitError={submitError}
@@ -330,8 +328,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     onToggleError={setShowError2}
                     onRevert={handleRevert}
                     showRevertModal={showRevertModal === 2}
-                    onRevertCancel={handleRevertCancel}
-                    onRevertConfirm={handleRevertConfirm}
                     error={rephrasedError}
                     submitLoading={submitLoading}
                     submitError={submitError}

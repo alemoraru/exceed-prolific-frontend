@@ -12,8 +12,6 @@ interface PanelProps {
     onToggleError: (open: boolean) => void;
     onRevert: () => void;
     showRevertModal: boolean;
-    onRevertCancel: () => void;
-    onRevertConfirm: () => void;
     error: string;
     submitLoading: boolean;
     submitError: string | null;
@@ -31,10 +29,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
     {
         code,
         readOnly,
-        showRevertModal,
-        onRevertCancel,
         onRevert,
-        onRevertConfirm,
         error,
         submitLoading,
         submitError,
@@ -69,12 +64,6 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             onCancel={onModalCancel}
             onConfirm={onModalConfirm}
             type={ConfirmChoiceModalType.CodeFix}
-        />
-        <ConfirmChoiceModal
-            open={showRevertModal}
-            onCancel={onRevertCancel}
-            onConfirm={onRevertConfirm}
-            type={ConfirmChoiceModalType.CodeRevert}
         />
     </div>
 );

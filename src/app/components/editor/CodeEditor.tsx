@@ -6,6 +6,7 @@ import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
 import {BottomPanel} from './BottomPanel';
 import {ErrorPanel} from './ErrorPanel';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../ConfirmChoiceModal";
 
 interface CodeEditorProps {
     title?: string;
@@ -62,6 +63,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         showHeader: true,
         showErrorPanel: step === 1 || step === 3, // Show the error panel by default for steps 1 and 3
     });
+    const [showRevertModal, setShowRevertModal] = useState(false);
 
     const handleCodeChange = useCallback((value: string) => {
         if (!state.isSubmitted && !readOnly) {
@@ -78,11 +80,19 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         }
     }, [state.isSubmitted, state.code, onSubmitAction]);
 
-    const handleRevert = useCallback(() => {
-        if (!state.isSubmitted) {
-            setState(prev => ({...prev, code: code}));
-        }
-    }, [code, state.isSubmitted]);
+    const handleRevertClick = useCallback(() => {
+        setShowRevertModal(true);
+    }, []);
+
+    const handleRevertConfirm = useCallback(() => {
+        setShowRevertModal(false);
+        setState(prev => ({...prev, code: code}));
+        if (onRevert) onRevert();
+    }, [code, onRevert]);
+
+    const handleRevertCancel = useCallback(() => {
+        setShowRevertModal(false);
+    }, []);
 
     const handleToggleHeader = useCallback(() => {
         setState(prev => ({...prev, showHeader: !prev.showHeader}));
@@ -145,7 +155,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 hasError={hasError}
                 showErrorPanel={state.showErrorPanel}
                 onToggleError={handleToggleError}
-                onRevert={typeof onRevert === 'function' ? onRevert : handleRevert}
+                onRevert={handleRevertClick}
                 onPrev={onPrev || (() => {
                 })}
                 onNext={onNext || handleSubmit}
@@ -153,6 +163,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 canRevert={canRevert}
                 step={step}
                 submitLoading={submitLoading}
+            />
+            {/* Revert Modal */}
+            <ConfirmChoiceModal
+                open={showRevertModal}
+                onCancel={handleRevertCancel}
+                onConfirm={handleRevertConfirm}
+                type={ConfirmChoiceModalType.CodeRevert}
             />
         </div>
     );
