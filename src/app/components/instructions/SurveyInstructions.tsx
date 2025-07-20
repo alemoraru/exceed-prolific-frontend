@@ -77,7 +77,7 @@ export function SurveyInstructions(
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                    {["Welcome & Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                    {["Welcome & Overview", "Experience Self-Assessment", "MCQ Example", "Code Fix Example"].map((label, idx) => (
                         <Tab
                             key={label}
                             iconPosition="end"
@@ -224,50 +224,32 @@ export function SurveyInstructions(
             {tabIndex === 3 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
-                    <p className="mb-4 text-gray-700">
-                        In the second part of the survey, you will review code snippets that contain errors. Each code
-                        review
-                        question follows a <b>multi‑step approach</b>:
-                    </p>
-                    <div className="mb-4 flex justify-center">
-                        <Stepper activeStep={1} alternativeLabel className="w-full">
-                            <Step key="Review">
-                                <StepLabel>Review Code & Error</StepLabel>
-                            </Step>
-                            <Step key="Fix">
-                                <StepLabel>Code Fix</StepLabel>
-                            </Step>
-                            <Step key="Review Error">
-                                <StepLabel>Review Different Error</StepLabel>
-                            </Step>
-                            <Step key="Final Fix">
-                                <StepLabel>Final Code Fix</StepLabel>
-                            </Step>
-                        </Stepper>
-                    </div>
                     <p className="mb-4 text-gray-700 text-left">
-                        <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
-                        the issue.
-                        <br/>
-                        <b>Step 2:</b> Based on the provided code snippet and error message, attempt to fix the code by
-                        editing it in
-                        the code editor.
-                        <br/>
-                        <b>Step 3:</b> If your first fix does not resolve all issues, you may receive a new error
-                        message and be
-                        asked to fix the code again. Please read the new error message carefully to understand what
-                        needs to be
-                        fixed.
-                        <br/>
-                        <b>Step 4:</b> Make any final adjustments to your code based on the follow‑up error message and
-                        submit your
-                        final fix that resolves all issues. Note that you cannot go back to previous steps.
-                        <br/>
+                        In this part, you&apos;ll review and fix Python code snippets containing errors. Each task
+                        consists of a multi-step process. Note that upon proceeding to the next step, you will not be
+                        able to return to previous steps. This is intended, therefore please ensure you are satisfied
+                        with your edits before proceeding. The steps are as follows:
                     </p>
+                    <ol className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
+                        <li><b>Review:</b> Read the code and error message to understand the problem.</li>
+                        <li><b>Fix:</b> Edit the code to resolve the error.</li>
+                        <li><b>Review Error:</b> If your fix doesn&apos;t solve all issues, you&apos;ll see a new error
+                            message
+                            and can try again.
+                        </li>
+                        <li><b>Final Fix:</b> Make any last changes and submit your final solution.</li>
+                    </ol>
 
-                    <div className="space-y-3">
+                    <p className="mb-4 text-gray-700 text-left">
+                        For instance, if you are on the second step, you will see the following interface below:
+                    </p>
+                    <div className="mb-4">
                         <CodeEditor
-                            instructions="Edit the code to fix any errors you have identified. You can revert to the original snippet if needed by clicking the Revert to original snippet button. The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it. Once you have made your changes, click the Next button to submit your fix. Note that once you submit, you will not be able to come back to this step to make further changes."
+                            instructions="Edit the code to fix any errors you have identified.
+                            You can revert to the original snippet if needed by clicking the Revert to original snippet button.
+                            The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it.
+                            Once you have made your changes, click the Next button to submit your fix.
+                            Note that once you submit, you will not be able to come back to this step to make further changes."
                             title="Step 2: Attempt a Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
@@ -277,11 +259,23 @@ export function SurveyInstructions(
                             readOnly={false}
                             autoHeight={true}
                         />
+                        <div
+                            className="mt-6 p-3 bg-gray-50 border-l-4 border-gray-400 rounded text-sm text-gray-700 text-left">
+                            <b>Editor Buttons Explained:</b>
+                            <ul className="list-disc pl-6 mt-2 space-y-1">
+                                <li><b>Hide/Show Instructions:</b> Toggle the instructions panel visibility.</li>
+                                <li><b>Revert to Original:</b> Restore the code to its initial state for this step.</li>
+                                <li><b>Show/Hide Error:</b> Toggle the error message visibility below the editor.</li>
+                                <li><b>Next/Submit:</b> Submit your code fix and move to the next step.</li>
+                            </ul>
+                        </div>
                     </div>
+
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Read the code snippet and error message, then edit the code to fix the
-                        error. Your
-                        solution must be your own work, without external help (whichever it may be).
+                        <b>What is expected:</b> Carefully read the code and error message (which you can toggle on or
+                        off), then edit the code to fix the error. You can revert to the original code if needed by
+                        clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your edits, you
+                        can click the &#34;Submit&#34; button to submit your fix.
                     </p>
                 </section>
             )}

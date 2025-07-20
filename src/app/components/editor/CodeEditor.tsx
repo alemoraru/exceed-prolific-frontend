@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useState} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
@@ -100,8 +100,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
 
     return (
         <div
-            className={autoHeight ? 'flex flex-col bg-background overflow-hidden text-center border border-gray-200 rounded-lg shadow-sm' :
-                'h-[80vh] flex flex-col bg-background overflow-hidden text-center border border-gray-200 rounded-lg shadow-sm'}>
+            className={autoHeight ? 'flex flex-col bg-background overflow-hidden text-center border border-black rounded-lg shadow-sm' :
+                'h-[80vh] flex flex-col bg-background overflow-hidden text-center border border-black rounded-lg shadow-sm'}>
             {/* Header */}
             <Header
                 title={title}
