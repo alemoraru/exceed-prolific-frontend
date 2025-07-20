@@ -104,6 +104,17 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
         }
     }, [step]);
 
+    // Warn on refresh/leave after consent is given
+    useEffect(() => {
+        // Only show warning after consent is given (participantId exists)
+        if (!participantId) return;
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [participantId]);
+
     // Next and Previous navigation helpers
     const goNext = async () => {
         window.scrollTo({top: 0, behavior: 'smooth'});

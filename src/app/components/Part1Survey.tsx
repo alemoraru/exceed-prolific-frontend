@@ -87,6 +87,16 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         }
     }, [step, questions]);
 
+    // Warn on refresh/leave after consent is given
+    useEffect(() => {
+        if (step === 0 || consent !== 0) return;
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [step, consent]);
+
     // Handlers
     const handleMCQSelect = (idx: number) => (ans: number) => {
         setMcqAnswers(prev => {
