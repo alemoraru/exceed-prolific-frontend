@@ -59,16 +59,19 @@ export function ConsentForm(
                     <span style={{color: '#B45309'}} className="font-bold">Important:</span> To maintain the integrity
                     of this
                     study, please complete all tasks independently, without using external assistance such as large
-                    language models (LLMs), AI tools, search engines, or help from others. <span className="font-bold">Copy-pasting code or answers from any source, including external websites or tools, is strictly prohibited and will result in immediate disqualification.</span> Your
-                    responses must reflect
-                    your own reasoning and understanding. It is essential that you thoughtfully engage with each
+                    language models (LLMs), AI tools of any sort, search engines, or help from others. <span
+                    className="font-bold">Copy-pasting code or answers from any source, including external websites or tools,
+                    is strictly prohibited and will result in immediate disqualification.</span> Your responses must
+                    reflect your own reasoning and understanding. It is essential that you thoughtfully engage with each
                     question rather than submitting answers at random or without proper consideration. We will be
                     actively checking for signs of inauthentic or careless participation.
                     <br/><br/>
                     <span style={{color: 'red'}} className="font-bold text-red-700">
-                        The use of LLMs (e.g., ChatGPT, Copilot),
-                        copy-paste commands, or failing to engage meaningfully with the task, will result in your
+                        The use of LLMs (e.g., ChatGPT, Copilot), or failing to engage meaningfully with the task, will result in your
                         responses being invalidated and you will NOT be eligible for compensation.
+                        <br/><br/>
+                        Additionally, we will monitor whether you copy code that we provide (including via keystrokes or copy-paste).
+                        Copying provided code will result in disqualification and NO compensation.
                     </span>
                 </div>
             </section>
@@ -95,12 +98,16 @@ export function ConsentForm(
 
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Confidentiality & Data Use</h3>
-                <p className="mb-4">We will not collect any data beyond what has been described above, and we will treat
-                    your information with strict confidentiality to the best of our ability. All data will be securely
-                    stored in password-protected electronic systems. Please note that the data collected in this study
-                    may be published or shared in anonymized form. This anonymized dataset may include your responses to
-                    the survey and coding tasks, but will exclude any personal identifiers (such as usernames or
-                    participant IDs), ensuring that your responses cannot be linked back to you.</p>
+                <p className="mb-4">
+                    We will only collect the data described above, and your information will be treated with strict
+                    confidentiality. Your PROLIFIC_ID will be collected solely for the purposes of tracking
+                    participation and ensuring fair monetary compensation. After the data collection phase is complete,
+                    all PROLIFIC_IDs will be anonymized so that your responses cannot be linked back to you. All data
+                    will be securely stored in password-protected electronic systems. Please note that the data
+                    collected in this study may be published or shared in anonymized form. This anonymized dataset may
+                    include your responses to the survey and coding tasks, but will exclude any personal identifiers
+                    (i.e., PROLIFIC_ID), ensuring that your responses cannot be traced back to you.
+                </p>
             </section>
 
             <section className="mb-8">
