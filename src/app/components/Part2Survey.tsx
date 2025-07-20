@@ -7,7 +7,7 @@ import {Part2Step2Panel} from "./Part2Step2Panel";
 import {Part2Step3Panel} from "./Part2Step3Panel";
 import {Part2Step4Panel} from "./Part2Step4Panel";
 import {CodeSnippet} from "@/app/utils/types";
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {ErrorToast} from './toast/ErrorToast';
 

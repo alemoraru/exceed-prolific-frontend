@@ -6,7 +6,7 @@ import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
 import {BottomPanel} from './BottomPanel';
 import {ErrorPanel} from './ErrorPanel';
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../ConfirmChoiceModal";
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../toast/ConfirmChoiceModal";
 
 interface CodeEditorProps {
     title?: string;

@@ -8,7 +8,7 @@ import {InfoButton} from './instructions/InfoButton';
 import {ExperienceSlider} from './ExperienceSlider';
 import {ErrorToast} from './toast/ErrorToast';
 import {LoaderToast} from './toast/LoaderToast';
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 import {ArrowRight} from 'lucide-react';
