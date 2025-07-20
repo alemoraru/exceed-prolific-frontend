@@ -2,7 +2,7 @@ import React from "react";
 import {CodeEditor} from "./editor/CodeEditor";
 import {LoaderToast} from "./toast/LoaderToast";
 import {ErrorToast} from "./toast/ErrorToast";
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./ConfirmChoiceModal";
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./toast/ConfirmChoiceModal";
 
 interface PanelProps {
     code: string;
@@ -12,8 +12,6 @@ interface PanelProps {
     onToggleError: (open: boolean) => void;
     onRevert: () => void;
     showRevertModal: boolean;
-    onRevertCancel: () => void;
-    onRevertConfirm: () => void;
     error: string;
     submitLoading: boolean;
     submitError: string | null;
@@ -31,10 +29,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
     {
         code,
         readOnly,
-        showRevertModal,
-        onRevertCancel,
         onRevert,
-        onRevertConfirm,
         error,
         submitLoading,
         submitError,
@@ -42,7 +37,8 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
         onSubmit,
         showConfirmModal,
         onModalCancel,
-        onModalConfirm
+        onModalConfirm,
+        onCodeChange
     }) => (
     <div>
         {submitLoading && <LoaderToast/>}
@@ -52,6 +48,7 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             errorMessage={error}
             readOnly={readOnly}
             onSubmitAction={onSubmit}
+            onCodeChange={onCodeChange}
             instructions="Based on the new error message and your understanding, please make your final changes to the code below.
             Your goal is to modify the code so that it achieves the desired result as initially defined within the docstrings.
             You can revert to the original snippet at any time by clicking the Revert to original snippet button.
@@ -69,12 +66,6 @@ export const Part2Step4Panel: React.FC<PanelProps> = (
             onCancel={onModalCancel}
             onConfirm={onModalConfirm}
             type={ConfirmChoiceModalType.CodeFix}
-        />
-        <ConfirmChoiceModal
-            open={showRevertModal}
-            onCancel={onRevertCancel}
-            onConfirm={onRevertConfirm}
-            type={ConfirmChoiceModalType.CodeRevert}
         />
     </div>
 );

@@ -4,11 +4,11 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
-import {Stepper, Step, StepLabel} from '@mui/material';
 import {ExperienceSlider} from '../ExperienceSlider';
 import {MultipleChoiceQuestion} from '../MultipleChoiceQuestion';
 import {CodeEditor} from '../editor/CodeEditor';
 import {FaInfoCircle, FaCheckCircle} from 'react-icons/fa';
+import {MdOutlineExitToApp} from "react-icons/md";
 
 /**
  * Component showing clear, user‑friendly instructions for participants in the survey.
@@ -57,9 +57,9 @@ export function SurveyInstructions(
     };
 
     return (
-        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-6 fade-in">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-2 fade-in">
             {/* Header */}
-            <header className="mb-6 text-center">
+            <header className="mb-4 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
             </header>
 
@@ -76,7 +76,7 @@ export function SurveyInstructions(
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                    {["Overview", "Your Experience", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                    {["Welcome & Overview", "Experience Self-Assessment", "MCQ Example", "Code Fix Example"].map((label, idx) => (
                         <Tab
                             key={label}
                             iconPosition="end"
@@ -104,7 +104,7 @@ export function SurveyInstructions(
 
             {/* Call‑out if not yet complete */}
             {!allVisited && requireAllTabs && (
-                <Box className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded" role="alert">
+                <Box className="mb-3 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded" role="alert">
                     <Typography variant="body2" color="text.secondary" textAlign="center">
                         Please review <strong>all</strong> tabs above before continuing. Your answers depend on
                         understanding each
@@ -116,14 +116,14 @@ export function SurveyInstructions(
             {/* Tab Panel - Main Overview */}
             {tabIndex === 0 && (
                 <div>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         This survey consists of two main parts: <b>multiple‑choice questions</b> and <b>code review/fix
                         tasks</b>.
                         You will first be asked to self‑assess your Python experience, then answer several
                         multiple‑choice questions about Python code and errors, and finally review and fix code snippets
                         with errors.
                     </p>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         The tabs above show examples of each type of question you will encounter. Please explore each
                         tab to
                         familiarise yourself with the layout and what will be expected of you. You can interact with the
@@ -135,11 +135,27 @@ export function SurveyInstructions(
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
-                            <FaInfoCircle className="inline text-blue-600 align-text-bottom relative -mt-0.5"
-                                          aria-label="Info icon"/>{' '}
-                            at the top‑right of the following survey pages. These will be available at any point during the survey
-                            should you require clarification on the expectations.
+                            <b>Notes:</b>
+                            <ul className="list-disc pl-6 mt-2 space-y-1">
+                                <li>
+                                    You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
+                                    <FaInfoCircle className="inline text-blue-600"
+                                                  aria-label="Info icon"/>{' '}
+                                    at the top‑right of the following survey pages. These will be available at any point should you require clarification on the expectations, or if you need to review the task instructions.
+                                </li>
+                                <li>
+                                    You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
+                                    {' '}<MdOutlineExitToApp className="inline relative -mt-0.5 text-red-400"/>{' '}
+                                    in the top-left corner of the page. If you choose to do so, all your data will be deleted, however,
+                                    you will NO longer receive compensation for your time and participation.
+                                </li>
+                                <li>
+                                    <span className="text-red-700 font-semibold">Refreshing or closing the tab / browser is strongly discouraged until finishing the survey. </span>
+                                    If you do so, a dialog will appear to confirm your choice, but if you proceed,
+                                    your progress will be lost and you will not be able to participate in the survey again.
+                                    Please avoid refreshing or closing the tab to ensure your responses are recorded and you receive compensation.
+                                </li>
+                            </ul>
                         </span>
                     </div>
                     <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
@@ -163,12 +179,10 @@ export function SurveyInstructions(
             {tabIndex === 1 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Self‑Assess Your Python Experience</h3>
-                    <p className="mb-4 text-gray-700">
+                    <p className="mb-4 text-gray-700 text-left">
                         You will be asked to indicate your years of programming experience with Python using a slider or
-                        by
-                        entering a number. If you have no experience, set it to 0. Round to the nearest whole number
-                        (e.g., 1.5 →
-                        2).
+                        by entering a number. If you have no experience, set it to 0. Round to the nearest whole number
+                        (e.g., 1.5 → 2).
                     </p>
                     <ExperienceSlider value={sliderValue} onChange={setSliderValue}/>
                     <p className="text-gray-600 text-sm">
@@ -209,50 +223,32 @@ export function SurveyInstructions(
             {tabIndex === 3 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
-                    <p className="mb-4 text-gray-700">
-                        In the second part of the survey, you will review code snippets that contain errors. Each code
-                        review
-                        question follows a <b>multi‑step approach</b>:
-                    </p>
-                    <div className="mb-4 flex justify-center">
-                        <Stepper activeStep={1} alternativeLabel className="w-full">
-                            <Step key="Review">
-                                <StepLabel>Review Code & Error</StepLabel>
-                            </Step>
-                            <Step key="Fix">
-                                <StepLabel>Code Fix</StepLabel>
-                            </Step>
-                            <Step key="Review Error">
-                                <StepLabel>Review Different Error</StepLabel>
-                            </Step>
-                            <Step key="Final Fix">
-                                <StepLabel>Final Code Fix</StepLabel>
-                            </Step>
-                        </Stepper>
-                    </div>
                     <p className="mb-4 text-gray-700 text-left">
-                        <b>Step 1:</b> Review the provided code snippet and the associated error message to understand
-                        the issue.
-                        <br/>
-                        <b>Step 2:</b> Based on the provided code snippet and error message, attempt to fix the code by
-                        editing it in
-                        the code editor.
-                        <br/>
-                        <b>Step 3:</b> If your first fix does not resolve all issues, you may receive a new error
-                        message and be
-                        asked to fix the code again. Please read the new error message carefully to understand what
-                        needs to be
-                        fixed.
-                        <br/>
-                        <b>Step 4:</b> Make any final adjustments to your code based on the follow‑up error message and
-                        submit your
-                        final fix that resolves all issues. Note that you cannot go back to previous steps.
-                        <br/>
+                        In this part, you&apos;ll review and fix Python code snippets containing errors. Each task
+                        consists of a multi-step process. Note that upon proceeding to the next step, you will not be
+                        able to return to previous steps. This is intended, therefore please ensure you are satisfied
+                        with your edits before proceeding. The steps are as follows:
                     </p>
+                    <ol className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
+                        <li><b>Review:</b> Read the code and error message to understand the problem.</li>
+                        <li><b>Fix:</b> Edit the code to resolve the error.</li>
+                        <li><b>Review Error:</b> If your fix doesn&apos;t solve all issues, you&apos;ll see a new error
+                            message
+                            and can try again.
+                        </li>
+                        <li><b>Final Fix:</b> Make any last changes and submit your final solution.</li>
+                    </ol>
 
-                    <div className="space-y-3">
+                    <p className="mb-4 text-gray-700 text-left">
+                        For instance, if you are on the second step, you will see the following interface below:
+                    </p>
+                    <div className="mb-4">
                         <CodeEditor
-                            instructions="Edit the code to fix any errors you have identified. You can revert to the original snippet if needed by clicking the Revert to original snippet button. The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it. Once you have made your changes, click the Next button to submit your fix. Note that once you submit, you will not be able to come back to this step to make further changes."
+                            instructions="Edit the code to fix any errors you have identified.
+                            You can revert to the original snippet if needed by clicking the Revert to original snippet button.
+                            The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it.
+                            Once you have made your changes, click the Next button to submit your fix.
+                            Note that once you submit, you will not be able to come back to this step to make further changes."
                             title="Step 2: Attempt a Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
@@ -262,11 +258,23 @@ export function SurveyInstructions(
                             readOnly={false}
                             autoHeight={true}
                         />
+                        <div
+                            className="mt-6 p-3 bg-gray-50 border-l-4 border-gray-400 rounded text-sm text-gray-700 text-left">
+                            <b>Editor Buttons Explained:</b>
+                            <ul className="list-disc pl-6 mt-2 space-y-1">
+                                <li><b>Hide/Show Instructions:</b> Toggle the instructions panel visibility.</li>
+                                <li><b>Revert to Original:</b> Restore the code to its initial state for this step.</li>
+                                <li><b>Show/Hide Error:</b> Toggle the error message visibility below the editor.</li>
+                                <li><b>Next/Submit:</b> Submit your code fix and move to the next step.</li>
+                            </ul>
+                        </div>
                     </div>
+
                     <p className="text-gray-600 text-sm">
-                        <b>What is expected:</b> Read the code snippet and error message, then edit the code to fix the
-                        error. Your
-                        solution must be your own work, without external help (whichever it may be).
+                        <b>What is expected:</b> Carefully read the code and error message (which you can toggle on or
+                        off), then edit the code to fix the error. You can revert to the original code if needed by
+                        clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your edits, you
+                        can click the &#34;Submit&#34; button to submit your fix.
                     </p>
                 </section>
             )}

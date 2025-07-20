@@ -7,7 +7,7 @@ import {Part2Step2Panel} from "./Part2Step2Panel";
 import {Part2Step3Panel} from "./Part2Step3Panel";
 import {Part2Step4Panel} from "./Part2Step4Panel";
 import {CodeSnippet} from "@/app/utils/types";
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {ErrorToast} from './toast/ErrorToast';
 
@@ -104,6 +104,17 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
         }
     }, [step]);
 
+    // Warn on refresh/leave after consent is given
+    useEffect(() => {
+        // Only show warning after consent is given (participantId exists)
+        if (!participantId) return;
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [participantId]);
+
     // Next and Previous navigation helpers
     const goNext = async () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -163,10 +174,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
         }
     };
 
-    // Rollback functions to reset code editors to the original snippet code (for Step 2 and Step 4)
-    const rollback = () => currentSnippet && setEditedCode1(currentSnippet.code);
-    const rollback2 = () => currentSnippet && setEditedCode2(currentSnippet.code);
-
     // Submit handlers for modals (confirming code fixes or reverting changes)
     const handleSubmit = () => {
         if (step === 2 || step === 4) setShowConfirmModal(step);
@@ -184,12 +191,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     };
     const handleModalCancel = () => setShowConfirmModal(false);
     const handleRevert = () => setShowRevertModal(step === 2 ? 1 : 2);
-    const handleRevertConfirm = () => {
-        setShowRevertModal(false);
-        if (step === 2) rollback();
-        else if (step === 4) rollback2();
-    };
-    const handleRevertCancel = () => setShowRevertModal(false);
 
     // Show quit button only after consent form and before end-of-study
     const showQuitButton = true; // Always show in Part2Survey, since consent is already given
@@ -283,8 +284,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     onToggleError={setShowError1}
                     onRevert={handleRevert}
                     showRevertModal={showRevertModal === 1}
-                    onRevertCancel={handleRevertCancel}
-                    onRevertConfirm={handleRevertConfirm}
                     error={getErrorMessage()}
                     submitLoading={submitLoading}
                     submitError={submitError}
@@ -319,8 +318,6 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     onToggleError={setShowError2}
                     onRevert={handleRevert}
                     showRevertModal={showRevertModal === 2}
-                    onRevertCancel={handleRevertCancel}
-                    onRevertConfirm={handleRevertConfirm}
                     error={rephrasedError}
                     submitLoading={submitLoading}
                     submitError={submitError}

@@ -37,5 +37,6 @@ export interface CodeSnippet {
 export enum SurveyStatusType {
     Success = "success",
     Error = "error",
-    Info = "info"
+    Info = "info",
+    AlreadyParticipated = "already_participated"
 }

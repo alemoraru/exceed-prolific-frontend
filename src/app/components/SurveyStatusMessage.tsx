@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import {Info, ArrowLeft, Mail, AlertTriangle, Smile} from "lucide-react";
+import {Info, ArrowLeft, Mail, AlertTriangle, Smile, CheckCircle} from "lucide-react";
 import Link from "next/link";
 import {ProgressBar} from "./ProgressBar";
 import {SurveyStatusType} from "../utils/types";
@@ -19,6 +19,7 @@ const iconMap = {
     [SurveyStatusType.Success]: <Smile className="w-12 h-12 text-green-500 mb-4" aria-hidden="true"/>,
     [SurveyStatusType.Error]: <AlertTriangle className="w-12 h-12 text-red-500 mb-4" aria-hidden="true"/>,
     [SurveyStatusType.Info]: <Info className="w-12 h-12 text-blue-500 mb-4" aria-hidden="true"/>,
+    [SurveyStatusType.AlreadyParticipated]: <CheckCircle className="w-12 h-12 text-gray-500 mb-4" aria-hidden="true"/>,
 };
 
 /**
@@ -51,9 +52,16 @@ export function SurveyStatusMessage(
     // Determine icon and color
     const resolvedType = type || SurveyStatusType.Info;
     const icon = iconMap[resolvedType];
-    const titleColor = resolvedType === SurveyStatusType.Error ? "text-red-700" : resolvedType === SurveyStatusType.Success ? "text-green-700" : "text-blue-700";
-    const subtitleColor = resolvedType === SurveyStatusType.Error ? "text-red-600" : "text-gray-800";
-    const progressBarColor = resolvedType === SurveyStatusType.Error ? "bg-red-500" : resolvedType === SurveyStatusType.Success ? "bg-green-500" : "bg-blue-500";
+    const titleColor = resolvedType === SurveyStatusType.Error ?
+        "text-red-700" : resolvedType === SurveyStatusType.Success ?
+            "text-green-700" : resolvedType === SurveyStatusType.AlreadyParticipated ?
+                "text-gray-700" : "text-blue-700";
+    const subtitleColor = resolvedType === SurveyStatusType.Error ?
+        "text-red-600" : "text-gray-800";
+    const progressBarColor = resolvedType === SurveyStatusType.Error ?
+        "bg-red-500" : resolvedType === SurveyStatusType.Success ?
+            "bg-green-500" : resolvedType === SurveyStatusType.AlreadyParticipated ?
+                "bg-gray-400" : "bg-blue-500";
 
     return (
         <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4 text-center"

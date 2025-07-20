@@ -8,7 +8,7 @@ import {InfoButton} from './instructions/InfoButton';
 import {ExperienceSlider} from './ExperienceSlider';
 import {ErrorToast} from './toast/ErrorToast';
 import {LoaderToast} from './toast/LoaderToast';
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from './ConfirmChoiceModal';
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion, Part1Answers} from "@/app/utils/types";
 import {ArrowRight} from 'lucide-react';
@@ -86,6 +86,16 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
             setMcqStartTime(Date.now());
         }
     }, [step, questions]);
+
+    // Warn on refresh/leave after consent is given
+    useEffect(() => {
+        if (step === 0 || consent !== 0) return;
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [step, consent]);
 
     // Handlers
     const handleMCQSelect = (idx: number) => (ans: number) => {

@@ -28,6 +28,10 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
         submitLoading,
     }) => {
     const nextLabel = (step === 2 || step === 4) ? 'Submit' : 'Next';
+
+    // Disable submit if code is not changed for code fix steps
+    const disableSubmit = (step === 2 || step === 4) && !canRevert;
+
     return (
         <div className="bg-gray-50 border-t border-gray-300 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -70,14 +74,14 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                 </button>
                 <button
                     onClick={onNext}
-                    disabled={isSubmitted || submitLoading}
+                    disabled={isSubmitted || submitLoading || disableSubmit}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-600 border
                     border-gray-300 hover:bg-blue-50 hover:text-blue-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed
                     focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
                     aria-label={nextLabel}
                 >
                     <span>{nextLabel}</span>
-                    {nextLabel === 'Submit' ? <Send size={14} className="text-blue-400"/> : <ArrowRight size={14}/>}
+                    {nextLabel === 'Submit' ? <Send size={14}/> : <ArrowRight size={14}/>}
                 </button>
             </div>
         </div>

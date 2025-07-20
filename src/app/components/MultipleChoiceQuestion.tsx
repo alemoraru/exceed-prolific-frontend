@@ -1,5 +1,5 @@
 import React from 'react';
-import {SimpleCodeEditor} from './SimpleCodeEditor';
+import {SimpleCodeEditor} from './editor/SimpleCodeEditor';
 import ReactMarkdown from 'react-markdown';
 
 interface MCQProps {
