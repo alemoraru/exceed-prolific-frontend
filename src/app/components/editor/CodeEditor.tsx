@@ -39,7 +39,6 @@ interface CodeEditorState {
  * @param code - The code to display in the editor.
  * @param errorMessage - Optional error message to display in the error panel.
  * @param onSubmit - Callback function to handle code submission.
- * @param language - Optional programming language for syntax highlighting (default is 'python').
  * @param readOnly - Optional flag to make the editor read-only (default is false).
  */
 export const CodeEditor: React.FC<CodeEditorProps> = (
@@ -53,7 +52,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         onNext,
         step,
         submitLoading,
-        language = 'python',
         readOnly = false,
         autoHeight = false,
         onRevert,
@@ -64,13 +62,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         showHeader: true,
         showErrorPanel: step === 1 || step === 3, // Show the error panel by default for steps 1 and 3
     });
-    const extensions = useMemo(() => {
-        const exts = [];
-        if (language === 'python') {
-            exts.push(python());
-        }
-        return exts;
-    }, [language]);
 
     const handleCodeChange = useCallback((value: string) => {
         if (!state.isSubmitted && !readOnly) {
@@ -126,7 +117,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                         value={state.code}
                         onChange={handleCodeChange}
                         theme={"light"}
-                        extensions={extensions}
+                        extensions={[python()]}
                         readOnly={state.isSubmitted || readOnly}
                         className={autoHeight ? "h-auto" : "h-full"}
                         basicSetup={{

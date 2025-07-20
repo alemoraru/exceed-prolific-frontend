@@ -143,13 +143,15 @@ export function SurveyInstructions(
                                     &#34;<FaInfoCircle
                                     className="inline text-blue-600 align-text-bottom relative -mt-0.5"
                                     aria-label="Info icon"/>&#34;{' '}
-                                    at the top‑right of the survey pages. These will be available at any point should you require clarification on the expectations.
+                                    at the top‑right of the following survey pages. These will be available at any point should you require clarification on the expectations,
+                                    or if you need to review the task instructions.
                                 </li>
                                 <li>
                                     You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
                                     &#34;<MdOutlineExitToApp
                                     className="inline relative -mt-0.5 text-red-400"/>&#34;{' '}
-                                    in the top-left corner of the page. If you choose to do so, all your data will be deleted and you will NO longer receive compensation for your participation.
+                                    in the top-left corner of the page. If you choose to do so, all your data will be deleted, however,
+                                    you will NO longer receive compensation for your time and participation.
                                 </li>
                             </ul>
                         </span>

@@ -77,7 +77,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                     aria-label={nextLabel}
                 >
                     <span>{nextLabel}</span>
-                    {nextLabel === 'Submit' ? <Send size={14} className="text-blue-400"/> : <ArrowRight size={14}/>}
+                    {nextLabel === 'Submit' ? <Send size={14}/> : <ArrowRight size={14}/>}
                 </button>
             </div>
         </div>
