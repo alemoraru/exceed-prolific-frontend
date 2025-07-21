@@ -18,8 +18,8 @@ export function QuitStudyButton({onClick, className = "", disabled = false}: Qui
             style={disabled ? {pointerEvents: 'none', opacity: 0.5} : {}}
         >
             <span
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-400 border
-                border-red-300 shadow group-hover:bg-red-500 group-hover:text-white group-hover:border-red-700
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-500 border
+                border-gray-300 shadow group-hover:bg-red-500 group-hover:text-white group-hover:border-red-700
                 transition-all duration-200"
             >
                 <MdOutlineExitToApp className="text-xl"/>
