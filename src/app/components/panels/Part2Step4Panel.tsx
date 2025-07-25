@@ -1,8 +1,8 @@
 import React from "react";
-import {CodeEditor} from "./editor/CodeEditor";
-import {LoaderToast} from "./toast/LoaderToast";
-import {ErrorToast} from "./toast/ErrorToast";
-import {ConfirmChoiceModal, ConfirmChoiceModalType} from "./toast/ConfirmChoiceModal";
+import {CodeEditor} from "../editor/CodeEditor";
+import {LoaderToast} from "../toast/LoaderToast";
+import {ErrorToast} from "../toast/ErrorToast";
+import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../toast/ConfirmChoiceModal";
 
 interface PanelProps {
     code: string;
