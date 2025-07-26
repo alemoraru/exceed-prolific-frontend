@@ -1,5 +1,5 @@
 import React from "react";
-import {CodeEditor} from "./editor/CodeEditor";
+import {CodeEditor} from "../editor/CodeEditor";
 
 interface PanelProps {
     code: string;

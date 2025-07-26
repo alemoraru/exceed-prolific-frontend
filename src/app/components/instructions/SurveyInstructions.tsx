@@ -7,6 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import {ExperienceSlider} from '../ExperienceSlider';
 import {MultipleChoiceQuestion} from '../MultipleChoiceQuestion';
 import {CodeEditor} from '../editor/CodeEditor';
+import {LikertScalePanel} from '../panels/LikertScalePanel';
 import {FaInfoCircle, FaCheckCircle} from 'react-icons/fa';
 import {MdOutlineExitToApp} from "react-icons/md";
 
@@ -31,7 +32,7 @@ export function SurveyInstructions(
     } = {}) {
 
     /* State management for the instruction component */
-    const totalTabs = 4;
+    const totalTabs = 5;
     const [tabIndex, setTabIndex] = useState(defaultTabIndex);
     const [visitedTabs, setVisitedTabs] = useState<Set<number>>(() => new Set([defaultTabIndex]));
     const [sliderValue, setSliderValue] = useState(2);
@@ -76,7 +77,7 @@ export function SurveyInstructions(
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                    {["Welcome & Overview", "Experience Self-Assessment", "MCQ Example", "Code Fix Example"].map((label, idx) => (
+                    {["Welcome & Overview", "Self-Assessment", "MCQ Example", "Code Fix Example", "Likert Scale Example"].map((label, idx) => (
                         <Tab
                             key={label}
                             iconPosition="end"
@@ -275,6 +276,36 @@ export function SurveyInstructions(
                         off), then edit the code to fix the error. You can revert to the original code if needed by
                         clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your edits, you
                         can click the &#34;Submit&#34; button to submit your fix.
+                    </p>
+                </section>
+            )}
+
+            {/* Tab Panel - Likert Scale Example */}
+            {tabIndex === 4 && (
+                <section className="space-y-4 text-gray-700">
+                    <h3 className="text-xl font-semibold">Likert Scale Question Example</h3>
+                    <p className="mb-4 text-gray-700 text-left">
+                        In this part, you will answer a series of Likert scale questions about
+                        your experience with a programming error message you encountered during the
+                        previous code fix task. These questions will help us understand your perception of the error
+                        messages and how they affect your coding experience.
+                    </p>
+                    <p>
+                        <br/><b>Note: The Likert scale questions will only be shown after you submit a code fix
+                        question.</b> Each question will present a statement, and you will need to select a response
+                        that best reflects your opinion, ranging from
+                        &#34;Strongly Disagree&#34; to &#34;Strongly Agree&#34;.
+                    </p>
+                    <LikertScalePanel
+                        errorMessage={exampleErrorMessage}
+                        onSubmit={() => {
+                        }}
+                        step={1}
+                        submitLoading={false}
+                    />
+                    <p className="text-gray-600 text-sm">
+                        <b>What is expected:</b> Please answer all Likert scale questions honestly. Your feedback helps
+                        us understand your experience and perception of the error messages.
                     </p>
                 </section>
             )}

@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 /**
- * Header component displays a title and instructions with a toggle button to show or hide them.
+ * A header component which displays a title and instructions with a toggle button to show or hide them.
  */
 export const Header: React.FC<HeaderProps> = ({title, instructions, isVisible, onToggle}) => {
     return (

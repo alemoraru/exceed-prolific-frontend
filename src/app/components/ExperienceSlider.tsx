@@ -9,7 +9,7 @@ import Slider from '@mui/material/Slider';
 export function ExperienceSlider({value, onChange}: { value: number; onChange: (v: number) => void }) {
     return (
         <div className="mb-8 w-full">
-            <label className="block font-semibold mb-2 text-gray-800 text-base">
+            <label className="block font-semibold mb-8 text-gray-800 text-base">
                 How many years of experience do you have with Python?
             </label>
 
