@@ -10,6 +10,7 @@ interface MCQProps {
     code?: string;
     error?: string;
     disabled?: boolean;
+    isFullWidth?: boolean;
 }
 
 /**
@@ -21,10 +22,21 @@ interface MCQProps {
  * @param code - Optional code snippet to display below the question.
  * @param error - Optional error message to display below the question.
  * @param disabled - Optional flag to disable interaction with the options.
+ * @param isFullWidth - Optional flag to make the component full width (default is false).
  */
-export function MultipleChoiceQuestion({question, options, selected, onSelect, code, error, disabled}: MCQProps) {
+export function MultipleChoiceQuestion(
+    {
+        question,
+        options,
+        selected,
+        onSelect,
+        code,
+        error,
+        disabled,
+        isFullWidth = false
+    }: MCQProps) {
     return (
-        <div className="mb-8 w-full">
+        <div className={`mb-8 w-full ${isFullWidth ? 'px-0' : 'px-8'}`}>
             <div className="font-semibold mb-2 w-full text-left">{question}</div>
 
             {/* Display code snippet if provided */}
