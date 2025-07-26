@@ -10,15 +10,24 @@ interface ErrorPanelProps {
     /** Controls whether the panel is rendered */
     isVisible: boolean;
     /** Called when the user clicks the X‑button */
-    onCloseAction: () => void;
+    onCloseAction?: () => void;
     /** The current step in the process */
     step: 1 | 2 | 3 | 4;
+    /** If true, hides the close icon */
+    hideCloseIcon?: boolean;
 }
 
 /**
  * ErrorPanel component displays an error message in a panel.
  */
-export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onCloseAction, step}) => {
+export const ErrorPanel: React.FC<ErrorPanelProps> = (
+    {
+        message,
+        isVisible,
+        onCloseAction,
+        step,
+        hideCloseIcon = false
+    }) => {
 
     // If the panel is not visible, return null to avoid rendering
     if (!isVisible) return null;
@@ -33,13 +42,15 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = ({message, isVisible, onClo
                     <AlertTriangle size={14} className="text-red-600"/>
                     Error
                 </div>
-                <button
-                    onClick={onCloseAction}
-                    aria-label="Close error panel"
-                    className="p-1 rounded hover:bg-red-200 transition-colors cursor-pointer"
-                >
-                    <X size={18}/>
-                </button>
+                {!hideCloseIcon && (
+                    <button
+                        onClick={onCloseAction}
+                        aria-label="Close error panel"
+                        className="p-1 rounded hover:bg-red-200 transition-colors cursor-pointer"
+                    >
+                        <X size={18}/>
+                    </button>
+                )}
             </header>
             <ErrorMessage errorMessage={message} renderMarkdown={step === 3 || step === 4}/>
         </div>

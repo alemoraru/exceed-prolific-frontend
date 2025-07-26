@@ -6,6 +6,7 @@ import {Part2Step1Panel} from "./panels/Part2Step1Panel";
 import {Part2Step2Panel} from "./panels/Part2Step2Panel";
 import {Part2Step3Panel} from "./panels/Part2Step3Panel";
 import {Part2Step4Panel} from "./panels/Part2Step4Panel";
+import {LikertScalePanel} from "./panels/LikertScalePanel";
 import {CodeSnippet} from "@/app/utils/types";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
@@ -49,6 +50,13 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     const [rephrasedError, setRephrasedError] = useState<string>("");
     const [submitStartTime, setSubmitStartTime] = useState<number | null>(null);
     const [showQuitModal, setShowQuitModal] = useState(false);
+
+    // Likert scale state
+    const [showLikertPanel, setShowLikertPanel] = useState<false | 2 | 4>(false);
+    const [likertAnswers, setLikertAnswers] = useState<number[]>([]);
+
+    // Store rephrased error temporarily after submitting code for step 2, and only set it in state after the likert scale panel is completed
+    const [pendingRephrasedError, setPendingRephrasedError] = useState<string>("");
 
     // Track if cheating detection should be active
     const cheatingDetectionActive = Boolean(participantId)
@@ -145,14 +153,12 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     })
                 });
                 const data = await res.json();
-                if (step === 2 && data.status !== 'success') {
-                    setRephrasedError(data.error_msg || 'Unknown error');
-                    setStep(3);
-                } else if (snippetIdx < snippetIds.length - 1) {
-                    setSnippetIdx(snippetIdx + 1);
-                    setStep(1);
-                } else {
-                    onComplete();
+                if (step === 2) {
+                    // Store rephrased error temporarily, show likert panel
+                    setPendingRephrasedError(data.status !== 'success' ? (data.error_msg || 'Unknown error') : '');
+                    setShowLikertPanel(2);
+                } else if (step === 4) {
+                    setShowLikertPanel(4);
                 }
             } catch {
                 setSubmitError('Our apologies, something went wrong while submitting your code. Please try again after a couple of seconds.');
@@ -225,6 +231,25 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     };
     const handleQuitCancel = () => setShowQuitModal(false);
 
+    // Handler for Likert panel submission
+    const handleLikertSubmit = (answers: number[]) => {
+        setLikertAnswers(answers);
+        setShowLikertPanel(false);
+        if (showLikertPanel === 2) {
+            // After panel 2: set rephrased error and go to step 3
+            setRephrasedError(pendingRephrasedError);
+            setStep(3);
+        } else if (showLikertPanel === 4) {
+            // After panel 4: go to the next snippet or finish
+            if (snippetIdx < snippetIds.length - 1) {
+                setSnippetIdx(snippetIdx + 1);
+                setStep(1);
+            } else {
+                onComplete();
+            }
+        }
+    };
+
     // UI for loading and error states (initial fetch of code snippet)
     if (loadingSnippet) {
         return null; // Optionally show a loading spinner here
@@ -281,7 +306,7 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                 />
             )}
             {/* Step 2: Ask user to fix the code, show standard error message below code, revert button below code */}
-            {step === 2 && (
+            {step === 2 && !showLikertPanel && (
                 <Part2Step2Panel
                     code={editedCode1}
                     onCodeChange={setEditedCode1}
@@ -315,7 +340,7 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                 />
             )}
             {/* Step 4: Ask user to fix the code again, show the new error message below code, revert button below code */}
-            {step === 4 && (
+            {step === 4 && !showLikertPanel && (
                 <Part2Step4Panel
                     code={editedCode2}
                     onCodeChange={setEditedCode2}
@@ -332,6 +357,15 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
                     showConfirmModal={showConfirmModal === 4}
                     onModalCancel={handleModalCancel}
                     onModalConfirm={handleModalConfirm}
+                />
+            )}
+            {/* Likert scale panel after code fix submission */}
+            {showLikertPanel && (
+                <LikertScalePanel
+                    errorMessage={showLikertPanel === 2 ? getErrorMessage() : rephrasedError}
+                    onSubmit={handleLikertSubmit}
+                    submitLoading={submitLoading}
+                    step={showLikertPanel === 2 ? 2 : 4}
                 />
             )}
         </div>
