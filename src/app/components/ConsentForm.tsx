@@ -139,6 +139,7 @@ export function ConsentForm(
                 selected={value}
                 onSelect={onChange}
                 disabled={disabled}
+                isFullWidth={true}
             />
         </div>
     );

@@ -58,7 +58,7 @@ export function SurveyInstructions(
     };
 
     return (
-        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-2 fade-in">
+        <div className="max-w-7xl mx-auto bg-white rounded-2xl px-8 fade-in">
             {/* Header */}
             <header className="mb-4 text-center">
                 <h2 className="text-3xl font-extrabold text-blue-900">Prolific Study Instructions</h2>
@@ -77,7 +77,7 @@ export function SurveyInstructions(
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
                 <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                    {["Welcome & Overview", "Self-Assessment", "MCQ Example", "Code Fix Example", "Likert Scale Example"].map((label, idx) => (
+                    {["General Overview", "Self-Assessment", "MCQ Example", "Code Fix Example", "Likert Scale"].map((label, idx) => (
                         <Tab
                             key={label}
                             iconPosition="end"

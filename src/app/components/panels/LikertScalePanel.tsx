@@ -150,7 +150,7 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                                     </Typography>
                                 )}
                                 {/* Separator */}
-                                <div className="w-full flex justify-center my-2 border border-gray-200"></div>
+                                <div className="w-full flex justify-center my-1 border border-gray-200"></div>
                             </React.Fragment>
                         ))}
                     </Grid>
