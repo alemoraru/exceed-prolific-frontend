@@ -232,15 +232,49 @@ export function Part2Survey({onComplete, setOverallStep, part1Total, onConsentDe
     const handleQuitCancel = () => setShowQuitModal(false);
 
     // Handler for Likert panel submission
-    const handleLikertSubmit = (answers: number[]) => {
+    const handleLikertSubmit = async (answers: number[]) => {
         setLikertAnswers(answers);
         setShowLikertPanel(false);
+
+        if (!participantId || !currentSnippet) {
+            // Defensive: skip feedback submission if missing context
+            if (showLikertPanel === 2) {
+                setRephrasedError(pendingRephrasedError);
+                setStep(3);
+            } else if (showLikertPanel === 4) {
+                if (snippetIdx < snippetIds.length - 1) {
+                    setSnippetIdx(snippetIdx + 1);
+                    setStep(1);
+                } else {
+                    onComplete();
+                }
+            }
+            return;
+        }
+        // Prepare feedback payload
+        if (answers.length === 3) {
+            try {
+                await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/errors/feedback`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        participant_id: participantId,
+                        snippet_id: currentSnippet.id,
+                        attempt_number: showLikertPanel === 2 ? 1 : 2,
+                        authoritativeness: likertAnswers[0],
+                        cognitive_load: likertAnswers[1],
+                        readability: likertAnswers[2],
+                        timestamp: Date.now().toString()
+                    }),
+                });
+            } catch {
+                // Optionally handle error, e.g., show a toast
+            }
+        }
         if (showLikertPanel === 2) {
-            // After panel 2: set rephrased error and go to step 3
             setRephrasedError(pendingRephrasedError);
             setStep(3);
         } else if (showLikertPanel === 4) {
-            // After panel 4: go to the next snippet or finish
             if (snippetIdx < snippetIds.length - 1) {
                 setSnippetIdx(snippetIdx + 1);
                 setStep(1);
