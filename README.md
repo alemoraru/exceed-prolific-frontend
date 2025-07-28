@@ -56,8 +56,14 @@ control; it is already included in the `.gitignore`.
 - The frontend is designed to work with the EXCEED Prolific
   backend ([EXCEED Prolific Backend](https://github.com/amoraru/exceed-prolific-backend)).
 - Error messages and code snippets are fetched from the backend.
-- The survey flow includes consent, experience, MCQs, and code debugging tasks.
-- Cheating detection and progress tracking are implemented client-side.
+- The survey flow includes:
+  - Consent form
+  - Experience with Python self-assessment
+  - Multiple-choice questions (MCQs)
+  - Code debugging tasks
+  - Subjective evaluation of programming error messages
+- Cheating detection and progress tracking are implemented client-side; however, the backend is responsible for
+  validating the validity of responses and cheating behavior.
 
 ---
 
