@@ -136,6 +136,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 // No need to setParticipantId, just store in localStorage for redundancy
                 localStorage.setItem('participant_id', data.participant_id);
                 setStep(1);
+                window.scrollTo({top: 0, behavior: 'instant'});
             } else if (consent === 1) {
                 localStorage.removeItem('participant_id');
                 onConsentDenied();

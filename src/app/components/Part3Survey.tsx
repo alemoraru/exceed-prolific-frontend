@@ -147,6 +147,7 @@ export function Part3Survey(
             if (feedbackPanel < 3) {
                 setFeedbackPanel(feedbackPanel + 1);
                 setLikertAnswers([]); // Reset answers for next panel
+                window.scrollTo({top: 0, behavior: 'instant'});
             } else {
                 onComplete();
             }
