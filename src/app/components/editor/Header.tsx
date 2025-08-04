@@ -4,14 +4,16 @@ import {ChevronUp, ChevronDown} from 'lucide-react';
 interface HeaderProps {
     title?: string;
     instructions?: string;
-    progress?: number;
-    maxProgress?: number;
     isVisible: boolean;
     onToggle: () => void;
 }
 
 /**
  * A header component which displays a title and instructions with a toggle button to show or hide them.
+ * @param title - The title to display in the header.
+ * @param instructions - The instructions to display below the title.
+ * @param isVisible - Controls whether the header content is visible.
+ * @param onToggle - Callback function to toggle the visibility of the header content.
  */
 export const Header: React.FC<HeaderProps> = ({title, instructions, isVisible, onToggle}) => {
     return (

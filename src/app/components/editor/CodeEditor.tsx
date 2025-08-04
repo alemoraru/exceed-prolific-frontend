@@ -8,6 +8,9 @@ import {BottomPanel} from './BottomPanel';
 import {ErrorPanel} from './ErrorPanel';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../toast/ConfirmChoiceModal";
 
+/**
+ * Props for the CodeEditor component.
+ */
 interface CodeEditorProps {
     title?: string;
     instructions?: string;
@@ -46,6 +49,10 @@ interface CodeEditorState {
  * @param errorMessage - Optional error message to display in the error panel.
  * @param onSubmit - Callback function to handle code submission.
  * @param readOnly - Optional flag to make the editor read-only (default is false).
+ * @param autoHeight - Optional flag to enable auto height for the editor (default is false).
+ * @param onRevert - Callback function to handle code revert action.
+ * @param onCodeChange - Callback function to handle code changes.
+ * @param renderMarkdown - Flag to determine if markdown rendering is enabled.
  */
 export const CodeEditor: React.FC<CodeEditorProps> = (
     {

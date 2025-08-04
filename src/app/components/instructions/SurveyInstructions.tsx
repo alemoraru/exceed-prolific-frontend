@@ -23,16 +23,11 @@ import Link from "next/link";
  * @param requireAllTabs   If true, fires `onAllTabsVisited` only after every tab has been visited.
  * @param onAllTabsVisited Callback when all tabs have been visited (fires once).
  */
-export function SurveyInstructions(
-    {
-        defaultTabIndex = 0,
-        requireAllTabs = false,
-        onAllTabsVisited
-    }: {
-        defaultTabIndex?: number;
-        requireAllTabs?: boolean;
-        onAllTabsVisited?: () => void;
-    } = {}) {
+export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false, onAllTabsVisited}: {
+    defaultTabIndex?: number;
+    requireAllTabs?: boolean;
+    onAllTabsVisited?: () => void;
+} = {}) {
 
     /* State management for the instruction component */
     const totalTabs = 5;
