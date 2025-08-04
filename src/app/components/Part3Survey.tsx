@@ -67,6 +67,7 @@ export function Part3Survey(
     const [showInstructions, setShowInstructions] = useState(false);
     const [errorToastMsg, setErrorToastMsg] = useState<string | null>(null);
     const [panelStartTime, setPanelStartTime] = useState<number>(Date.now());
+    const [likertAnswers, setLikertAnswers] = useState<number[]>([]);
 
     // Warn on refresh/leave after consent is given
     useEffect(() => {
@@ -87,6 +88,11 @@ export function Part3Survey(
     // Reset panel start time when the feedback panel changes
     useEffect(() => {
         setPanelStartTime(Date.now());
+    }, [feedbackPanel]);
+
+    // Reset Likert answers when feedbackPanel changes
+    useEffect(() => {
+        setLikertAnswers([]);
     }, [feedbackPanel]);
 
     // Handle Likert scale submission (for all feedback panels)
@@ -140,6 +146,7 @@ export function Part3Survey(
             }
             if (feedbackPanel < 3) {
                 setFeedbackPanel(feedbackPanel + 1);
+                setLikertAnswers([]); // Reset answers for next panel
             } else {
                 onComplete();
             }
@@ -186,6 +193,8 @@ export function Part3Survey(
                 submitLoading={submitLoading}
                 isMarkdown={isMarkdown}
                 questions={likertQuestions}
+                selectedAnswers={likertAnswers}
+                onAnswersChange={setLikertAnswers}
             />
         </div>
     );

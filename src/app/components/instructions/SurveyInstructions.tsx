@@ -44,6 +44,7 @@ export function SurveyInstructions(
     const [reviewCode] = useState(
         'def add(a, b):\n    return a + b\n\nprint(add(2))'
     );
+    const [likertAnswers, setLikertAnswers] = useState<number[]>([]);
     const visitedCount = visitedTabs.size;
     const allVisited = visitedCount === totalTabs;
 
@@ -157,7 +158,7 @@ export function SurveyInstructions(
                                     You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
                                     {' '}<MdOutlineExitToApp className="inline relative -mt-0.5 text-red-400"/>{' '}
                                     in the top-left corner of the page. If you choose to do so, all your data will be deleted, however,
-                                    you will NO longer receive compensation for your time and participation.
+                                    you will <b>NO</b> longer receive compensation for your time and participation.
                                 </li>
                                 <li>
                                     <span className="text-red-700 font-semibold">Refreshing or closing the tab / browser is strongly discouraged until finishing the survey. </span>
@@ -175,7 +176,7 @@ export function SurveyInstructions(
                             interact with programming errors and code.
                         </li>
                         <li>
-                            <b>Do not use external help</b> (AI tools, search engines, or others) to answer questions or
+                            <b>Do NOT use external help</b> (AI tools, search engines, or others) to answer questions or
                             fix code. Your
                             own reasoning is essential for the study. We will monitor for any signs of external
                             assistance, and any
@@ -347,11 +348,12 @@ export function SurveyInstructions(
                     </p>
                     <LikertScalePanel
                         errorMessage={exampleErrorMessage}
-                        onSubmit={() => {
-                        }}
+                        onSubmit={() => setLikertAnswers([])}
                         submitLoading={false}
                         isMarkdown={false}
                         questions={instructionsQuestions}
+                        selectedAnswers={likertAnswers}
+                        onAnswersChange={setLikertAnswers}
                     />
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Please answer all Likert scale questions honestly. Your feedback helps

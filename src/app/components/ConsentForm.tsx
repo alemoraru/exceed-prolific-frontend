@@ -42,7 +42,8 @@ export function ConsentForm({value, onChange, disabled}: {
                     part of the study and will help us gauge your proficiency in Python. In the second part, you’ll be
                     asked to review and correct a Python code snippet that contains a bug. Lastly, in the third part,
                     you will be asked to answer a few more Likert-style questions about your experience with the error
-                    message in the code fixing task. The entire study should take approximately 30 minutes to complete.
+                    message in the code fixing task. The entire study should take approximately 15-20 minutes to
+                    complete.
                 </p>
                 <p className="mb-4">You don’t need any special equipment to participate other than the ability to type
                     code in a text editor. The study is designed to be completed entirely online.

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ErrorPanel} from "../editor/ErrorPanel";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -19,6 +19,8 @@ interface LikertScalePanelProps {
     submitLoading?: boolean;
     isMarkdown: boolean;
     questions: string[];
+    selectedAnswers?: number[];
+    onAnswersChange?: (answers: number[]) => void;
 }
 
 /**
@@ -31,6 +33,8 @@ interface LikertScalePanelProps {
  * @param submitLoading - Optional flag to indicate if the submission is in progress.
  * @param isMarkdown - Flag indicating if the error message should be rendered as Markdown.
  * @param questions - Array of questions to be displayed in the Likert scale.
+ * @param selectedAnswers - Optional array of pre-selected answers for controlled components.
+ * @param onAnswersChange - Optional callback to handle changes in selected answers for controlled components.
  */
 export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
     {
@@ -38,28 +42,37 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
         onSubmit,
         submitLoading = false,
         isMarkdown,
-        questions
+        questions,
+        selectedAnswers,
+        onAnswersChange
     }) => {
+    // Use controlled answers if provided, otherwise manage internally
+    const isControlled = selectedAnswers !== undefined && onAnswersChange !== undefined;
+    const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+    const [touched, setTouched] = useState<boolean[]>(Array(questions.length).fill(false));
 
-    // State to track answers for each question
-    const [answers, setAnswers] = useState<(number | null)[]>(
-        Array(questions.length).fill(null)
-    );
+    // Sync controlled answers with internal state
+    useEffect(() => {
+        if (isControlled) {
+            setAnswers(selectedAnswers.map(a => a ?? null).concat(Array(questions.length - selectedAnswers.length).fill(null)).slice(0, questions.length));
+        } else {
+            setAnswers(Array(questions.length).fill(null));
+        }
+        setTouched(Array(questions.length).fill(false));
+    }, [isControlled, questions, selectedAnswers]);
 
     // Track if each question has been touched (answered or interacted with)
-    const [touched, setTouched] = useState<boolean[]>(
-        Array(questions.length).fill(false)
-    );
-
-    // State to track changes in the form
     const handleChange = (idx: number, value: number) => {
         const newAnswers = [...answers];
         newAnswers[idx] = value;
         setAnswers(newAnswers);
-
         const newTouched = [...touched];
         newTouched[idx] = true;
         setTouched(newTouched);
+        if (isControlled && onAnswersChange) {
+            // Convert nulls to undefined for controlled answers
+            onAnswersChange(newAnswers.map(a => a ?? undefined) as number[]);
+        }
     };
 
     const allAnswered = answers.every((a) => a !== null);
