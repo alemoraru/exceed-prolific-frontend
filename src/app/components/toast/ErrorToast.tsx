@@ -10,6 +10,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
  * SubmissionError component displays an error message when there is an issue with form submission.
  * Uses MUI Alert for improved accessibility and appearance.
  * Once shown, it will disappear automatically after 6 seconds.
+ * @param message - The error message to display
  */
 export function ErrorToast({message}: { message: string }) {
     const [visible, setVisible] = useState(true);

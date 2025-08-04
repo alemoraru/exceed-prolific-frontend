@@ -10,7 +10,7 @@ import {ErrorToast} from './toast/ErrorToast';
 import {LoaderToast} from './toast/LoaderToast';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
-import {MCQQuestion, Part1Answers} from "@/app/utils/types";
+import {MCQQuestion} from "@/app/utils/types";
 import {ArrowRight} from 'lucide-react';
 import {useCheatingDetection} from '../hooks/useCheatingDetection';
 
@@ -23,7 +23,7 @@ import {useCheatingDetection} from '../hooks/useCheatingDetection';
  */
 export function Part1Survey({participantId, onComplete, onStepChange, onConsentDenied}: {
     participantId: string,
-    onComplete: (answers: Part1Answers) => void,
+    onComplete: () => void,
     onStepChange: (step: number) => void,
     onConsentDenied: () => void
 }) {
@@ -40,7 +40,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const [questionsLoading, setQuestionsLoading] = useState(false);
     const [questionsError, setQuestionsError] = useState<string | null>(null);
     const [showSubmittingLoader, setShowSubmittingLoader] = useState(false);
-    const [mcqTimes, setMcqTimes] = useState<number[]>([]);
+    const [, setMcqTimes] = useState<number[]>([]);
     const [mcqStartTime, setMcqStartTime] = useState<number | null>(null);
     const [allInstructionTabsVisited, setAllInstructionTabsVisited] = useState(false);
     const [showQuitModal, setShowQuitModal] = useState(false);
@@ -103,7 +103,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const cheatingDetectionActive =
         consent === 0 && // consent given
         step > 2 && // MCQs started
-        (!questions || step < questions.length + 3); // before survey end
+        (!questions || step < questions.length + 3);
 
     useCheatingDetection(cheatingDetectionActive);
 
@@ -136,6 +136,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 // No need to setParticipantId, just store in localStorage for redundancy
                 localStorage.setItem('participant_id', data.participant_id);
                 setStep(1);
+                window.scrollTo({top: 0, behavior: 'instant'});
             } else if (consent === 1) {
                 localStorage.removeItem('participant_id');
                 onConsentDenied();
@@ -196,7 +197,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
             });
             if (!res.ok) throw new Error('Failed to submit MCQ answer');
             if (questionIdx >= questions.length - 1) {
-                onComplete({consent, experience, mcqAnswers, questions, mcqTimes});
+                onComplete();
                 return;
             } else {
                 setStep(s => s + 1);
@@ -238,9 +239,10 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         return (
             <div>
                 <div className="mb-8 text-left text-gray-700 text-sm">
-                    Please indicate your years of experience with Python. Use the slider or enter a number. If
-                    you have no experience, set it to 0, otherwise round it to the closest whole number (e.g. 1.5
-                    years should be set to 2). This information helps us understand your background.
+                    Please indicate your years of experience with programming in Python. Use the slider or enter a
+                    number. If you have no experience, set it to 0, otherwise round it to the closest whole number (e.g.
+                    1.5 years should be set to 2). This information helps us understand your background, and does not
+                    affect your participation in the study in any way.
                 </div>
                 <ExperienceSlider value={experience} onChange={setExperience}/>
             </div>
@@ -295,11 +297,11 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
         }
         if (step === 2) return handleExperienceNext();
         if (questions && step > 2 && step - 3 < questions.length) return handleMCQNext();
-        if (isLast) onComplete({consent, experience, mcqAnswers, questions: questions ?? [], mcqTimes});
+        if (isLast) onComplete();
         else setStep(s => s + 1);
     };
 
-    // Show quit button only after consent form and before end-of-study/consent-denied
+    // Show quit button only after the consent form and before end-of-study/consent-denied
     const showQuitButton = step > 0 && step < (questions ? questions.length + 3 : 9999);
 
     // Handler for quit study
@@ -335,6 +337,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                     disabled={showQuitModal}
                 />
             )}
+
             {/* Quit Study Modal */}
             <ConfirmChoiceModal
                 open={showQuitModal}
@@ -342,21 +345,28 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 onConfirm={handleQuitConfirm}
                 type={ConfirmChoiceModalType.QuitStudy}
             />
+
             {/* Error toast for quit error */}
             {quitError && <ErrorToast message={quitError}/>}
+
             {/* Instructions Info Button */}
             {step > 1 && <InfoButton onClick={() => setShowInstructions(true)}/>}
+
             {/* Overlay for instructions */}
             <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
                 <SurveyInstructions defaultTabIndex={step === 2 ? 1 : step > 2 ? 2 : 0}/>
             </InstructionsOverlay>
+
+            {/* Progress Bar tracker for questions */}
             <div className="text-center text-gray-600 mt-2">
                 {step > 1 ? <span>Question {progressStep} of {totalSteps}</span> : <span></span>}
             </div>
+
             {/* Divider when not on the consent form page */}
             {step > 1 &&
                 <div className="my-6 border-b border-gray-200"/>
             }
+
             {/* Loading and Error Messages */}
             {questionsLoading && step === 1 &&
                 <div className="text-blue-700 mt-2">Loading questions...</div>
@@ -364,6 +374,8 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
             {questionsError && step === 1 &&
                 <div className="text-red-700 mt-2">{questionsError}</div>
             }
+
+            {/* Step Content */}
             {stepContent}
 
             {/* Consent or experience submission error */}
@@ -374,7 +386,8 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                         : "Our apologies, something went wrong while submitting your experience. Please try again after a couple of seconds."
                 }/>
             )}
-            {/* Navigation Buttons */}
+
+            {/* Navigation Button - Submit Answer */}
             <div className="flex justify-end mt-8 px-8">
                 <PrimaryButton
                     onClick={handleNext}

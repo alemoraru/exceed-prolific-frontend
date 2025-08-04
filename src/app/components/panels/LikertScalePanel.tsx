@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ErrorPanel} from "../editor/ErrorPanel";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,12 +10,17 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import {Send} from "lucide-react";
 
-
+/**
+ * Props for the LikertScalePanel component.
+ */
 interface LikertScalePanelProps {
     errorMessage: string;
     onSubmit: (answers: number[]) => void;
-    step: 1 | 2 | 3 | 4;
     submitLoading?: boolean;
+    isMarkdown: boolean;
+    questions: string[];
+    selectedAnswers?: number[];
+    onAnswersChange?: (answers: number[]) => void;
 }
 
 /**
@@ -26,36 +31,48 @@ interface LikertScalePanelProps {
  * @param onSubmit - Callback function to handle the submission of answers.
  * @param step - The current step in the process (1, 2, 3, or 4).
  * @param submitLoading - Optional flag to indicate if the submission is in progress.
+ * @param isMarkdown - Flag indicating if the error message should be rendered as Markdown.
+ * @param questions - Array of questions to be displayed in the Likert scale.
+ * @param selectedAnswers - Optional array of pre-selected answers for controlled components.
+ * @param onAnswersChange - Optional callback to handle changes in selected answers for controlled components.
  */
 export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
     {
         errorMessage,
         onSubmit,
-        step,
         submitLoading = false,
+        isMarkdown,
+        questions,
+        selectedAnswers,
+        onAnswersChange
     }) => {
+    // Use controlled answers if provided, otherwise manage internally
+    const isControlled = selectedAnswers !== undefined && onAnswersChange !== undefined;
+    const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+    const [touched, setTouched] = useState<boolean[]>(Array(questions.length).fill(false));
 
-    const questions = [
-        "The error message made me feel like I was being told what to do, rather than being helped to understand:",
-        "The error message was easy to process and required little mental effort:",
-        "The error message was clearly written and easy to read:",
-    ];
+    // Sync controlled answers with internal state
+    useEffect(() => {
+        if (isControlled) {
+            setAnswers(selectedAnswers.map(a => a ?? null).concat(Array(questions.length - selectedAnswers.length).fill(null)).slice(0, questions.length));
+        } else {
+            setAnswers(Array(questions.length).fill(null));
+        }
+        setTouched(Array(questions.length).fill(false));
+    }, [isControlled, questions, selectedAnswers]);
 
-    const [answers, setAnswers] = useState<(number | null)[]>(
-        Array(questions.length).fill(null)
-    );
-    const [touched, setTouched] = useState<boolean[]>(
-        Array(questions.length).fill(false)
-    );
-
+    // Track if each question has been touched (answered or interacted with)
     const handleChange = (idx: number, value: number) => {
         const newAnswers = [...answers];
         newAnswers[idx] = value;
         setAnswers(newAnswers);
-
         const newTouched = [...touched];
         newTouched[idx] = true;
         setTouched(newTouched);
+        if (isControlled && onAnswersChange) {
+            // Convert nulls to undefined for controlled answers
+            onAnswersChange(newAnswers.map(a => a ?? undefined) as number[]);
+        }
     };
 
     const allAnswered = answers.every((a) => a !== null);
@@ -77,15 +94,15 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                 borderRadius: 4,
                 border: "1px solid #000",
                 borderColor: "black",
-                boxShadow: 1,
-                p: 4,
+                boxShadow: 4,
+                px: 4,
+                py: 1
             }}
         >
             <CardContent>
-                <div className={"py-4 font-bold"}>
-                    Please answer the following questions about the error message you just saw, which we
-                    also display below. Your responses will help us understand how well the error message
-                    communicates its intent.
+                <div className={"pb-4"}>
+                    Please read again the error message below and provide your feedback according to the following
+                    statements. Note that this is the same error message you saw in the previous code fix task.
                 </div>
 
                 {errorMessage && (
@@ -93,8 +110,8 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                         <ErrorPanel
                             message={errorMessage}
                             isVisible={true}
-                            step={step}
                             hideCloseIcon={true}
+                            renderMarkdown={isMarkdown}
                         />
                     </div>
                 )}

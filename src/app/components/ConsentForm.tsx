@@ -7,21 +7,17 @@ import Link from 'next/link';
  * Controlled: receives value and onChange from parent.
  * Uses MultipleChoiceQuestion for the consent question.
  */
-export function ConsentForm(
-    {
-        value,
-        onChange,
-        disabled
-    }: {
-        value: number | null;
-        onChange: (value: number) => void;
-        disabled?: boolean;
-    }) {
+export function ConsentForm({value, onChange, disabled}: {
+    value: number | null;
+    onChange: (value: number) => void;
+    disabled?: boolean;
+}) {
     return (
         <div
             className="mb-8 w-full mx-auto text-left bg-white px-8 rounded-2xl">
             <h2 className="text-2xl font-bold mb-8 text-center text-blue-900">Research Consent</h2>
 
+            {/* About the study section */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">About the Study</h3>
                 <p className="mb-4">We are a team of researchers from <strong><Link
@@ -29,19 +25,25 @@ export function ConsentForm(
                     className="underline hover:text-blue-700 transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
-                >Delft University of Technology in the Netherlands</Link></strong>. This study explores how individuals
-                    interpret and respond to programming errors, with the aim of improving how such errors are explained
-                    based on a programmer’s skill level. You are invited to take part in this research project.
+                >
+                    Delft University of Technology in the Netherlands</Link></strong>. This study explores how
+                    individuals interpret and respond to programming errors, with the aim of improving how such errors
+                    are explained based on a programmer’s skill level. You are invited to take part in this research
+                    project.
                 </p>
             </section>
 
+            {/* Your participation section - what the survey will be about */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Your Participation</h3>
                 <p className="mb-4">If you agree to participate, you will begin by self-assessing your experience with
                     Python. Following that, you’ll complete a series of multiple-choice questions designed to evaluate
                     different aspects of your understanding of Python programming errors. These questions form the first
                     part of the study and will help us gauge your proficiency in Python. In the second part, you’ll be
-                    asked to review and correct code snippets that contain errors.
+                    asked to review and correct a Python code snippet that contains a bug. Lastly, in the third part,
+                    you will be asked to answer a few more Likert-style questions about your experience with the error
+                    message in the code fixing task. The entire study should take approximately 15-20 minutes to
+                    complete.
                 </p>
                 <p className="mb-4">You don’t need any special equipment to participate other than the ability to type
                     code in a text editor. The study is designed to be completed entirely online.
@@ -53,6 +55,7 @@ export function ConsentForm(
                 </p>
             </section>
 
+            {/* Integrity & Fairness section - what is allowed and not allowed to do */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Integrity & Fairness</h3>
                 <div style={{backgroundColor: '#FEF9C3', borderLeft: '4px solid #FACC15'}} className="p-4 rounded mb-4">
@@ -76,6 +79,7 @@ export function ConsentForm(
                 </div>
             </section>
 
+            {/* Section on what data we will collect while participating */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">What Data Will Be Collected?</h3>
                 <p className="mb-2">We will collect the following information during your participation:</p>
@@ -84,32 +88,35 @@ export function ConsentForm(
                     <li><strong>Your programming experience:</strong> How many years you report having worked with
                         Python.
                     </li>
-                    <li><strong>Your interaction data:</strong> Metrics such as the time you spend on each question and
-                        whether the survey window remains active (for example, when you switch tabs or windows).
+                    <li><strong>Your interaction data:</strong> Metrics such as the time you spend on each question,
+                        whether the survey window remains active (for example, when you switch tabs or windows), and
+                        keystroke data (e.g., if you copy or paste code).
                     </li>
                     <li><strong>Your survey responses:</strong> The answers you provide to the multiple-choice
-                        questions.
+                        questions and Likert-style questions throughout the study.
                     </li>
                     <li><strong>Your code submissions:</strong> The code you write and submit in response to the coding
-                        tasks.
+                        task.
                     </li>
                 </ul>
             </section>
 
+            {/* Confidentiality section - what we will do with the data we collect and how do we store it */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Confidentiality & Data Use</h3>
                 <p className="mb-4">
                     We will only collect the data described above, and your information will be treated with strict
-                    confidentiality. Your PROLIFIC_ID will be collected solely for the purposes of tracking
+                    confidentiality. Your <b>PROLIFIC_ID</b> will be collected solely for the purposes of tracking
                     participation and ensuring fair monetary compensation. After the data collection phase is complete,
                     all PROLIFIC_IDs will be anonymized so that your responses cannot be linked back to you. All data
                     will be securely stored in password-protected electronic systems. Please note that the data
                     collected in this study may be published or shared in anonymized form. This anonymized dataset may
-                    include your responses to the survey and coding tasks, but will exclude any personal identifiers
-                    (i.e., PROLIFIC_ID), ensuring that your responses cannot be traced back to you.
+                    include your responses to the survey and coding submissions, but will exclude any personal
+                    identifiers (i.e., PROLIFIC_ID), ensuring that your responses cannot be traced back to you.
                 </p>
             </section>
 
+            {/* Contact information section - how to contact the researchers */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Contact Information</h3>
                 <p className="mb-4">
@@ -119,12 +126,14 @@ export function ConsentForm(
                 </p>
             </section>
 
+            {/* Your rights section - what you can do and what happens if you consent */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Your Rights</h3>
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-2">
                     <span className="font-semibold">By clicking &nbsp;
                         <span className='text-blue-700'>&quot;Yes, I consent&quot;</span>
-                        &nbsp; at the bottom of this page, you confirm that you have read, understood, and consent to the above information.
+                        &nbsp; at the bottom of this page, you confirm that you have carefully read, understood,
+                        and consent to the above information.
                     </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-2"><strong>Note:</strong> You can exit the task at any time. This

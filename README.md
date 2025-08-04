@@ -2,8 +2,8 @@
 
 This repository contains the frontend code for the EXCEED Prolific application, a study aimed at investigating code
 understanding and error correction using Python code snippets and error messages. The frontend is built with Next.js and
-React, providing a survey interface for participants to provide their experience with Python, answer MCQs, and
-participate in code debugging tasks.
+React, providing a survey interface for participants to provide their experience with Python, answer MCQs, debug buggy
+Python code, and evaluate error messages on readability, cognitive load, and authoritativeness.
 
 ---
 
@@ -61,7 +61,7 @@ control; it is already included in the `.gitignore`.
   - Experience with Python self-assessment
   - Multiple-choice questions (MCQs)
   - Code debugging tasks
-  - Subjective evaluation of programming error messages
+  - Subjective evaluation of programming error messages (readability, cognitive load, authoritativeness)
 - Cheating detection and progress tracking are implemented client-side; however, the backend is responsible for
   validating the validity of responses and cheating behavior.
 

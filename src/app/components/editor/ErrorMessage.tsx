@@ -14,6 +14,8 @@ const codeClasses = "bg-gray-100 rounded px-1 py-0.5 text-xs font-mono";
 
 /**
  * ErrorMessage component displays an error message with optional styling and Markdown rendering.
+ * @param errorMessage - The error message to display.
+ * @param renderMarkdown - Whether to render the error message as Markdown (default is false).
  */
 export const ErrorMessage: React.FC<ErrorMessageProps> = (
     {

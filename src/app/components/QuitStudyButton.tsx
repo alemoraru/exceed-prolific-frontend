@@ -7,6 +7,12 @@ interface QuitStudyButtonProps {
     disabled?: boolean;
 }
 
+/**
+ * Component of a button to quit the study and revoke consent.
+ * @param onClick - Function to call when the button is clicked
+ * @param className - Additional CSS classes for styling the button
+ * @param disabled - Whether the button should be disabled
+ */
 export function QuitStudyButton({onClick, className = "", disabled = false}: QuitStudyButtonProps) {
     return (
         <button

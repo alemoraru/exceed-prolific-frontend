@@ -8,7 +8,6 @@ interface InfoButtonProps {
     onClick: () => void;
     className?: string;
     ariaLabel?: string;
-    tooltip?: string;
 }
 
 /**
@@ -16,7 +15,6 @@ interface InfoButtonProps {
  * @param onClick - Function to call when the button is clicked
  * @param className - Optional additional CSS classes for styling
  * @param ariaLabel - Optional ARIA label for accessibility, defaults to "Show instructions"
- * @param tooltip - Optional tooltip text displayed on hover, defaults to "Show instructions"
  * @constructor
  */
 export const InfoButton: React.FC<InfoButtonProps> = (

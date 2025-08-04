@@ -8,6 +8,9 @@ import {BottomPanel} from './BottomPanel';
 import {ErrorPanel} from './ErrorPanel';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "../toast/ConfirmChoiceModal";
 
+/**
+ * Props for the CodeEditor component.
+ */
 interface CodeEditorProps {
     title?: string;
     instructions?: string;
@@ -16,15 +19,15 @@ interface CodeEditorProps {
     progress?: number;
     maxProgress?: number;
     onSubmitAction?: (code: string) => void;
-    onPrev?: () => void;
     onNext?: () => void;
-    step: 1 | 2 | 3 | 4;
+    step: 1 | 2;
     submitLoading?: boolean;
     language?: string;
     readOnly?: boolean;
     autoHeight?: boolean;
     onRevert?: () => void;
     onCodeChange?: (code: string) => void;
+    renderMarkdown: boolean;
 }
 
 /**
@@ -46,6 +49,10 @@ interface CodeEditorState {
  * @param errorMessage - Optional error message to display in the error panel.
  * @param onSubmit - Callback function to handle code submission.
  * @param readOnly - Optional flag to make the editor read-only (default is false).
+ * @param autoHeight - Optional flag to enable auto height for the editor (default is false).
+ * @param onRevert - Callback function to handle code revert action.
+ * @param onCodeChange - Callback function to handle code changes.
+ * @param renderMarkdown - Flag to determine if markdown rendering is enabled.
  */
 export const CodeEditor: React.FC<CodeEditorProps> = (
     {
@@ -54,7 +61,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         code,
         errorMessage,
         onSubmitAction,
-        onPrev,
         onNext,
         step,
         submitLoading,
@@ -62,6 +68,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         autoHeight = false,
         onRevert,
         onCodeChange,
+        renderMarkdown
     }) => {
 
     // Store the true original code only once on mount
@@ -77,7 +84,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         code: code,
         isSubmitted: false,
         showHeader: true,
-        showErrorPanel: step === 1 || step === 3, // Show the error panel by default for steps 1 and 3
+        showErrorPanel: true
     });
 
     // State to control the revert modal visibility
@@ -175,7 +182,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                     message={errorMessage}
                     isVisible={state.showErrorPanel}
                     onCloseAction={handleToggleError}
-                    step={step}
+                    renderMarkdown={renderMarkdown}
                 />
             </div>
             {/* Bottom Panel */}
@@ -184,8 +191,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 showErrorPanel={state.showErrorPanel}
                 onToggleError={handleToggleError}
                 onRevert={handleRevertClick}
-                onPrev={onPrev || (() => {
-                })}
                 onNext={onNext || handleSubmit}
                 isSubmitted={state.isSubmitted}
                 canRevert={canRevert}

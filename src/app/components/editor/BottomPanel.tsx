@@ -1,36 +1,49 @@
 import React from 'react';
-import {AlertTriangle, RotateCcw, Send, ArrowRight, ArrowLeft} from 'lucide-react';
+import {AlertTriangle, RotateCcw, Send, ArrowRight} from 'lucide-react';
 
+/**
+ * Props for the BottomPanel component.
+ */
 interface BottomPanelProps {
     hasError: boolean;
     showErrorPanel: boolean;
     onToggleError: () => void;
     onRevert: () => void;
-    onPrev: () => void;
     onNext: () => void;
     isSubmitted: boolean;
     canRevert: boolean;
-    step: 1 | 2 | 3 | 4;
+    step: 1 | 2;
     submitLoading?: boolean;
 }
 
+/**
+ * BottomPanel component provides a footer panel with action buttons for the code editor.
+ * @param hasError - Indicates if there is an error to display.
+ * @param showErrorPanel - Controls visibility of the error panel.
+ * @param onToggleError - Callback to toggle the error panel visibility.
+ * @param onRevert - Callback to revert the code to its original state.
+ * @param onNext - Callback to proceed to the next step or submit the code.
+ * @param isSubmitted - Indicates if the code has been submitted.
+ * @param canRevert - Indicates if the code can be reverted to its original state.
+ * @param step - Current step in the process (1 being read-only review, 2 being code fix).
+ * @param submitLoading - Indicates if the submission is currently loading.
+ */
 export const BottomPanel: React.FC<BottomPanelProps> = (
     {
         hasError,
         showErrorPanel,
         onToggleError,
         onRevert,
-        onPrev,
         onNext,
         isSubmitted,
         canRevert,
         step,
         submitLoading,
     }) => {
-    const nextLabel = (step === 2 || step === 4) ? 'Submit' : 'Next';
+    const nextLabel = step === 2 ? 'Submit' : 'Next';
 
     // Disable submit if code is not changed for code fix steps
-    const disableSubmit = (step === 2 || step === 4) && !canRevert;
+    const disableSubmit = step === 2 && !canRevert;
 
     return (
         <div className="bg-gray-50 border-t border-gray-300 px-4 py-3 flex items-center justify-between">
@@ -48,30 +61,22 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                         <span>Error Message</span>
                     </button>
                 )}
-                <button
-                    onClick={onRevert}
-                    disabled={!canRevert || isSubmitted}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-600
+                {step === 2 && (
+                    <button
+                        onClick={onRevert}
+                        disabled={!canRevert || isSubmitted}
+                        className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-600
                     border border-gray-300 hover:bg-yellow-50 hover:text-yellow-700 transition-colors
                     shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2
                     focus:ring-yellow-300 cursor-pointer"
-                    aria-label="Revert to original code"
-                >
-                    <RotateCcw size={14} className="text-gray-400"/>
-                    <span>Revert Code</span>
-                </button>
+                        aria-label="Revert to original code"
+                    >
+                        <RotateCcw size={14} className="text-gray-400"/>
+                        <span>Revert Code</span>
+                    </button>
+                )}
             </div>
             <div className="flex items-center gap-3">
-                <button
-                    onClick={onPrev}
-                    disabled={submitLoading || step === 1}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-600 border
-                    border-gray-300 hover:bg-gray-100 transition-colors shadow-sm disabled:opacity-50
-                    disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
-                >
-                    <ArrowLeft size={14}/>
-                    <span>Prev</span>
-                </button>
                 <button
                     onClick={onNext}
                     disabled={isSubmitted || submitLoading || disableSubmit}
