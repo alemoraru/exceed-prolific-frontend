@@ -94,7 +94,7 @@ export function Part2Survey(
             }
         };
         fetchSnippet();
-    }, [renderMarkdown, participantId]);
+    }, [participantId]);
 
     // When the step changes to 2 (another fix attempt), reset attemptStartTime
     useEffect(() => {
