@@ -268,11 +268,11 @@ export function SurveyInstructions(
                     </p>
                     <div className="mb-4">
                         <CodeEditor
-                            instructions="Carefully review the code and the error message.
+                            instructions={`Carefully review the code and the error message.
                             Try to understand what the code is intended to do and what the error means.
-                            When you are ready, click the Next button. Note that this step is for review only,
+                            When you are ready, click the "Next" button. This step is for review only,
                             therefore you cannot make any changes to the code at this point.
-                            You will be asked to fix the code in the next step."
+                            You will be asked to fix the code in the next step.`}
                             title="Step 1: Review the Code and Error"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
@@ -294,10 +294,9 @@ export function SurveyInstructions(
                     <div className="mb-4">
                         <CodeEditor
                             instructions={`Edit the code to fix any errors you have identified.
-                            You can revert to the original snippet if needed by clicking the "Revert Code" button.
-                            The error message is shown below for reference, but you can toggle it on and off using the button in the editor toolbar.
-                            Once you have made your changes, click the Next button to submit your fix.
-                            Note that once you submit, you will not be able to come back to this step to make further changes.`}
+                            You can restore the original snippet using the "Revert Code" button.
+                            The error message is shown below and can be toggled using the toolbar button.
+                            When you're done, click "Submit". Submitting uses one attempt — if you have none left, you can’t return to this step.`}
                             title="Step 2: Attempt a Code Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}

@@ -172,8 +172,8 @@ export function Part2Survey(
     }
     if (snippetError || !currentSnippet) {
         return (
-            <div
-                className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">{'Failed to load snippet.'}
+            <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">
+                {'Failed to load snippet.'}
             </div>
         );
     }

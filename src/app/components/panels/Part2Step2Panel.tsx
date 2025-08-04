@@ -49,10 +49,9 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
             onSubmitAction={onNext}
             onCodeChange={onCodeChange}
             instructions={`Edit the code to fix any errors you have identified.
-            You can revert to the original snippet if needed by clicking the "Revert Code" button.
-            The error message is shown below for reference, but you can toggle it on and off using the button in the editor toolbar.
-            Once you have made your changes, click the Next button to submit your fix.
-            Note that once you submit, you will not be able to come back to this step to make further changes.`}
+            You can restore the original snippet using the "Revert Code" button.
+            The error message is shown below and can be toggled using the toolbar button.
+            When you're done, click "Submit". Submitting uses one attempt — if you have none left, you can’t return to this step.`}
             title="Step 2: Attempt a Code Fix"
             step={2}
             onNext={onNext}
