@@ -88,11 +88,12 @@ export function ConsentForm({value, onChange, disabled}: {
                     <li><strong>Your programming experience:</strong> How many years you report having worked with
                         Python.
                     </li>
-                    <li><strong>Your interaction data:</strong> Metrics such as the time you spend on each question and
-                        whether the survey window remains active (for example, when you switch tabs or windows).
+                    <li><strong>Your interaction data:</strong> Metrics such as the time you spend on each question,
+                        whether the survey window remains active (for example, when you switch tabs or windows), and
+                        keystroke data (e.g., if you copy or paste code).
                     </li>
                     <li><strong>Your survey responses:</strong> The answers you provide to the multiple-choice
-                        questions.
+                        questions and Likert-style questions throughout the study.
                     </li>
                     <li><strong>Your code submissions:</strong> The code you write and submit in response to the coding
                         task.
