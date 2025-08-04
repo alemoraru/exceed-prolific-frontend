@@ -10,12 +10,15 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import {Send} from "lucide-react";
 
-
+/**
+ * Props for the LikertScalePanel component.
+ */
 interface LikertScalePanelProps {
     errorMessage: string;
     onSubmit: (answers: number[]) => void;
-    step: 1 | 2 | 3 | 4;
     submitLoading?: boolean;
+    isMarkdown: boolean;
+    questions: string[];
 }
 
 /**
@@ -26,28 +29,29 @@ interface LikertScalePanelProps {
  * @param onSubmit - Callback function to handle the submission of answers.
  * @param step - The current step in the process (1, 2, 3, or 4).
  * @param submitLoading - Optional flag to indicate if the submission is in progress.
+ * @param isMarkdown - Flag indicating if the error message should be rendered as Markdown.
+ * @param questions - Array of questions to be displayed in the Likert scale.
  */
 export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
     {
         errorMessage,
         onSubmit,
-        step,
         submitLoading = false,
+        isMarkdown,
+        questions
     }) => {
 
-    const questions = [
-        "The error message made me feel like I was being told what to do, rather than being helped to understand:",
-        "The error message was easy to process and required little mental effort:",
-        "The error message was clearly written and easy to read:",
-    ];
-
+    // State to track answers for each question
     const [answers, setAnswers] = useState<(number | null)[]>(
         Array(questions.length).fill(null)
     );
+
+    // Track if each question has been touched (answered or interacted with)
     const [touched, setTouched] = useState<boolean[]>(
         Array(questions.length).fill(false)
     );
 
+    // State to track changes in the form
     const handleChange = (idx: number, value: number) => {
         const newAnswers = [...answers];
         newAnswers[idx] = value;
@@ -77,15 +81,15 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                 borderRadius: 4,
                 border: "1px solid #000",
                 borderColor: "black",
-                boxShadow: 1,
-                p: 4,
+                boxShadow: 4,
+                px: 4,
+                py: 1
             }}
         >
             <CardContent>
-                <div className={"py-4 font-bold"}>
-                    Please answer the following questions about the error message you just saw, which we
-                    also display below. Your responses will help us understand how well the error message
-                    communicates its intent.
+                <div className={"pb-4"}>
+                    Please read again the error message below and provide your feedback according to the following
+                    statements. Note that this is the same error message you saw in the previous code fix task.
                 </div>
 
                 {errorMessage && (
@@ -93,8 +97,8 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                         <ErrorPanel
                             message={errorMessage}
                             isVisible={true}
-                            step={step}
                             hideCloseIcon={true}
+                            renderMarkdown={isMarkdown}
                         />
                     </div>
                 )}

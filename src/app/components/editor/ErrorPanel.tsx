@@ -11,10 +11,10 @@ interface ErrorPanelProps {
     isVisible: boolean;
     /** Called when the user clicks the X‑button */
     onCloseAction?: () => void;
-    /** The current step in the process */
-    step: 1 | 2 | 3 | 4;
     /** If true, hides the close icon */
     hideCloseIcon?: boolean;
+    /** If true, renders the message as Markdown */
+    renderMarkdown: boolean;
 }
 
 /**
@@ -25,8 +25,8 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = (
         message,
         isVisible,
         onCloseAction,
-        step,
-        hideCloseIcon = false
+        hideCloseIcon = false,
+        renderMarkdown
     }) => {
 
     // If the panel is not visible, return null to avoid rendering
@@ -52,7 +52,7 @@ export const ErrorPanel: React.FC<ErrorPanelProps> = (
                     </button>
                 )}
             </header>
-            <ErrorMessage errorMessage={message} renderMarkdown={step === 3 || step === 4}/>
+            <ErrorMessage errorMessage={message} renderMarkdown={renderMarkdown}/>
         </div>
     );
 };

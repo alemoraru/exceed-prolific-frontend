@@ -1,16 +1,15 @@
 import React from 'react';
-import {AlertTriangle, RotateCcw, Send, ArrowRight, ArrowLeft} from 'lucide-react';
+import {AlertTriangle, RotateCcw, Send, ArrowRight} from 'lucide-react';
 
 interface BottomPanelProps {
     hasError: boolean;
     showErrorPanel: boolean;
     onToggleError: () => void;
     onRevert: () => void;
-    onPrev: () => void;
     onNext: () => void;
     isSubmitted: boolean;
     canRevert: boolean;
-    step: 1 | 2 | 3 | 4;
+    step: 1 | 2;
     submitLoading?: boolean;
 }
 
@@ -20,17 +19,16 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
         showErrorPanel,
         onToggleError,
         onRevert,
-        onPrev,
         onNext,
         isSubmitted,
         canRevert,
         step,
         submitLoading,
     }) => {
-    const nextLabel = (step === 2 || step === 4) ? 'Submit' : 'Next';
+    const nextLabel = step === 2 ? 'Submit' : 'Next';
 
     // Disable submit if code is not changed for code fix steps
-    const disableSubmit = (step === 2 || step === 4) && !canRevert;
+    const disableSubmit = step === 2 && !canRevert;
 
     return (
         <div className="bg-gray-50 border-t border-gray-300 px-4 py-3 flex items-center justify-between">
@@ -62,16 +60,6 @@ export const BottomPanel: React.FC<BottomPanelProps> = (
                 </button>
             </div>
             <div className="flex items-center gap-3">
-                <button
-                    onClick={onPrev}
-                    disabled={submitLoading || step === 1}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-600 border
-                    border-gray-300 hover:bg-gray-100 transition-colors shadow-sm disabled:opacity-50
-                    disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer"
-                >
-                    <ArrowLeft size={14}/>
-                    <span>Prev</span>
-                </button>
                 <button
                     onClick={onNext}
                     disabled={isSubmitted || submitLoading || disableSubmit}

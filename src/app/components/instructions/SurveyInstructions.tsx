@@ -10,6 +10,9 @@ import {CodeEditor} from '../editor/CodeEditor';
 import {LikertScalePanel} from '../panels/LikertScalePanel';
 import {FaInfoCircle, FaCheckCircle} from 'react-icons/fa';
 import {MdOutlineExitToApp} from "react-icons/md";
+import {instructionsQuestions} from "@/app/utils/likertQuestions";
+import {Mail} from "lucide-react";
+import Link from "next/link";
 
 /**
  * Component showing clear, user‑friendly instructions for participants in the survey.
@@ -118,19 +121,25 @@ export function SurveyInstructions(
             {tabIndex === 0 && (
                 <div>
                     <p className="mb-4 text-gray-700 text-left">
-                        This survey consists of two main parts: <b>multiple‑choice questions</b> and <b>code review/fix
-                        tasks</b>.
-                        You will first be asked to self‑assess your Python experience, then answer several
-                        multiple‑choice questions about Python code and errors, and finally review and fix code snippets
-                        with errors.
+                        This survey is made up of three parts: <b>multiple‑choice questions</b>, a <b>code review/fix
+                        task</b>, and several <b>Likert scale questions</b> pertaining to your experience with the code
+                        review/fix task.
                     </p>
                     <p className="mb-4 text-gray-700 text-left">
-                        The tabs above show examples of each type of question you will encounter. Please explore each
-                        tab to
-                        familiarise yourself with the layout and what will be expected of you. You can interact with the
-                        example
-                        components to get a feel for how the survey works. These will not affect your participation or
-                        results.
+                        You will first be asked to self‑assess your Python experience, then answer several
+                        multiple‑choice questions about Python code and errors. After that, you will be presented with
+                        a Python code snippet which contains an issue. Besides the code, you will also be shown the
+                        error message that the code produces when run. You will then be asked to review the code and
+                        attempt to fix the code while using the provided code editor. Finally, you will answer a series
+                        of Likert scale questions about your experience with the error message you encountered during
+                        the code fix task.
+                    </p>
+                    <p className="mb-4 text-gray-700 text-left">
+                        The tabs shown on this page above show examples of each of the aforementioned tasks.
+                        Please explore each tab to familiarise yourself with the layout and what will be expected of
+                        you. You can interact with the example components to get a feel for how the survey works. These
+                        will not affect your participation or results. Before proceeding to the actual survey, you
+                        must review all tabs above and ensure you understand the tasks and expectations.
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
@@ -170,7 +179,7 @@ export function SurveyInstructions(
                             fix code. Your
                             own reasoning is essential for the study. We will monitor for any signs of external
                             assistance, and any
-                            detected use of external help will result in disqualification.
+                            detected use of external help will result in immediate disqualification.
                         </li>
                     </ul>
                 </div>
@@ -225,32 +234,70 @@ export function SurveyInstructions(
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
-                        In this part, you&apos;ll review and fix Python code snippets containing errors. Each task
-                        consists of a multi-step process. Note that upon proceeding to the next step, you will not be
-                        able to return to previous steps. This is intended, therefore please ensure you are satisfied
-                        with your edits before proceeding. The steps are as follows:
+                        In this part, you&apos;ll review and fix a Python code snippet containing an error.
+                        This task consists of <b>two steps</b>:
                     </p>
                     <ol className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
-                        <li><b>Review:</b> Read the code and error message to understand the problem.</li>
-                        <li><b>Fix:</b> Edit the code to resolve the error.</li>
-                        <li><b>Review Error:</b> If your fix doesn&apos;t solve all issues, you&apos;ll see a new error
-                            message
-                            and can try again.
+                        <li><b>Review:</b> Read the Python code snippet and error message to understand the problem. You
+                            are not allowed to edit the code at this step. To proceed to the next step, click the
+                            &#34;Next&#34; button.
                         </li>
-                        <li><b>Final Fix:</b> Make any last changes and submit your final solution.</li>
+                        <li><b>Fix:</b> Edit the code to fix any errors you have identified. You can revert to the
+                            original
+                            snippet if needed by clicking the &#34;Revert Code&#34; button. After you are satisfied
+                            with your edit, click the &#34;Submit&#34; button to submit your fix.
+                        </li>
                     </ol>
 
+                    <div
+                        className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
+                    >
+                        <span className="text-blue-900 ml-1">
+                            <b>Note:</b> If your submitted code in step 2 does not fix the underlying issue,
+                            you will be given <b>up to 2 extra chances</b> to fix it (for a total of 3 fix attempts).
+                            If at any point within the allowed 3 attempts you submit a code that fixes the error, you
+                            will immediately move on to the next stage of the survey.
+                        </span>
+                    </div>
+
+                    {/* Show the first-step interface for the code fix task */}
                     <p className="mb-4 text-gray-700 text-left">
-                        For instance, if you are on the second step, you will see the following interface below:
+                        To get familiar with the interface you will use in the actual code fix task, consider the
+                        code editor interface shown below as an example of the first step of the code fix task.
                     </p>
                     <div className="mb-4">
                         <CodeEditor
-                            instructions="Edit the code to fix any errors you have identified.
-                            You can revert to the original snippet if needed by clicking the Revert to original snippet button.
-                            The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it.
+                            instructions="Carefully review the code and the error message.
+                            Try to understand what the code is intended to do and what the error means.
+                            When you are ready, click the Next button. Note that this step is for review only,
+                            therefore you cannot make any changes to the code at this point.
+                            You will be asked to fix the code in the next step."
+                            title="Step 1: Review the Code and Error"
+                            code={reviewCode}
+                            errorMessage={exampleErrorMessage}
+                            step={1}
+                            onSubmitAction={() => {
+                            }}
+                            readOnly={true}
+                            autoHeight={true}
+                            renderMarkdown={false}
+                        />
+                    </div>
+
+                    {/* Show the second-step interface for the code fix task */}
+                    <p className="mb-4 text-gray-700 text-left">
+                        Similarly, if you are on the second step of the code code fix task, you will see the following
+                        code editor interface below, which differs from the first step in that it allows you to edit the
+                        code.
+                    </p>
+                    <div className="mb-4">
+                        <CodeEditor
+                            instructions={`Edit the code to fix any errors you have identified.
+                            You can revert to the original snippet if needed by clicking the "Revert Code" button.
+                            The error message is shown below for reference, but you can toggle it on and off using the button in the editor toolbar.
                             Once you have made your changes, click the Next button to submit your fix.
-                            Note that once you submit, you will not be able to come back to this step to make further changes."
-                            title="Step 2: Attempt a Fix"
+                            Note that once you submit, you will not be able to come back to this step to make further changes.`}
+                            title="Step 2: Attempt a Code Fix"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
                             step={2}
@@ -258,6 +305,7 @@ export function SurveyInstructions(
                             }}
                             readOnly={false}
                             autoHeight={true}
+                            renderMarkdown={false}
                         />
                         <div
                             className="mt-6 p-3 bg-gray-50 border-l-4 border-gray-400 rounded text-sm text-gray-700 text-left">
@@ -274,8 +322,9 @@ export function SurveyInstructions(
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Carefully read the code and error message (which you can toggle on or
                         off), then edit the code to fix the error. You can revert to the original code if needed by
-                        clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your edits, you
-                        can click the &#34;Submit&#34; button to submit your fix.
+                        clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your code fix
+                        edit, you can click the &#34;Submit&#34; button to submit your fix. Do not forget that you are
+                        allowed a maximum of 3 attempts to fix the code.
                     </p>
                 </section>
             )}
@@ -283,7 +332,7 @@ export function SurveyInstructions(
             {/* Tab Panel - Likert Scale Example */}
             {tabIndex === 4 && (
                 <section className="space-y-4 text-gray-700">
-                    <h3 className="text-xl font-semibold">Likert Scale Question Example</h3>
+                    <h3 className="text-xl font-semibold">Likert Scale Questions Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
                         In this part, you will answer a series of Likert scale questions about
                         your experience with a programming error message you encountered during the
@@ -291,24 +340,34 @@ export function SurveyInstructions(
                         messages and how they affect your coding experience.
                     </p>
                     <p>
-                        <br/><b>Note: The Likert scale questions will only be shown after you submit a code fix
-                        question.</b> Each question will present a statement, and you will need to select a response
-                        that best reflects your opinion, ranging from
-                        &#34;Strongly Disagree&#34; to &#34;Strongly Agree&#34;.
+                        <br/><b>Note:</b> Likert scale questions appear only after you finish the code fix task. Each
+                        panel presents one or more statements for you to rate from &#34;Strongly
+                        Disagree&#34; to &#34;Strongly Agree&#34;. The example below is a preview of the Likert-scale
+                        panel interface; actual survey questions will differ.
                     </p>
                     <LikertScalePanel
                         errorMessage={exampleErrorMessage}
                         onSubmit={() => {
                         }}
-                        step={1}
                         submitLoading={false}
+                        isMarkdown={false}
+                        questions={instructionsQuestions}
                     />
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Please answer all Likert scale questions honestly. Your feedback helps
-                        us understand your experience and perception of the error messages.
+                        us understand your experience and perception of the error message.
                     </p>
                 </section>
             )}
+
+            {/* Support email address for participants */}
+            <div className="mt-6 text-xs text-gray-400 flex items-center gap-2 mx-auto justify-center w-fit">
+                <Mail className="w-4 h-4"/>
+                For support and issues encountered while completing the survey, please contact
+                <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600">
+                    amoraru@tudelft.nl
+                </Link>
+            </div>
         </div>
     );
 }

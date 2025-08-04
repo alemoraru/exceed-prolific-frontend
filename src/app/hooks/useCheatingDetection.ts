@@ -18,8 +18,7 @@ export function useCheatingDetection(active: boolean) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     participant_id,
-                    event_type: event_type,
-                    timestamp: Date.now().toString(),
+                    event_type: event_type
                 })
             }).then(r =>
                 r.ok ? null : console.error(`Failed to log event: ${event_type}`, r.statusText)

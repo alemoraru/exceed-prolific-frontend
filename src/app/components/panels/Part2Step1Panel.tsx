@@ -6,6 +6,7 @@ interface PanelProps {
     error: string;
     showError: boolean;
     onNext: () => void;
+    renderMarkdown: boolean;
 }
 
 /**
@@ -15,7 +16,8 @@ export const Part2Step1Panel: React.FC<PanelProps> = (
     {
         code,
         error,
-        onNext
+        onNext,
+        renderMarkdown
     }) => (
     <div>
         <div className="flex flex-col gap-3">
@@ -31,9 +33,8 @@ export const Part2Step1Panel: React.FC<PanelProps> = (
                     You will be asked to fix the code in the next step."
                     title="Step 1: Review the Code and Error"
                     step={1}
-                    onPrev={() => {
-                    }}
                     onNext={onNext}
+                    renderMarkdown={renderMarkdown}
                 />
             </div>
         </div>

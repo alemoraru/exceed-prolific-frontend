@@ -11,15 +11,14 @@ interface PanelProps {
     showError: boolean;
     onToggleError: (open: boolean) => void;
     onRevert: () => void;
-    showRevertModal: boolean;
     error: string;
     submitLoading: boolean;
     submitError: string | null;
-    onPrev: () => void;
     onNext: () => void;
     showConfirmModal: boolean;
     onModalCancel: () => void;
     onModalConfirm: () => void;
+    renderMarkdown: boolean;
 }
 
 /**
@@ -33,12 +32,12 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
         error,
         submitLoading,
         submitError,
-        onPrev,
         onNext,
         showConfirmModal,
         onModalCancel,
         onModalConfirm,
-        onCodeChange
+        onCodeChange,
+        renderMarkdown
     }) => (
     <div>
         {submitLoading && <LoaderToast/>}
@@ -49,17 +48,17 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
             readOnly={readOnly}
             onSubmitAction={onNext}
             onCodeChange={onCodeChange}
-            instructions="Edit the code to fix any errors you have identified.
-                You can revert to the original snippet if needed by clicking the Revert to original snippet button.
-                The error message is shown below for your reference - by default it is hidden, but you can toggle it on to see it.
-                Once you have made your changes, click the Next button to submit your fix.
-                Note that once you submit, you will not be able to come back to this step to make further changes."
-            title="Step 2: Attempt a Fix"
+            instructions={`Edit the code to fix any errors you have identified.
+            You can revert to the original snippet if needed by clicking the "Revert Code" button.
+            The error message is shown below for reference, but you can toggle it on and off using the button in the editor toolbar.
+            Once you have made your changes, click the Next button to submit your fix.
+            Note that once you submit, you will not be able to come back to this step to make further changes.`}
+            title="Step 2: Attempt a Code Fix"
             step={2}
-            onPrev={onPrev}
             onNext={onNext}
             submitLoading={submitLoading}
             onRevert={onRevert}
+            renderMarkdown={renderMarkdown}
         />
         <ConfirmChoiceModal
             open={showConfirmModal}

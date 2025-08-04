@@ -5,12 +5,25 @@ import {MdRestore} from "react-icons/md";
 import {MdOutlineExitToApp} from "react-icons/md";
 import {MdOutlineThumbUp} from "react-icons/md";
 
+/**
+ * ConfirmChoiceModalType enum defines the types of confirmation modals.
+ * - CodeFix: For confirming code submission.
+ * - CodeRevert: For confirming code reversion to original state.
+ * - QuitStudy: For confirming quitting the study and revoking consent.
+ */
 export enum ConfirmChoiceModalType {
     CodeFix = "CodeFix",
     CodeRevert = "CodeRevert",
     QuitStudy = "QuitStudy"
 }
 
+/**
+ * ConfirmChoiceModalProps interface defines the properties for the ConfirmChoiceModal component.
+ * - open: Whether the modal is currently open.
+ * - onCancel: Function to call when the user cancels the action.
+ * - onConfirm: Function to call when the user confirms the action.
+ * - type: The type of confirmation modal to display (CodeFix, CodeRevert, or QuitStudy).
+ */
 export interface ConfirmChoiceModalProps {
     open: boolean;
     onCancel: () => void;
@@ -56,9 +69,9 @@ export function ConfirmChoiceModal(
         title = "Confirm Code Submission";
         message = (
             <>
-                Are you sure you want to submit your code fix for this step? <b>Once you submit, you will not be able to
-                return to this step to make further changes.</b> Please make sure you are satisfied with your edits
-                before submitting.
+                Are you sure you want to submit your code fix for this step? <b>This will use one of your
+                attempts.</b> If you have attempts left and your fix is incorrect, you can try again. <b>If you have no
+                attempts left, you cannot make further changes or return to this step.</b> Please confirm to proceed.
             </>
         );
         confirmLabel = "Submit Code Fix";
