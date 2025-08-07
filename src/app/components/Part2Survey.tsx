@@ -175,7 +175,7 @@ export function Part2Survey(
     if (snippetError || !currentSnippet) {
         return (
             <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">
-                {'Failed to load snippet.'}
+                {'Failed to load Python code snippet and error message.'}
                 <div className="mt-6 text-xs text-gray-400 flex items-center justify-center">
                     <Mail className="w-4 h-4 mr-2"/>
                     For support regarding failures such as this, please reach out to us via Prolific or send an email to
