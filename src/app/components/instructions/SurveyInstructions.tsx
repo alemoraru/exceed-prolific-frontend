@@ -153,7 +153,8 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
                                 </li>
                                 <li>
                                     You may quit and revoke consent at any time by clicking the <b>Quit & Revoke Consent</b> icon <MdOutlineExitToApp
-                                    className="inline relative -mt-0.5 text-red-400"/> in the top-left corner. All your data will be deleted, but you will not receive compensation.
+                                    className="inline relative -mt-0.5 text-red-400"/> in the top-left corner. All your data will be deleted, <span
+                                    className="text-red-700 font-semibold"> but you will NOT receive compensation</span>.
                                 </li>
                             </ul>
                         </span>
