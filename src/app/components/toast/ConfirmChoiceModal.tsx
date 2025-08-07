@@ -69,7 +69,7 @@ export function ConfirmChoiceModal(
         title = "Confirm Code Submission";
         message = (
             <>
-                Are you sure you want to submit your code fix for this step? <b>This will use one of your
+                Are you sure you want to submit your changes for a code fix? <b>This will use one of your
                 attempts.</b> If you have attempts left and your fix is incorrect, you can try again. <b>If you have no
                 attempts left, you cannot make further changes or return to this step.</b> Please confirm to proceed.
             </>
@@ -82,7 +82,7 @@ export function ConfirmChoiceModal(
         title = "Revert to Original Code?";
         message = (
             <>
-                Are you sure you want to revert your changes? <b>All edits for this step will be lost</b> and the
+                Are you sure you want to revert your changes? <b>All edits for this fix attempt will be lost</b> and the
                 original code that was provided will be restored. Please confirm if you want to proceed with this
                 action.
             </>

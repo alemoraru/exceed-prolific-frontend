@@ -169,17 +169,26 @@ export function Part2Survey(
                         className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
                     <div className="text-lg text-gray-700">Loading code and error message...</div>
                 </div>
+                <div className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-1">
+                    <Mail className="w-4 h-4"/>
+                    For support regarding long loading times or failures, please reach out to us via Prolific or send an
+                    email to
+                    <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600">
+                        amoraru@tudelft.nl
+                    </Link>
+                </div>
             </div>
         );
     }
+
     if (snippetError || !currentSnippet) {
         return (
             <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">
                 {'Failed to load Python code snippet and error message.'}
-                <div className="mt-6 text-xs text-gray-400 flex items-center justify-center">
-                    <Mail className="w-4 h-4 mr-2"/>
+                <div className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-1">
+                    <Mail className="w-4 h-4"/>
                     For support regarding failures such as this, please reach out to us via Prolific or send an email to
-                    <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600 ml-1">
+                    <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600">
                         amoraru@tudelft.nl
                     </Link>
                 </div>

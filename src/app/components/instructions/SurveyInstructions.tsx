@@ -117,67 +117,47 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             {tabIndex === 0 && (
                 <div>
                     <p className="mb-4 text-gray-700 text-left">
-                        This survey is made up of three parts: <b>multiple‑choice questions</b>, a <b>code review/fix
-                        task</b>, and several <b>Likert scale questions</b> pertaining to your experience with the code
-                        review/fix task.
+                        This survey has three parts: <b>multiple-choice questions</b>, a <b>code fix task</b>, and <b>Likert
+                        scale questions</b>.
                     </p>
                     <p className="mb-4 text-gray-700 text-left">
-                        You will first be asked to self‑assess your Python experience, then answer several
-                        multiple‑choice questions about Python code and errors. After that, you will be presented with
-                        a Python code snippet which contains an issue. Besides the code, you will also be shown the
-                        error message that the code produces when run. You will then be asked to review the code and
-                        attempt to fix the code while using the provided code editor. Finally, you will answer a series
-                        of Likert scale questions about your experience with the error message you encountered during
-                        the code fix task.
+                        You will first self-assess your Python experience, and answer several multiple-choice questions
+                        about Python code and errors. Afterwards, you will be asked to review and fix a Python code
+                        snippet using the provided editor interface. Lastly, you will rate your experience with the
+                        encountered error message in the code fix task using a series of Likert scale questions.
                     </p>
                     <p className="mb-4 text-gray-700 text-left">
-                        The tabs shown on this page above show examples of each of the aforementioned tasks.
-                        Please explore each tab to familiarise yourself with the layout and what will be expected of
-                        you. You can interact with the example components to get a feel for how the survey works. These
-                        will not affect your participation or results. Before proceeding to the actual survey, you
-                        must review all tabs above and ensure you understand the tasks and expectations.
+                        Please review each tab above to understand the survey layout and expectations. We
+                        strongly encourage you to read the instructions for each task carefully and play with the
+                        example interfaces before proceeding to completing the actual survey tasks.
                     </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            <b>Notes:</b>
+                            <b>Important:</b>
                             <ul className="list-disc pl-6 mt-2 space-y-1">
                                 <li>
-                                    You can always revisit these instructions at any time during the survey by clicking the <b>INFO</b> button{' '}
-                                    <FaInfoCircle className="inline text-blue-600"
-                                                  aria-label="Info icon"/>{' '}
-                                    at the top‑right of the following survey pages. These will be available at any point should you require clarification on the expectations, or if you need to review the task instructions.
+                                    <span className="text-red-700 font-semibold">Do NOT reload, close the tab or browser, or clear your browser&#39;s cache during the survey. </span>
+                                    Doing so will break the survey&#39;s flow and result in <span
+                                    className="text-red-700 font-semibold">immediate disqualification and loss of compensation</span>.
                                 </li>
                                 <li>
-                                    You can exit the study and revoke your consent at any time by clicking the <b>Quit & Revoke Consent</b> icon
-                                    {' '}<MdOutlineExitToApp className="inline relative -mt-0.5 text-red-400"/>{' '}
-                                    in the top-left corner of the page. If you choose to do so, all your data will be deleted, however,
-                                    you will <b>NO</b> longer receive compensation for your time and participation.
+                                    <span className="text-red-700 font-semibold">Do NOT use external help (AI tools, search engines, or other people) to answer questions or
+                                        fix code. </span> Doing so will result in
+                                    <span className="text-red-700 font-semibold"> immediate disqualification and loss of compensation</span>.
                                 </li>
                                 <li>
-                                    <span className="text-red-700 font-semibold">Refreshing or closing the tab / browser is strongly discouraged until finishing the survey. </span>
-                                    If you do so, a dialog will appear to confirm your choice, but if you proceed,
-                                    your progress will be lost and you will not be able to participate in the survey again.
-                                    Please avoid refreshing or closing the tab to ensure your responses are recorded and you receive compensation.
+                                    You can revisit these instructions at any time by clicking the <b>INFO</b> button <FaInfoCircle
+                                    className="inline text-blue-600" aria-label="Info icon"/> at the top-right of the survey pages.
+                                </li>
+                                <li>
+                                    You may quit and revoke consent at any time by clicking the <b>Quit & Revoke Consent</b> icon <MdOutlineExitToApp
+                                    className="inline relative -mt-0.5 text-red-400"/> in the top-left corner. All your data will be deleted, but you will not receive compensation.
                                 </li>
                             </ul>
                         </span>
                     </div>
-                    <ul className="list-disc pl-6 mb-4 text-gray-700 text-left">
-                        <li>
-                            <b>Be honest and thoughtful</b> in your responses. Your answers help us understand how
-                            programmers
-                            interact with programming errors and code.
-                        </li>
-                        <li>
-                            <b>Do NOT use external help</b> (AI tools, search engines, or others) to answer questions or
-                            fix code. Your
-                            own reasoning is essential for the study. We will monitor for any signs of external
-                            assistance, and any
-                            detected use of external help will result in immediate disqualification.
-                        </li>
-                    </ul>
                 </div>
             )}
 
@@ -230,69 +210,34 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
-                        In this part, you&apos;ll review and fix a Python code snippet containing an error.
-                        This task consists of <b>two steps</b>:
+                        In this part, you&apos;ll fix a Python code snippet containing an error.
+                        Your task is to <b>edit the code to resolve the issue</b> and submit your fix.
                     </p>
-                    <ol className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
-                        <li><b>Review:</b> Read the Python code snippet and error message to understand the problem. You
-                            are not allowed to edit the code at this step. To proceed to the next step, click the
-                            &#34;Next&#34; button.
+                    <ul className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
+                        <li>
+                            <b>Fix:</b> Edit the code to correct the error you identified. You can revert to the
+                            original snippet if needed by clicking the &#34;<b>Revert Code</b>&#34; button. When you are
+                            satisfied with your edit, click the &#34;<b>Submit</b>&#34; button.
                         </li>
-                        <li><b>Fix:</b> Edit the code to fix any errors you have identified. You can revert to the
-                            original
-                            snippet if needed by clicking the &#34;Revert Code&#34; button. After you are satisfied
-                            with your edit, click the &#34;Submit&#34; button to submit your fix.
-                        </li>
-                    </ol>
+                    </ul>
 
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            <b>Note:</b> If your submitted code in step 2 does not fix the underlying issue,
-                            you will be given <b>up to 2 extra chances</b> to fix it (for a total of 3 fix attempts).
-                            If at any point within the allowed 3 attempts you submit a code that fixes the error, you
-                            will immediately move on to the next stage of the survey.
+                            <b>Note:</b> You have <b>up to 3 attempts</b> to fix the code. Once you submit your third attempt, you will move on to the next stage of the survey.
                         </span>
                     </div>
 
-                    {/* Show the first-step interface for the code fix task */}
                     <p className="mb-4 text-gray-700 text-left">
-                        To get familiar with the interface you will use in the actual code fix task, consider the
-                        code editor interface shown below as an example of the first step of the code fix task.
+                        To get familiar with the interface you will use in the actual code fix task, consider the code
+                        editor interface shown below — you can interact with it and try editing the code to see how it
+                        works. Submitting this example code will not perform any action.
                     </p>
                     <div className="mb-4">
                         <CodeEditor
-                            instructions={`Carefully review the code and the error message.
-                            Try to understand what the code is intended to do and what the error means.
-                            When you are ready, click the "Next" button. This step is for review only,
-                            therefore you cannot make any changes to the code at this point.
-                            You will be asked to fix the code in the next step.`}
-                            title="Step 1: Review the Code and Error"
-                            code={reviewCode}
-                            errorMessage={exampleErrorMessage}
-                            step={1}
-                            onSubmitAction={() => {
-                            }}
-                            readOnly={true}
-                            autoHeight={true}
-                            renderMarkdown={false}
-                        />
-                    </div>
-
-                    {/* Show the second-step interface for the code fix task */}
-                    <p className="mb-4 text-gray-700 text-left">
-                        Similarly, if you are on the second step of the code code fix task, you will see the following
-                        code editor interface below, which differs from the first step in that it allows you to edit the
-                        code.
-                    </p>
-                    <div className="mb-4">
-                        <CodeEditor
-                            instructions={`Edit the code to fix any errors you have identified.
-                            You can restore the original snippet using the "Revert Code" button.
-                            The error message is shown below and can be toggled using the toolbar button.
-                            When you're done, click "Submit". Submitting uses one attempt — if you have none left, you can’t return to this step.`}
-                            title="Step 2: Attempt a Code Fix"
+                            instructions={`Edit the code to fix any errors you have identified.\nYou can restore the original snippet using the \"Revert Code\" button.\nThe error message is shown below and can be toggled using the toolbar button.\nWhen you're done, click \"Submit\". You have up to 3 attempts to fix the code.`}
+                            title="Code Fix: Review and Edit The Code"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
                             step={2}
@@ -309,7 +254,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
                                 <li><b>Hide/Show Instructions:</b> Toggle the instructions panel visibility.</li>
                                 <li><b>Revert to Original:</b> Restore the code to its initial state for this step.</li>
                                 <li><b>Show/Hide Error:</b> Toggle the error message visibility below the editor.</li>
-                                <li><b>Next/Submit:</b> Submit your code fix and move to the next step.</li>
+                                <li><b>Submit:</b> Submit your code fix and move to the next part of the survey.</li>
                             </ul>
                         </div>
                     </div>
@@ -317,7 +262,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
                     <p className="text-gray-600 text-sm">
                         <b>What is expected:</b> Carefully read the code and error message (which you can toggle on or
                         off), then edit the code to fix the error. You can revert to the original code if needed by
-                        clicking the &#34;Revert to Original&#34; button. Once you are satisfied with your code fix
+                        clicking the &#34;Revert Code&#34; button. Once you are satisfied with your code fix
                         edit, you can click the &#34;Submit&#34; button to submit your fix. Do not forget that you are
                         allowed a maximum of 3 attempts to fix the code.
                     </p>
@@ -329,16 +274,11 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Likert Scale Questions Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
-                        In this part, you will answer a series of Likert scale questions about
-                        your experience with a programming error message you encountered during the
-                        previous code fix task. These questions will help us understand your perception of the error
-                        messages and how they affect your coding experience.
-                    </p>
-                    <p>
-                        <br/><b>Note:</b> Likert scale questions appear only after you finish the code fix task. Each
-                        panel presents one or more statements for you to rate from &#34;Strongly
-                        Disagree&#34; to &#34;Strongly Agree&#34;. The example below is a preview of the Likert-scale
-                        panel interface; actual survey questions will differ.
+                        After the code fix task, you will answer several Likert scale questions about your experience
+                        with the error message you had just reviewed. Some questions use a scale from &#34;Strongly
+                        Disagree&#34; to &#34;Strongly Agree&#34;, while others may use different rating options.
+                        Pay attention to the scale used for each question when answering. The example below shows the
+                        interface you will use. Actual survey questions and scales may differ.
                     </p>
                     <LikertScalePanel
                         errorMessage={exampleErrorMessage}
@@ -357,9 +297,10 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             )}
 
             {/* Support email address for participants */}
-            <div className="mt-6 text-xs text-gray-400 flex items-center gap-2 mx-auto justify-center w-fit">
+            <div className="mt-6 text-xs text-gray-400 flex items-center gap-1 mx-auto justify-center w-fit">
                 <Mail className="w-4 h-4"/>
-                For support and issues encountered while completing the survey, please contact
+                For support and issues encountered while completing the survey, reach out to us via Prolific or send an
+                email to
                 <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600">
                     amoraru@tudelft.nl
                 </Link>
