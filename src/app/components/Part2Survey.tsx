@@ -9,6 +9,8 @@ import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceM
 import {QuitStudyButton} from './QuitStudyButton';
 import {ErrorToast} from './toast/ErrorToast';
 import {useCheatingDetection} from '../hooks/useCheatingDetection';
+import {Mail} from "lucide-react";
+import Link from "next/link";
 
 /**
  * Part2Survey component handles the second part of the survey where users fix code snippets.
@@ -174,7 +176,15 @@ export function Part2Survey(
         return (
             <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center text-red-600">
                 {'Failed to load snippet.'}
+                <div className="mt-6 text-xs text-gray-400 flex items-center justify-center">
+                    <Mail className="w-4 h-4 mr-2"/>
+                    For support regarding failures such as this, please reach out to us via Prolific or send an email to
+                    <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600 ml-1">
+                        amoraru@tudelft.nl
+                    </Link>
+                </div>
             </div>
+
         );
     }
 
