@@ -23,15 +23,24 @@ import Link from "next/link";
  * @param requireAllTabs   If true, fires `onAllTabsVisited` only after every tab has been visited.
  * @param onAllTabsVisited Callback when all tabs have been visited (fires once).
  */
-export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false, onAllTabsVisited}: {
+export function SurveyInstructions({
+                                       defaultTabIndex = 0,
+                                       requireAllTabs = false,
+                                       onAllTabsVisited,
+                                       tabIndex: controlledTabIndex,
+                                       onTabIndexChange
+                                   }: {
     defaultTabIndex?: number;
     requireAllTabs?: boolean;
     onAllTabsVisited?: () => void;
+    tabIndex?: number;
+    onTabIndexChange?: (newIndex: number) => void;
 } = {}) {
 
     /* State management for the instruction component */
     const totalTabs = 5;
     const [tabIndex, setTabIndex] = useState(defaultTabIndex);
+    const actualTabIndex = controlledTabIndex !== undefined ? controlledTabIndex : tabIndex;
     const [visitedTabs, setVisitedTabs] = useState<Set<number>>(() => new Set([defaultTabIndex]));
     const [sliderValue, setSliderValue] = useState(2);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -51,8 +60,18 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
     }, [allVisited, requireAllTabs, onAllTabsVisited]);
 
     // Reset the visited tabs if the default tab index changes
+    // Next tab logic for external control
+    useEffect(() => {
+        if (controlledTabIndex !== undefined) {
+            setTabIndex(controlledTabIndex);
+            setVisitedTabs(prev => new Set(prev).add(controlledTabIndex));
+        }
+    }, [controlledTabIndex]);
+
+    // Update visited tabs when tab changes
     const handleTabChange = (_: unknown, newIndex: number) => {
-        setTabIndex(newIndex);
+        if (onTabIndexChange) onTabIndexChange(newIndex);
+        else setTabIndex(newIndex);
         setVisitedTabs(prev => new Set(prev).add(newIndex));
     };
 
@@ -75,7 +94,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
 
             {/* Tabs Navigation */}
             <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
-                <Tabs value={tabIndex} onChange={handleTabChange} centered>
+                <Tabs value={actualTabIndex} onChange={handleTabChange} centered>
                     {["General Overview", "Self-Assessment", "MCQ Example", "Code Fix Example", "Likert Scale"].map((label, idx) => (
                         <Tab
                             key={label}
@@ -106,15 +125,14 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             {!allVisited && requireAllTabs && (
                 <Box className="mb-3 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded" role="alert">
                     <Typography variant="body2" color="text.secondary" textAlign="center">
-                        Please review <strong>all</strong> tabs above before continuing. Your answers depend on
-                        understanding each
-                        section.
+                        Please review <strong>all</strong> tabs above before proceeding to the survey tasks.
+                        You can navigate to different sections using the tabs above or the &#34;Next&#34; button.
                     </Typography>
                 </Box>
             )}
 
             {/* Tab Panel - Main Overview */}
-            {tabIndex === 0 && (
+            {actualTabIndex === 0 && (
                 <div>
                     <p className="mb-4 text-gray-700 text-left">
                         This survey has three parts: <b>multiple-choice questions</b>, a <b>code fix task</b>, and <b>Likert
@@ -163,7 +181,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             )}
 
             {/* Tab Panel - Your Experience */}
-            {tabIndex === 1 && (
+            {actualTabIndex === 1 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Self‑Assess Your Python Experience</h3>
                     <p className="mb-4 text-gray-700 text-left">
@@ -181,7 +199,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             )}
 
             {/* Tab Panel - Multiple‑Choice Question Example */}
-            {tabIndex === 2 && (
+            {actualTabIndex === 2 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Multiple‑Choice Question Example</h3>
                     <p className="mb-4 text-gray-700">
@@ -207,7 +225,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             )}
 
             {/* Tab Panel - Code Review & Fix Example */}
-            {tabIndex === 3 && (
+            {actualTabIndex === 3 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Code Review & Fix Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
@@ -271,7 +289,7 @@ export function SurveyInstructions({defaultTabIndex = 0, requireAllTabs = false,
             )}
 
             {/* Tab Panel - Likert Scale Example */}
-            {tabIndex === 4 && (
+            {actualTabIndex === 4 && (
                 <section className="space-y-4 text-gray-700">
                     <h3 className="text-xl font-semibold">Likert Scale Questions Example</h3>
                     <p className="mb-4 text-gray-700 text-left">
