@@ -87,7 +87,7 @@ export function Part3Survey(
 
     // Update the progress bar step on each panel
     useEffect(() => {
-        setOverallStep(part1Total + part2Total + feedbackPanel);
+        setOverallStep(part1Total + part2Total + feedbackPanel - 1);
     }, [feedbackPanel, setOverallStep, part1Total, part2Total]);
 
     // Reset panel start time when the feedback panel changes

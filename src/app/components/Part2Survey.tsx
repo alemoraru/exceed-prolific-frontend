@@ -55,7 +55,7 @@ export function Part2Survey(
 
     // Progress bar step (always show code fix step)
     useEffect(() => {
-        setOverallStep(part1Total + 2);
+        setOverallStep(part1Total + 1); // Part 1 total steps + 1 for code fix step
     }, [setOverallStep, part1Total]);
 
     // Warn on refresh/leave after consent is given
