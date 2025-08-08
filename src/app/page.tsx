@@ -7,6 +7,7 @@ import {ProgressBar} from "./components/ProgressBar";
 import {Part1Survey} from "./components/Part1Survey";
 import {Part2Survey} from "./components/Part2Survey";
 import {Part3Survey} from "./components/Part3Survey";
+import NotFound from "@/app/not-found";
 
 /**
  * App component is the main entry point for the Prolific Python Error Fixing Study application.
@@ -33,6 +34,35 @@ export default function App() {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [codeSnippetId, setCodeSnippetId] = useState<string>("");
     const [renderMarkdown, setRenderMarkdown] = useState<boolean>(false);
+
+    // Hooks for redirect URL after survey completion
+    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+    const [isFetchingUrl, setIsFetchingUrl] = useState(false);
+
+    // Show completed survey message after feedback is submitted
+    useEffect(() => {
+        // Only fetch if survey is complete and not already fetching
+        if (part3Complete && !redirectUrl && !isFetchingUrl) {
+            setIsFetchingUrl(true);
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/participants/completion-redirect?participant_id=${participantId}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setRedirectUrl(data.url);
+                })
+                .catch(() => {
+
+                });
+        }
+    }, [part3Complete, redirectUrl, isFetchingUrl, participantId]);
+
+    useEffect(() => {
+        if (redirectUrl) {
+            const timer = setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [redirectUrl]);
 
     // Extract PROLIFIC_PID from URL on mount
     useEffect(() => {
@@ -178,14 +208,18 @@ export default function App() {
         );
     }
 
-    // Show completed survey message after feedback is submitted
-    return (
-        <SurveyStatusMessage
-            title="Thank you for your time!"
-            subtitle="You have completed the survey."
-            message="We appreciate your effort and attention in helping us improve code understanding and error fixing. Your responses have been recorded."
-            showStudyTitle={true}
-            type={SurveyStatusType.Success}
-        />
-    );
+    if (part3Complete) {
+        return (
+            <SurveyStatusMessage
+                title="Thank you for your time!"
+                subtitle="You have completed the survey."
+                message="You will be redirected to Prolific in 5 seconds for survey completion confirmation.
+                Please do not close this window. Thank you for your participation!"
+                showStudyTitle={true}
+                type={SurveyStatusType.Success}
+            />
+        );
+    }
+
+    return NotFound;
 }
