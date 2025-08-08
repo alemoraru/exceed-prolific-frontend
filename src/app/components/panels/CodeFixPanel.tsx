@@ -57,7 +57,6 @@ export const CodeFixPanel: React.FC<PanelProps> = (
             The error message is shown below and can be toggled using the "Error Message" button.
             When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.`}
             title="Code Fix: Review and Edit The Code"
-            step={2}
             onNext={onNext}
             submitLoading={submitLoading}
             onRevert={onRevert}

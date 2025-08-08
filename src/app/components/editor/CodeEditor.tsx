@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useState, useRef, useEffect} from "react";
+import React, {useCallback, useState, useRef} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
@@ -20,7 +20,6 @@ interface CodeEditorProps {
     maxProgress?: number;
     onSubmitAction?: (code: string) => void;
     onNext?: () => void;
-    step: 1 | 2;
     submitLoading?: boolean;
     language?: string;
     readOnly?: boolean;
@@ -62,7 +61,6 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         errorMessage,
         onSubmitAction,
         onNext,
-        step,
         submitLoading,
         readOnly = false,
         autoHeight = false,
@@ -72,14 +70,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     }) => {
 
     // Store the true original code only once on mount
-    const originalCodeRef = useRef<string>("");
-    useEffect(() => {
-        if (originalCodeRef.current === "") {
-            originalCodeRef.current = code;
-        }
-    }, [code]);
-
-    // Initialize state with the original code
+    const originalCodeRef = useRef<string>(code);
     const [state, setState] = useState<CodeEditorState>({
         code: code,
         isSubmitted: false,
@@ -139,6 +130,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     // Determine if there is an error and if the code can be reverted
     const hasError = Boolean(errorMessage);
     const canRevert = state.code !== originalCodeRef.current;
+    const canSubmit = state.code !== originalCodeRef.current && !state.isSubmitted && !readOnly;
 
     // If autoHeight is true, do not enforce height; otherwise, use h-[80vh]
     const editorClass = autoHeight ? 'overflow-auto' : 'h-[80vh] overflow-auto';
@@ -194,7 +186,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
                 onNext={onNext || handleSubmit}
                 isSubmitted={state.isSubmitted}
                 canRevert={canRevert}
-                step={step}
+                canSubmit={canSubmit}
                 submitLoading={submitLoading}
             />
             {/* Revert Modal */}
