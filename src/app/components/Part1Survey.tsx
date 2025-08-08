@@ -45,6 +45,9 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     const [allInstructionTabsVisited, setAllInstructionTabsVisited] = useState(false);
     const [showQuitModal, setShowQuitModal] = useState(false);
 
+    // Add state for instructions tab index
+    const [instructionsTabIndex, setInstructionsTabIndex] = useState(0);
+
     // Fetch questions after consent and participantId is set
     useEffect(() => {
         if (step === 1 && participantId) {
@@ -159,6 +162,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                 body: JSON.stringify({participant_id: participantId, python_yoe: experience})
             });
             if (!res.ok) throw new Error('Failed to submit experience');
+            window.scrollTo({top: 0, behavior: 'instant'});
         } catch (e) {
             setSubmissionError(e instanceof Error ? e.message : 'Failed to submit experience');
             return;
@@ -212,7 +216,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     // Navigation logic
     const canContinue = (
         (step === 0 && consent !== null) ||
-        (step === 1) ||
+        (step === 1 && (instructionsTabIndex < 4 || (instructionsTabIndex === 4 && allInstructionTabsVisited))) ||
         (step === 2) ||
         (step > 2 && questions && mcqAnswers[step - 3] !== null)
     );
@@ -229,7 +233,8 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
             <SurveyInstructions
                 requireAllTabs={step === 1}
                 onAllTabsVisited={() => setAllInstructionTabsVisited(true)}
-                defaultTabIndex={0}
+                tabIndex={instructionsTabIndex}
+                onTabIndexChange={setInstructionsTabIndex}
             />
         );
     }
@@ -288,10 +293,18 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
     if (step === 2) progressStep = 1;
     else if (step > 2) progressStep = step - 1;
 
-    // Next button handler
+    // Next button handler to handle navigation through the steps
+    // Handles consent, instructions, experience, and multiple choice questions
     const handleNext = async () => {
         if (step === 0) return handleConsentNext();
         if (step === 1) {
+            // If not on last tab, go to next tab
+            if (instructionsTabIndex < 4) {
+                window.scrollTo({top: 0, behavior: 'instant'});
+                setInstructionsTabIndex(i => i + 1);
+                return;
+            }
+            // On last tab, only proceed if all tabs visited
             if (!questionsLoading && questions && allInstructionTabsVisited) setStep(2);
             return;
         }
@@ -394,8 +407,7 @@ export function Part1Survey({participantId, onComplete, onStepChange, onConsentD
                     disabled={
                         !canContinue ||
                         mcqLoading ||
-                        consentSubmitting ||
-                        (step === 1 && (!questions || questionsLoading || !allInstructionTabsVisited))
+                        consentSubmitting
                     }
                 >
                     <span className="flex items-center">

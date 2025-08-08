@@ -102,7 +102,7 @@ export function SurveyStatusMessage(
                         </button>
                     ) : null}
                 </div>
-                {!isNotFound && (
+                {!isNotFound && SurveyStatusType.Success !== resolvedType && (
                     <div className="text-gray-500 text-sm mt-8">You may now close this window.</div>
                 )}
             </div>

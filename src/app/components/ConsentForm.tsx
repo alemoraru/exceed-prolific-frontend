@@ -120,9 +120,9 @@ export function ConsentForm({value, onChange, disabled}: {
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Contact Information</h3>
                 <p className="mb-4">
-                    You can further contact the researchers for any clarification. To do this, send an email to
-                    <a href="mailto:amoraru@tudelft.nl"
-                       className="text-blue-700 underline ml-1">amoraru@tudelft.nl</a> for any questions.
+                    You can further contact the researchers for any questions. To do this, either contact us via
+                    Prolific or send an email to
+                    <a href="mailto:amoraru@tudelft.nl" className="text-blue-700 underline ml-1">amoraru@tudelft.nl</a>.
                 </p>
             </section>
 
@@ -138,7 +138,8 @@ export function ConsentForm({value, onChange, disabled}: {
                 </div>
                 <p className="text-sm text-gray-600 mt-2"><strong>Note:</strong> You can exit the task at any time. This
                     will imply revoking your consent, and subsequently, all your data will be discarded from our
-                    databases.</p>
+                    databases, and you will not receive any compensation for your participation.
+                </p>
             </section>
 
             {/* Consent question and options using MCQ style */}
