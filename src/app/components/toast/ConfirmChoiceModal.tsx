@@ -70,8 +70,9 @@ export function ConfirmChoiceModal(
         message = (
             <>
                 Are you sure you want to submit your changes for a code fix? <b>This will use one of your
-                attempts.</b> If you have attempts left and your fix is incorrect, you can try again. <b>If you have no
-                attempts left, you cannot make further changes or return to this step.</b> Please confirm to proceed.
+                attempts.</b> If you have attempts left and your fix is incorrect, you can try again. <b> In the case
+                of an incorrect fix, the editor will reset to the original code snippet. If you have no attempts left,
+                you cannot make further changes or return to this step.</b> Please confirm to proceed.
             </>
         );
         confirmLabel = "Submit Code Fix";

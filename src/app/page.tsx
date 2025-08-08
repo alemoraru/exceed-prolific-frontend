@@ -214,7 +214,8 @@ export default function App() {
                 title="Thank you for your time!"
                 subtitle="You have completed the survey."
                 message="You will be redirected to Prolific in 5 seconds for survey completion confirmation.
-                Please do not close this window. Thank you for your participation!"
+                DO NOT CLOSE THIS WINDOW until you are redirected.
+                Thank you for your participation!"
                 showStudyTitle={true}
                 type={SurveyStatusType.Success}
             />
