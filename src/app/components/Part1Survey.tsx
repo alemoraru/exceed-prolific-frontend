@@ -11,9 +11,8 @@ import {LoaderToast} from './toast/LoaderToast';
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
 import {MCQQuestion} from "@/app/utils/types";
-import {ArrowRight, Mail} from 'lucide-react';
+import {ArrowRight} from 'lucide-react';
 import {useCheatingDetection} from '../hooks/useCheatingDetection';
-import Link from "next/link";
 
 /**
  * Part1Survey component handles the first part of the survey including consent, experience, and multiple choice questions.

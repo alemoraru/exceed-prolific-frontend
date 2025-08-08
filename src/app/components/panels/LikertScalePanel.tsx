@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
-import {Send} from "lucide-react";
+import {ArrowRight, Send} from "lucide-react";
 import {LikertQuestion} from "@/app/utils/likertQuestions";
 
 /**
@@ -182,7 +182,9 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                             ) : (
                                 <>
                                     <span>{feedbackPanel !== undefined && feedbackPanel !== 3 ? "Next" : "Submit"}</span>
-                                    <Send size={20} className="ml-2"/>
+                                    {feedbackPanel !== undefined && feedbackPanel !== 3 ?
+                                        <ArrowRight size={20} className="ml-2"/> : <Send size={20} className="ml-2"/>
+                                    }
                                 </>
                             )}
                         </button>
