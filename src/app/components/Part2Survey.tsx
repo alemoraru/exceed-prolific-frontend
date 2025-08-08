@@ -143,7 +143,18 @@ export function Part2Survey(
         }
     };
 
-    // UI for loading and error states
+    // long error wait state management and detection
+    const [showLongWait, setShowLongWait] = useState(false);
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (loadingSnippet) {
+            timer = setTimeout(() => setShowLongWait(true), 5000);
+        } else {
+            setShowLongWait(false);
+        }
+        return () => clearTimeout(timer);
+    }, [loadingSnippet]);
+
     if (loadingSnippet) {
         return (
             <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 text-center">
@@ -151,6 +162,9 @@ export function Part2Survey(
                     <div
                         className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
                     <div className="text-lg text-gray-700">Loading code and error message...</div>
+                    {showLongWait && (
+                        <div className="mt-4 text-yellow-600 text-base">Still working, please wait…</div>
+                    )}
                 </div>
                 <div className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-1">
                     <Mail className="w-4 h-4"/>
