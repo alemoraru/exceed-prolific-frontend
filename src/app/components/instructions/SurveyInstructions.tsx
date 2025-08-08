@@ -235,7 +235,7 @@ export function SurveyInstructions(
                         In this part, you&apos;ll fix a Python code snippet containing an error.
                         Your task is to <b>edit the code to resolve the issue</b> and submit your fix.
                     </p>
-                    <ul className="list-decimal pl-6 mb-4 space-y-1 text-gray-700 text-left">
+                    <ul className="list-disc pl-6 mb-4 space-y-1 text-gray-700 text-left">
                         <li>
                             <b>Fix:</b> Edit the code to correct the error you identified. You can revert to the
                             original snippet if needed by clicking the &#34;<b>Revert Code</b>&#34; button. When you are
@@ -247,7 +247,8 @@ export function SurveyInstructions(
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
                         <span className="text-blue-900 ml-1">
-                            <b>Note:</b> You have <b>up to 3 attempts</b> to fix the code. Once you submit your third attempt, you will move on to the next stage of the survey.
+                            <b>NOTE:</b> You have <b>up to 3 attempts</b> to fix the code. Each failed attempt will reset the code editor to its original state.
+                            You must fix <b>only</b> the original code snippet provided in this example. Once you submit your third attempt, you will move on to the next stage of the survey.
                         </span>
                     </div>
 
