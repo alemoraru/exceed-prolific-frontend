@@ -22,20 +22,23 @@ import Link from "next/link";
  * @param defaultTabIndex  Which tab to show by default (0‑based). The default is set to 0.
  * @param requireAllTabs   If true, fires `onAllTabsVisited` only after every tab has been visited.
  * @param onAllTabsVisited Callback when all tabs have been visited (fires once).
+ * @param controlledTabIndex If provided, this overrides the internal tab index state.
+ * @param onTabIndexChange Callback when the tab index changes, allowing external control of the tab index.
  */
-export function SurveyInstructions({
-                                       defaultTabIndex = 0,
-                                       requireAllTabs = false,
-                                       onAllTabsVisited,
-                                       tabIndex: controlledTabIndex,
-                                       onTabIndexChange
-                                   }: {
-    defaultTabIndex?: number;
-    requireAllTabs?: boolean;
-    onAllTabsVisited?: () => void;
-    tabIndex?: number;
-    onTabIndexChange?: (newIndex: number) => void;
-} = {}) {
+export function SurveyInstructions(
+    {
+        defaultTabIndex = 0,
+        requireAllTabs = false,
+        onAllTabsVisited,
+        tabIndex: controlledTabIndex,
+        onTabIndexChange
+    }: {
+        defaultTabIndex?: number;
+        requireAllTabs?: boolean;
+        onAllTabsVisited?: () => void;
+        tabIndex?: number;
+        onTabIndexChange?: (newIndex: number) => void;
+    } = {}) {
 
     /* State management for the instruction component */
     const totalTabs = 5;
@@ -264,7 +267,6 @@ export function SurveyInstructions({
                             title="Code Fix: Review and Edit The Code"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
-                            step={2}
                             onSubmitAction={() => {
                             }}
                             readOnly={false}

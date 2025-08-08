@@ -9,6 +9,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import {Send} from "lucide-react";
+import {LikertQuestion} from "@/app/utils/likertQuestions";
 
 /**
  * Props for the LikertScalePanel component.
@@ -18,7 +19,7 @@ interface LikertScalePanelProps {
     onSubmit: (answers: number[]) => void;
     submitLoading?: boolean;
     isMarkdown: boolean;
-    questions: string[];
+    questions: LikertQuestion[];
     selectedAnswers?: number[];
     onAnswersChange?: (answers: number[]) => void;
 }
@@ -77,14 +78,6 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
 
     const allAnswered = answers.every((a) => a !== null);
 
-    const likertMarks = [
-        {value: 1, label: "Strongly disagree"},
-        {value: 2, label: "Disagree"},
-        {value: 3, label: "Neutral"},
-        {value: 4, label: "Agree"},
-        {value: 5, label: "Strongly agree"},
-    ];
-
     return (
         <Card
             sx={{
@@ -126,7 +119,7 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                         {questions.map((q, idx) => (
                             <React.Fragment key={idx}>
                                 <div className={"font-semibold w-full"}>
-                                    {q}
+                                    {q.question}
                                 </div>
                                 <FormControl
                                     component="fieldset"
@@ -139,22 +132,22 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                                         sx={{width: '100%'}}
                                     >
                                         <div className="flex w-full justify-between items-start">
-                                            {likertMarks.map(mark => (
+                                            {q.scale.map((label, i) => (
                                                 <div
-                                                    key={mark.value}
+                                                    key={i + 1}
                                                     className="flex flex-col items-center flex-1 min-w-[120px]"
                                                 >
                                                     <Radio
                                                         disabled={submitLoading}
-                                                        value={mark.value}
-                                                        checked={answers[idx] === mark.value}
+                                                        value={i + 1}
+                                                        checked={answers[idx] === i + 1}
                                                         onChange={e => handleChange(idx, Number(e.target.value))}
                                                     />
                                                     <Typography
                                                         variant="body2"
                                                         className="mt-1 text-center whitespace-nowrap"
                                                     >
-                                                        {mark.label}
+                                                        {label}
                                                     </Typography>
                                                 </div>
                                             ))}

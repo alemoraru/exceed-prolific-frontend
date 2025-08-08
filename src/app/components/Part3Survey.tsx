@@ -1,6 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {LikertScalePanel} from "./panels/LikertScalePanel";
-import {readabilityQuestions, cognitiveLoadQuestions, authoritativenessQuestions} from "@/app/utils/likertQuestions";
+import {
+    readabilityQuestions,
+    cognitiveLoadQuestions,
+    authoritativenessQuestions,
+    LikertQuestion
+} from "@/app/utils/likertQuestions";
 import {QuitStudyButton} from "@/app/components/QuitStudyButton";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from "@/app/components/toast/ConfirmChoiceModal";
 import {InfoButton} from "@/app/components/instructions/InfoButton";
@@ -158,7 +163,7 @@ export function Part3Survey(
         }
     };
 
-    let likertQuestions: string[];
+    let likertQuestions: LikertQuestion[];
     let likertPanelTitle: string;
     if (feedbackPanel === 1) {
         likertQuestions = readabilityQuestions;
