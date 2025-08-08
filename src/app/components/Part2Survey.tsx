@@ -2,8 +2,7 @@ import React, {useState, useEffect} from "react";
 import {SurveyInstructions} from './instructions/SurveyInstructions';
 import {InstructionsOverlay} from './instructions/InstructionsOverlay';
 import {InfoButton} from './instructions/InfoButton';
-import {Part2Step1Panel} from "./panels/Part2Step1Panel";
-import {Part2Step2Panel} from "./panels/Part2Step2Panel";
+import {CodeFixPanel} from "./panels/CodeFixPanel";
 import {CodeSnippet} from "@/app/utils/types";
 import {ConfirmChoiceModal, ConfirmChoiceModalType} from './toast/ConfirmChoiceModal';
 import {QuitStudyButton} from './QuitStudyButton';
@@ -49,25 +48,18 @@ export function Part2Survey(
     const [showQuitModal, setShowQuitModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [attemptCount, setAttemptCount] = useState(1); // Track the number of attempts
-    const [step, setStep] = useState<1 | 2>(1); // Step state: 1 = review, 2 = fix
     const [attemptStartTime, setAttemptStartTime] = useState<number>(Date.now());
 
     // Track if cheating detection should be active
     useCheatingDetection(Boolean(participantId) && !showQuitModal && !snippetError);
 
-    // Progress bar step
+    // Progress bar step (always show code fix step)
     useEffect(() => {
-        // Only increment for the initial review and code fix steps, not for each attempt
-        if (step === 1) {
-            setOverallStep(part1Total + 1); // Review step
-        } else if (step === 2) {
-            setOverallStep(part1Total + 2); // Code fix step
-        }
-    }, [step, setOverallStep, part1Total]);
+        setOverallStep(part1Total + 2);
+    }, [setOverallStep, part1Total]);
 
     // Warn on refresh/leave after consent is given
     useEffect(() => {
-        // Only show warning after consent is given (participantId exists)
         if (!participantId) return;
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
@@ -98,19 +90,10 @@ export function Part2Survey(
         fetchSnippet();
     }, [participantId]);
 
-    // When the step changes to 2 (another fix attempt), reset attemptStartTime
-    useEffect(() => {
-        if (step === 2) {
-            setAttemptStartTime(Date.now());
-        }
-    }, [step]);
-
     // When a new attempt starts (after a failed submission), reset attemptStartTime
     useEffect(() => {
-        if (step === 2) {
-            setAttemptStartTime(Date.now());
-        }
-    }, [attemptCount, step]);
+        setAttemptStartTime(Date.now());
+    }, [attemptCount]);
 
     // Handle code fix submission (used for both initial and follow-up attempts)
     const handleSubmit = async () => {
@@ -197,33 +180,7 @@ export function Part2Survey(
         );
     }
 
-    // Step 1: Review code and error, only on the first load
-    if (step === 1) {
-        return (
-            <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
-                <QuitStudyButton onClick={() => setShowQuitModal(true)} disabled={showQuitModal}/>
-                <ConfirmChoiceModal open={showQuitModal} onCancel={() => setShowQuitModal(false)}
-                                    onConfirm={onConsentDenied} type={ConfirmChoiceModalType.QuitStudy}/>
-                <InfoButton onClick={() => setShowInstructions(true)}/>
-                <InstructionsOverlay open={showInstructions} onClose={() => setShowInstructions(false)}>
-                    <SurveyInstructions defaultTabIndex={3}/>
-                </InstructionsOverlay>
-                <div className="text-center text-gray-600 mt-0">
-                    Attempt {attemptCount} of 3
-                </div>
-                <div className="mt-6"/>
-                <Part2Step1Panel
-                    code={currentSnippet.code}
-                    error={currentSnippet.error}
-                    showError={true}
-                    onNext={() => setStep(2)}
-                    renderMarkdown={renderMarkdown}
-                />
-            </div>
-        );
-    }
-
-    // Step 2: Attempt a fix (shown after review, and for all follow-up attempts)
+    // Only show code fix panel (no review step)
     return (
         <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-6 relative fade-in">
             <QuitStudyButton onClick={() => setShowQuitModal(true)} disabled={showQuitModal}/>
@@ -248,7 +205,7 @@ export function Part2Survey(
                 Attempt {attemptCount} out of 3
             </div>
             <div className="mt-6"/>
-            <Part2Step2Panel
+            <CodeFixPanel
                 code={editedCode}
                 onCodeChange={setEditedCode}
                 readOnly={submitLoading}

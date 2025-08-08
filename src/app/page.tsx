@@ -20,7 +20,7 @@ export default function App() {
 
     // Calculate total steps for both parts
     const part1Total = 8 + 1 + 1; // 8 MCQs + 1 for experience/consent + 1 for instructions
-    const part2Total = 2; // 2 steps for part 2 (one for review, and another for attempts 1 through 3)
+    const part2Total = 1; // the code fix panel (all 3 attempts are considered as one step)
     const part3Total = 3; // 3 steps, each of which having different Likert scales questions
     const totalSteps = part1Total + part2Total + part3Total; // Total steps across all parts
 

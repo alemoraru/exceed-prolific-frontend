@@ -22,9 +22,11 @@ interface PanelProps {
 }
 
 /**
- * Panel for Part 2 Step 2 of the study, which allows participants to attempt a fix based on the error message.
+ * CodeFixPanel component allows users to review and edit code snippets in order to fix the present errors.
+ * It provides a code editor with error messages, a revert button to restore the original code,
+ * and a submit button to save changes. It also includes a confirmation modal for submitting changes.
  */
-export const Part2Step2Panel: React.FC<PanelProps> = (
+export const CodeFixPanel: React.FC<PanelProps> = (
     {
         code,
         readOnly,
@@ -48,11 +50,13 @@ export const Part2Step2Panel: React.FC<PanelProps> = (
             readOnly={readOnly}
             onSubmitAction={onNext}
             onCodeChange={onCodeChange}
-            instructions={`Edit the code to fix any errors you have identified.
+            instructions={`Carefully review the code and the error message.
+            Try to understand what the code is intended to do and what the error means. When you are ready, 
+            edit the code to fix any errors you have identified.
             You can restore the original snippet using the "Revert Code" button.
-            The error message is shown below and can be toggled using the toolbar button.
-            When you're done, click "Submit". Submitting uses one attempt — if you have none left, you can’t return to this step.`}
-            title="Step 2: Attempt a Code Fix"
+            The error message is shown below and can be toggled using the "Error Message" button.
+            When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.`}
+            title="Code Fix: Review and Edit The Code"
             step={2}
             onNext={onNext}
             submitLoading={submitLoading}

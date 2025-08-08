@@ -255,7 +255,12 @@ export function SurveyInstructions({
                     </p>
                     <div className="mb-4">
                         <CodeEditor
-                            instructions={`Edit the code to fix any errors you have identified.\nYou can restore the original snippet using the \"Revert Code\" button.\nThe error message is shown below and can be toggled using the toolbar button.\nWhen you're done, click \"Submit\". You have up to 3 attempts to fix the code.`}
+                            instructions={`Carefully review the code and the error message.
+                            Try to understand what the code is intended to do and what the error means. When you are ready, 
+                            edit the code to fix any errors you have identified.
+                            You can restore the original snippet using the "Revert Code" button.
+                            The error message is shown below and can be toggled using the "Error Message" button.
+                            When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.`}
                             title="Code Fix: Review and Edit The Code"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}
