@@ -21,6 +21,7 @@ interface LikertScalePanelProps {
     isMarkdown: boolean;
     questions: LikertQuestion[];
     selectedAnswers?: number[];
+    feedbackPanel?: number;
     onAnswersChange?: (answers: number[]) => void;
 }
 
@@ -35,6 +36,7 @@ interface LikertScalePanelProps {
  * @param isMarkdown - Flag indicating if the error message should be rendered as Markdown.
  * @param questions - Array of questions to be displayed in the Likert scale.
  * @param selectedAnswers - Optional array of pre-selected answers for controlled components.
+ * @param feedbackPanel - Optional panel number to indicate which feedback panel is being used (1, 2, or 3).
  * @param onAnswersChange - Optional callback to handle changes in selected answers for controlled components.
  */
 export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
@@ -45,6 +47,7 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
         isMarkdown,
         questions,
         selectedAnswers,
+        feedbackPanel,
         onAnswersChange
     }) => {
     // Use controlled answers if provided, otherwise manage internally
@@ -178,7 +181,7 @@ export const LikertScalePanel: React.FC<LikertScalePanelProps> = (
                                 <CircularProgress size={28} color="inherit"/>
                             ) : (
                                 <>
-                                    <span>Submit</span>
+                                    <span>{feedbackPanel !== undefined && feedbackPanel !== 3 ? "Next" : "Submit"}</span>
                                     <Send size={20} className="ml-2"/>
                                 </>
                             )}

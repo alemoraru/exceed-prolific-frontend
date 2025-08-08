@@ -200,6 +200,7 @@ export function Part3Survey(
                 isMarkdown={isMarkdown}
                 questions={likertQuestions}
                 selectedAnswers={likertAnswers}
+                feedbackPanel={feedbackPanel}
                 onAnswersChange={setLikertAnswers}
             />
         </div>
