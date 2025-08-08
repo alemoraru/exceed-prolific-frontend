@@ -49,6 +49,7 @@ export function Part2Survey(
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [attemptCount, setAttemptCount] = useState(1); // Track the number of attempts
     const [attemptStartTime, setAttemptStartTime] = useState<number>(Date.now());
+    const [shouldRevert, setShouldRevert] = useState(false);
 
     // Track if cheating detection should be active
     useCheatingDetection(Boolean(participantId) && !showQuitModal && !snippetError);
@@ -126,7 +127,7 @@ export function Part2Survey(
                 return;
             } else {
                 setAttemptCount(attemptCount + 1);
-                setEditedCode(currentSnippet?.code || "")
+                setShouldRevert(true); // trigger revert in CodeEditor
                 if (attemptCount + 1 > 3) {
                     onComplete(currentSnippet?.error || "", currentSnippet?.id || "", renderMarkdown);
                     return;
@@ -145,6 +146,7 @@ export function Part2Survey(
 
     // long error wait state management and detection
     const [showLongWait, setShowLongWait] = useState(false);
+    // Add state to trigger revert
     useEffect(() => {
         let timer: NodeJS.Timeout;
         if (loadingSnippet) {
@@ -234,6 +236,8 @@ export function Part2Survey(
                 onModalConfirm={handleSubmit}
                 onRevert={() => setEditedCode(currentSnippet.code || "")}
                 renderMarkdown={renderMarkdown}
+                shouldRevert={shouldRevert}
+                onRevertComplete={() => setShouldRevert(false)}
             />
         </div>
     );

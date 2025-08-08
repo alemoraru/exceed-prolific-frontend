@@ -19,6 +19,8 @@ interface PanelProps {
     onModalCancel: () => void;
     onModalConfirm: () => void;
     renderMarkdown: boolean;
+    shouldRevert?: boolean;
+    onRevertComplete?: () => void;
 }
 
 /**
@@ -39,11 +41,12 @@ export const CodeFixPanel: React.FC<PanelProps> = (
         onModalCancel,
         onModalConfirm,
         onCodeChange,
-        renderMarkdown
+        renderMarkdown,
+        shouldRevert,
+        onRevertComplete
     }) => (
     <div>
         {submitLoading && <LoaderToast/>}
-        {submitError && <ErrorToast message={submitError}/>}
         <CodeEditor
             code={code}
             errorMessage={error}
@@ -61,6 +64,8 @@ export const CodeFixPanel: React.FC<PanelProps> = (
             submitLoading={submitLoading}
             onRevert={onRevert}
             renderMarkdown={renderMarkdown}
+            shouldRevert={shouldRevert}
+            onRevertComplete={onRevertComplete}
         />
         <ConfirmChoiceModal
             open={showConfirmModal}
@@ -68,5 +73,6 @@ export const CodeFixPanel: React.FC<PanelProps> = (
             onConfirm={onModalConfirm}
             type={ConfirmChoiceModalType.CodeFix}
         />
+        {submitError && <ErrorToast message={submitError}/>}
     </div>
 );

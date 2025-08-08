@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useState, useRef} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import {python} from '@codemirror/lang-python';
 import {Header} from './Header';
@@ -27,6 +27,8 @@ interface CodeEditorProps {
     onRevert?: () => void;
     onCodeChange?: (code: string) => void;
     renderMarkdown: boolean;
+    shouldRevert?: boolean;
+    onRevertComplete?: () => void;
 }
 
 /**
@@ -52,6 +54,8 @@ interface CodeEditorState {
  * @param onRevert - Callback function to handle code revert action.
  * @param onCodeChange - Callback function to handle code changes.
  * @param renderMarkdown - Flag to determine if markdown rendering is enabled.
+ * @param shouldRevert - Flag to trigger revert action when true.
+ * @param onRevertComplete - Callback function to execute after revert is complete.
  */
 export const CodeEditor: React.FC<CodeEditorProps> = (
     {
@@ -66,7 +70,9 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
         autoHeight = false,
         onRevert,
         onCodeChange,
-        renderMarkdown
+        renderMarkdown,
+        shouldRevert,
+        onRevertComplete
     }) => {
 
     // Store the true original code only once on mount
@@ -126,6 +132,15 @@ export const CodeEditor: React.FC<CodeEditorProps> = (
     const handleToggleError = useCallback(() => {
         setState(prev => ({...prev, showErrorPanel: !prev.showErrorPanel}));
     }, []);
+
+    // Listen for shouldRevert prop and reset code if triggered
+    useEffect(() => {
+        if (shouldRevert) {
+            setState(prev => ({...prev, code: originalCodeRef.current}));
+            if (onCodeChange) onCodeChange(originalCodeRef.current);
+            if (onRevertComplete) onRevertComplete();
+        }
+    }, [shouldRevert, onCodeChange, onRevertComplete]);
 
     // Determine if there is an error and if the code can be reverted
     const hasError = Boolean(errorMessage);
