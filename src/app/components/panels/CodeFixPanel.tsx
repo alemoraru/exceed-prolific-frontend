@@ -54,7 +54,7 @@ export const CodeFixPanel: React.FC<PanelProps> = (
             Try to understand what the code is intended to do and what the error means. When you are ready, 
             edit the code to fix any errors you have identified.
             You can restore the original snippet using the "Revert Code" button.
-            The error message is shown below and can be toggled using the "Error Message" button.
+            The error message is shown below and can be toggled on/off using the "Error Message" button.
             When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.`}
             title="Code Fix: Review and Edit The Code"
             onNext={onNext}
