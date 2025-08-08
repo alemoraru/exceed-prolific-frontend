@@ -253,9 +253,9 @@ export function SurveyInstructions(
                     </div>
 
                     <p className="mb-4 text-gray-700 text-left">
-                        To get familiar with the interface you will use in the actual code fix task, consider the code
-                        editor interface shown below — you can interact with it and try editing the code to see how it
-                        works. Submitting this example code will not perform any action.
+                        To get familiar with the code fix interface you will use in the actual survey task, try editing
+                        the code below. The &#34;Submit&#34; button here only locks the editor and does not count as an
+                        attempt.
                     </p>
                     <div className="mb-4">
                         <CodeEditor
