@@ -141,17 +141,6 @@ export function SurveyInstructions(
                         This survey has three parts: <b>multiple-choice questions</b>, a <b>code fix task</b>, and <b>Likert
                         scale questions</b>.
                     </p>
-                    <p className="mb-4 text-gray-700 text-left">
-                        You will first self-assess your Python experience, and answer several multiple-choice questions
-                        about Python code and errors. Afterwards, you will be asked to review and fix a Python code
-                        snippet using the provided editor interface. Lastly, you will rate your experience with the
-                        encountered error message in the code fix task using a series of Likert scale questions.
-                    </p>
-                    <p className="mb-4 text-gray-700 text-left">
-                        Please review each tab above to understand the survey layout and expectations. We
-                        strongly encourage you to read the instructions for each task carefully and play with the
-                        example interfaces before proceeding to completing the actual survey tasks.
-                    </p>
                     <div
                         className="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded flex items-center gap-2 text-left"
                     >
@@ -159,14 +148,18 @@ export function SurveyInstructions(
                             <b>Important:</b>
                             <ul className="list-disc pl-6 mt-2 space-y-1">
                                 <li>
-                                    <span className="text-red-700 font-semibold">Do NOT reload, close the tab or browser, or clear your browser&#39;s cache during the survey. </span>
-                                    Doing so will break the survey&#39;s flow and result in <span
-                                    className="text-red-700 font-semibold">immediate disqualification and loss of compensation</span>.
+                                    <span className="text-red-700 font-semibold">Do NOT issue any copy-paste commands, such as Ctrl+C, Ctrl+V, Ctrl+X during the survey. </span>
+                                    Doing so will result in <span className="text-red-700 font-semibold"> disqualification and loss of compensation</span>.
                                 </li>
                                 <li>
                                     <span className="text-red-700 font-semibold">Do NOT use external help (AI tools, search engines, or other people) to answer questions or
                                         fix code. </span> Doing so will result in
                                     <span className="text-red-700 font-semibold"> immediate disqualification and loss of compensation</span>.
+                                </li>
+                                <li>
+                                    <span className="text-red-700 font-semibold">Do NOT reload, close the tab or browser, or clear your browser&#39;s cache during the survey. </span>
+                                    Doing so will break the survey&#39;s flow and result in <span
+                                    className="text-red-700 font-semibold">immediate disqualification and loss of compensation</span>.
                                 </li>
                                 <li>
                                     You can revisit these instructions at any time by clicking the <b>INFO</b> button <FaInfoCircle
@@ -180,6 +173,17 @@ export function SurveyInstructions(
                             </ul>
                         </span>
                     </div>
+                    <p className="mb-4 text-gray-700 text-left">
+                        You will first self-assess your Python experience, and answer several multiple-choice questions
+                        about Python code and errors. Afterwards, you will be asked to review and fix a Python code
+                        snippet using the provided editor interface. Lastly, you will rate your experience with the
+                        encountered error message in the code fix task using a series of Likert scale questions.
+                    </p>
+                    <p className="mb-4 text-gray-700 text-left">
+                        Please review each tab above to understand the survey layout and expectations. We
+                        strongly encourage you to read the instructions for each task carefully and play with the
+                        example interfaces before proceeding to completing the actual survey tasks.
+                    </p>
                 </div>
             )}
 
@@ -264,7 +268,9 @@ export function SurveyInstructions(
                             edit the code to fix any errors you have identified.
                             You can restore the original snippet using the "Revert Code" button.
                             The error message is shown below and can be toggled on/off using the "Error Message" button.
-                            When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.`}
+                            When you're done, click the "Submit" button. Submitting uses one attempt — if you have none left, you can’t return to this step.
+                            Reminder: NO copy-pasting is allowed — you MUST write the code yourself.
+                            `}
                             title="Code Fix: Review and Edit The Code"
                             code={reviewCode}
                             errorMessage={exampleErrorMessage}

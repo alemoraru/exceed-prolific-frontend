@@ -33,6 +33,31 @@ export function ConsentForm({value, onChange, disabled}: {
                 </p>
             </section>
 
+            {/* Integrity & Fairness section - what is allowed and not allowed to do */}
+            <section className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 text-blue-800">Integrity & Fairness</h3>
+                <div style={{backgroundColor: '#FEF9C3', borderLeft: '4px solid #FACC15'}} className="p-4 rounded mb-4">
+                    <span style={{color: '#B45309'}} className="font-bold">Important:</span> To maintain the integrity
+                    of this
+                    study, please complete all tasks independently, without using external assistance such as large
+                    language models (LLMs), AI tools of any sort, search engines, or help from others. <span
+                    className="font-bold">Copy-pasting code or answers from any source, including external websites or tools,
+                    is strictly prohibited and will result in immediate disqualification.</span> Your responses must
+                    reflect your own reasoning and understanding. It is essential that you thoughtfully engage with each
+                    question rather than submitting answers at random or without proper consideration. We will be
+                    actively checking for signs of inauthentic or careless participation.
+                    <br/><br/>
+                    <span style={{color: 'red'}} className="font-bold text-red-700">
+                        The use of LLMs (e.g., ChatGPT, Copilot), or failing to engage meaningfully with the task, will result in your
+                        responses being invalidated and you will NOT be eligible for compensation.
+                        <br/><br/>
+                        REMINDER: we will monitor whether you copy code that we provide (including via keystrokes or copy-paste).
+                        Copying provided code will result in disqualification and NO compensation. This includes any of
+                        the following commands: Ctrl+C, Ctrl+V, Cmd+C, Cmd+V, or any other copy-paste action.
+                    </span>
+                </div>
+            </section>
+
             {/* Your participation section - what the survey will be about */}
             <section className="mb-8">
                 <h3 className="text-lg font-semibold mb-2 text-blue-800">Your Participation</h3>
@@ -53,30 +78,6 @@ export function ConsentForm({value, onChange, disabled}: {
                         className="font-semibold"> you will NOT receive any compensation for your participation.
                     </span>
                 </p>
-            </section>
-
-            {/* Integrity & Fairness section - what is allowed and not allowed to do */}
-            <section className="mb-8">
-                <h3 className="text-lg font-semibold mb-2 text-blue-800">Integrity & Fairness</h3>
-                <div style={{backgroundColor: '#FEF9C3', borderLeft: '4px solid #FACC15'}} className="p-4 rounded mb-4">
-                    <span style={{color: '#B45309'}} className="font-bold">Important:</span> To maintain the integrity
-                    of this
-                    study, please complete all tasks independently, without using external assistance such as large
-                    language models (LLMs), AI tools of any sort, search engines, or help from others. <span
-                    className="font-bold">Copy-pasting code or answers from any source, including external websites or tools,
-                    is strictly prohibited and will result in immediate disqualification.</span> Your responses must
-                    reflect your own reasoning and understanding. It is essential that you thoughtfully engage with each
-                    question rather than submitting answers at random or without proper consideration. We will be
-                    actively checking for signs of inauthentic or careless participation.
-                    <br/><br/>
-                    <span style={{color: 'red'}} className="font-bold text-red-700">
-                        The use of LLMs (e.g., ChatGPT, Copilot), or failing to engage meaningfully with the task, will result in your
-                        responses being invalidated and you will NOT be eligible for compensation.
-                        <br/><br/>
-                        Additionally, we will monitor whether you copy code that we provide (including via keystrokes or copy-paste).
-                        Copying provided code will result in disqualification and NO compensation.
-                    </span>
-                </div>
             </section>
 
             {/* Section on what data we will collect while participating */}
