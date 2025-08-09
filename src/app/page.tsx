@@ -34,6 +34,7 @@ export default function App() {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [codeSnippetId, setCodeSnippetId] = useState<string>("");
     const [renderMarkdown, setRenderMarkdown] = useState<boolean>(false);
+    const [wasFixSuccessful, setWasFixSuccessful] = useState<boolean>(false);
 
     // Hooks for redirect URL after survey completion
     const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
@@ -169,10 +170,11 @@ export default function App() {
                         setOverallStep={setOverallStep}
                         part1Total={part1Total}
                         onConsentDenied={() => setConsentDenied(true)}
-                        onComplete={async (errorMsg, snippetId, isMarkdown) => {
+                        onComplete={async (errorMsg, snippetId, isMarkdown, wasSuccessful) => {
                             setErrorMessage(errorMsg);
                             setCodeSnippetId(snippetId);
                             setRenderMarkdown(isMarkdown);
+                            setWasFixSuccessful(wasSuccessful);
                             setPart2Complete(true);
                         }}
                     />
@@ -198,6 +200,7 @@ export default function App() {
                             setOverallStep(part1Total + part2Total + part3Total);
                         }}
                         isMarkdown={renderMarkdown}
+                        wasFixSuccessful={wasFixSuccessful}
                         onConsentDenied={() => setConsentDenied(true)}
                         setOverallStep={setOverallStep}
                         part1Total={part1Total}

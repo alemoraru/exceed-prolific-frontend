@@ -33,7 +33,7 @@ export function Part2Survey(
         setOverallStep: (step: number) => void;
         part1Total: number;
         onConsentDenied: () => void;
-        onComplete: (errorMessage: string, codeSnippetId: string, renderMarkdown: boolean) => void;
+        onComplete: (errorMessage: string, codeSnippetId: string, renderMarkdown: boolean, wasFixSuccessful: boolean) => void;
     }) {
     // State management
     const [currentSnippet, setCurrentSnippet] = useState<CodeSnippet>();
@@ -123,13 +123,13 @@ export function Part2Survey(
                 await new Promise(resolve => setTimeout(resolve, minLoaderMs - elapsed));
             }
             if (data.status === 'success') {
-                onComplete(currentSnippet?.error || "", currentSnippet?.id || "", renderMarkdown);
+                onComplete(currentSnippet?.error || "", currentSnippet?.id || "", renderMarkdown, true);
                 return;
             } else {
                 setAttemptCount(attemptCount + 1);
                 setShouldRevert(true); // trigger revert in CodeEditor
                 if (attemptCount + 1 > 3) {
-                    onComplete(currentSnippet?.error || "", currentSnippet?.id || "", renderMarkdown);
+                    onComplete(currentSnippet?.error || "", currentSnippet?.id || "", renderMarkdown, false);
                     return;
                 }
             }
@@ -170,8 +170,8 @@ export function Part2Survey(
                 </div>
                 <div className="mt-6 text-xs text-gray-400 flex items-center justify-center gap-1">
                     <Mail className="w-4 h-4"/>
-                    For support regarding long loading times or failures, please reach out to us via Prolific or send an
-                    email to
+                    For support regarding really long loading times or failures, please reach out to us via Prolific or
+                    send an email to
                     <Link href="mailto:amoraru@tudelft.nl" className="underline hover:text-blue-600">
                         amoraru@tudelft.nl
                     </Link>
