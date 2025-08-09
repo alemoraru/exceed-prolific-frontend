@@ -12,6 +12,7 @@ import {InfoButton} from "@/app/components/instructions/InfoButton";
 import {InstructionsOverlay} from "@/app/components/instructions/InstructionsOverlay";
 import {SurveyInstructions} from "@/app/components/instructions/SurveyInstructions";
 import {ErrorToast} from "@/app/components/toast/ErrorToast";
+import {SuccessToast} from "@/app/components/toast/SuccessToast";
 
 /**
  * Interface for the feedback request body sent to the backend.
@@ -37,6 +38,7 @@ interface FeedbackRequestBody {
  * @param errorMessage - Error message from previous steps, if any.
  * @param onComplete - Callback when feedback is submitted.
  * @param isMarkdown - Flag indicating if the error message should be rendered as Markdown.
+ * @param wasFixSuccessful - Flag indicating if the code fix was successful.
  * @param onConsentDenied - Callback when consent is denied or participant quits the study.
  * @param setOverallStep - Function to update the overall step in the progress bar.
  * @param part1Total - Total steps in part 1 of the survey.
@@ -49,6 +51,7 @@ export function Part3Survey(
         snippetId,
         onComplete,
         isMarkdown,
+        wasFixSuccessful,
         onConsentDenied,
         setOverallStep,
         part1Total,
@@ -59,6 +62,7 @@ export function Part3Survey(
         snippetId: string | null;
         onComplete: () => void;
         isMarkdown: boolean;
+        wasFixSuccessful?: boolean;
         onConsentDenied: () => void;
         setOverallStep: (step: number) => void;
         part1Total: number;
@@ -178,6 +182,7 @@ export function Part3Survey(
 
     return (
         <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 fade-in">
+            {wasFixSuccessful && <SuccessToast message="Code fix was successful!"/>}
             <QuitStudyButton onClick={() => setShowQuitModal(true)} disabled={showQuitModal}/>
             <ConfirmChoiceModal
                 open={showQuitModal}

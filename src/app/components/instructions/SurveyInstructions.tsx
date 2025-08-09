@@ -305,7 +305,7 @@ export function SurveyInstructions(
                         with the error message you had just reviewed. Some questions use a scale from &#34;Strongly
                         Disagree&#34; to &#34;Strongly Agree&#34;, while others may use different rating options.
                         Pay attention to the scale used for each question when answering. The example below shows the
-                        interface you will use. Actual survey questions and scales may differ.
+                        interface you will use. Actual survey questions will be different.
                     </p>
                     <LikertScalePanel
                         errorMessage={exampleErrorMessage}
