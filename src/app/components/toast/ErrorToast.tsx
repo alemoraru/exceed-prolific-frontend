@@ -19,7 +19,7 @@ export function ErrorToast({message}: { message: string }) {
     useEffect(() => {
         setVisible(true);
         setProgress(100);
-        const duration = 6000; // 6 seconds
+        const duration = 5000; // 5 seconds
         let animationFrame: number;
         const start = Date.now();
 

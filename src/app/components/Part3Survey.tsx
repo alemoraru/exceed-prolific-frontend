@@ -183,6 +183,7 @@ export function Part3Survey(
     return (
         <div className="w-full max-w-6xl mx-auto bg-white rounded-2xl card-shadow p-8 fade-in">
             {wasFixSuccessful && <SuccessToast message="Code fix was successful!"/>}
+            {!wasFixSuccessful && <ErrorToast message="Code fix was not successful!"/>}
             <QuitStudyButton onClick={() => setShowQuitModal(true)} disabled={showQuitModal}/>
             <ConfirmChoiceModal
                 open={showQuitModal}
