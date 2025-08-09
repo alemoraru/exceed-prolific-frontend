@@ -58,11 +58,11 @@ export const authoritativenessQuestions: LikertQuestion[] = [
  */
 export const instructionsQuestions: LikertQuestion[] = [
     {
-        question: "Reading this error message feels mentally demanding.",
+        question: "I find Python an easy programming language to understand and use.",
         scale: ["Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"]
     },
     {
-        question: "This error message is useful for identifying the problem.",
+        question: "I find it annoying when I encounter error messages in Python.",
         scale: ["Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"]
     }
 ];
